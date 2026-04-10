@@ -1,903 +1,178 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>祐興食品 | Yau Hing Food</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --color-bg: #FAFAF8;
-            --color-bg-alt: #F5F5F0;
-            --color-text: #2D2D2D;
-            --color-text-muted: #6B6B6B;
-            --color-accent: #4A7C59;
-            --color-accent-light: #7BA68D;
-            --color-gold: #C9A962;
-            --color-border: #E5E5E0;
-            --font-serif: 'Noto Serif TC', serif;
-            --font-sans: 'Noto Sans TC', sans-serif;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--color-bg);
-            color: var(--color-text);
-            line-height: 1.7;
-            font-weight: 400;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(250, 250, 248, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--color-border);
-            transition: var(--transition);
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-text);
-            text-decoration: none;
-            letter-spacing: 0.05em;
-        }
-
-        .logo span {
-            color: var(--color-accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--color-text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--color-accent);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--color-accent);
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .btn-member {
-            padding: 0.6rem 1.2rem;
-            border: 1px solid var(--color-border);
-            background: transparent;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-        }
-
-        .btn-member:hover {
-            background: var(--color-text);
-            color: var(--color-bg);
-            border-color: var(--color-text);
-        }
-
-        .btn-whatsapp {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            background: #25D366;
-            color: white;
-            border: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-        }
-
-        .btn-whatsapp:hover {
-            background: #128C7E;
-            transform: translateY(-1px);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--color-bg-alt) 0%, transparent 100%);
-            z-index: -1;
-        }
-
-        .hero-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .hero-content {
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-label {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--color-accent);
-            margin-bottom: 1.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(74, 124, 89, 0.1);
-        }
-
-        .hero-title {
-            font-family: var(--font-serif);
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-title span {
-            display: block;
-            color: var(--color-accent);
-        }
-
-        .hero-desc {
-            font-size: 1.1rem;
-            color: var(--color-text-muted);
-            margin-bottom: 2.5rem;
-            max-width: 480px;
-            line-height: 1.8;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn-primary {
-            padding: 1rem 2rem;
-            background: var(--color-text);
-            color: var(--color-bg);
-            border: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            letter-spacing: 0.02em;
-        }
-
-        .btn-primary:hover {
-            background: var(--color-accent);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            padding: 1rem 2rem;
-            background: transparent;
-            color: var(--color-text);
-            border: 1px solid var(--color-border);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--color-text);
-        }
-
-        .hero-visual {
-            position: relative;
-            animation: fadeInUp 1s ease-out 0.3s backwards;
-        }
-
-        .hero-image {
-            width: 100%;
-            aspect-ratio: 4/5;
-            background: linear-gradient(135deg, var(--color-bg-alt) 0%, #E8E8E0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-serif);
-            font-size: 6rem;
-            color: var(--color-accent-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234A7C59' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        .hero-badge {
-            position: absolute;
-            bottom: 2rem;
-            left: -1rem;
-            background: white;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .badge-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--color-accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .badge-text {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .badge-text small {
-            display: block;
-            font-family: var(--font-sans);
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--color-text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        /* Products Section */
-        .products {
-            padding: 8rem 2rem;
-            background: var(--color-bg-alt);
-        }
-
-        .products-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--color-accent);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .section-title {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .section-desc {
-            color: var(--color-text-muted);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .product-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .tab-btn {
-            padding: 0.75rem 1.5rem;
-            background: transparent;
-            border: 1px solid var(--color-border);
-            font-family: var(--font-sans);
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .tab-btn.active,
-        .tab-btn:hover {
-            background: var(--color-text);
-            color: var(--color-bg);
-            border-color: var(--color-text);
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .product-card {
-            background: white;
-            padding: 2rem;
-            transition: var(--transition);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-        }
-
-        .product-image {
-            aspect-ratio: 1;
-            background: var(--color-bg-alt);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            position: relative;
-        }
-
-        .product-tag {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            padding: 0.4rem 0.8rem;
-            background: var(--color-accent);
-            color: white;
-        }
-
-        .product-tag.import {
-            background: var(--color-gold);
-        }
-
-        .product-name {
-            font-family: var(--font-serif);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-desc {
-            font-size: 0.85rem;
-            color: var(--color-text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .product-origin {
-            font-size: 0.75rem;
-            color: var(--color-accent);
-            font-weight: 500;
-            letter-spacing: 0.05em;
-        }
-
-        /* About Section */
-        .about {
-            padding: 8rem 2rem;
-        }
-
-        .about-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-            align-items: center;
-        }
-
-        .about-image {
-            aspect-ratio: 4/3;
-            background: linear-gradient(135deg, var(--color-bg-alt) 0%, #E8E8E0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-serif);
-            font-size: 4rem;
-            color: var(--color-accent-light);
-        }
-
-        .about-content h2 {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
-        }
-
-        .about-content p {
-            color: var(--color-text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.9;
-        }
-
-        .about-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 2.5rem;
-            padding-top: 2.5rem;
-            border-top: 1px solid var(--color-border);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-accent);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--color-text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 8rem 2rem;
-            background: var(--color-text);
-            color: var(--color-bg);
-        }
-
-        .contact-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .contact h2 {
-            font-family: var(--font-serif);
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .contact p {
-            color: rgba(250, 250, 248, 0.7);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .contact .btn-whatsapp {
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-        }
-
-        /* Footer */
-        footer {
-            padding: 4rem 2rem;
-            background: var(--color-text);
-            color: rgba(250, 250, 248, 0.6);
-            border-top: 1px solid rgba(250, 250, 248, 0.1);
-        }
-
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-logo {
-            font-family: var(--font-serif);
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--color-bg);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .footer-links a {
-            color: rgba(250, 250, 248, 0.6);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--color-bg);
-        }
-
-        .footer-copy {
-            font-size: 0.8rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .hero-content {
-                order: 2;
-            }
-
-            .hero-visual {
-                order: 1;
-            }
-
-            .hero-title {
-                font-size: 3rem;
-            }
-
-            .hero-desc {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .hero-buttons {
-                justify-content: center;
-            }
-
-            .about-container {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .about-stats {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .footer-container {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祐興食品 | Yau Hing Food</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF8;--bg2:#F0EAE0;--txt:#2D2D2D;--muted:#6B6B6B;--a:#C8462B;--a2:#E07B3A;--a3:#2D6A4F;--gold:#D4A843;--bd:#E0D8C8;--sh1:0 2px 8px rgba(0,0,0,.06);--sh2:0 8px 24px rgba(0,0,0,.10);--sh3:0 16px 48px rgba(0,0,0,.14);--r:14px;--tr:all .3s cubic-bezier(.4,0,.2,1);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(250,250,248,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);transition:var(--tr)}
+nav.scrolled{background:rgba(250,250,248,.98);box-shadow:var(--sh1)}
+.ni{max-width:1280px;margin:0 auto;padding:.9rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:2rem}
+.logo{font-family:'Noto Serif TC',serif;font-size:1.6rem;font-weight:600;color:var(--txt);text-decoration:none;letter-spacing:.05em}
+.logo span{color:var(--a)}
+.nl{display:flex;gap:2.2rem;list-style:none}
+.nl a{text-decoration:none;color:var(--muted);font-size:.88rem;font-weight:500;letter-spacing:.03em;transition:var(--tr);position:relative}
+.nl a:hover{color:var(--a)}
+.nl a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:2px;background:var(--a);transition:var(--tr)}
+.nl a:hover::after{width:100%}
+.nb{display:flex;align-items:center;gap:.8rem}
+.bwa{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.1rem;background:#25D366;color:white;border:none;border-radius:50px;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif;text-decoration:none}
+.bwa:hover{background:#128C7E;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,211,102,.3)}
+.hr{min-height:100vh;padding:8rem 2rem 5rem;display:flex;align-items:center;position:relative;overflow:hidden;background:linear-gradient(160deg,#FDF8F3 0%,#F5EDE0 50%,#EDE0CC 100%)}
+.hri{max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center}
+.hc{animation:fu .8s ease-out}
+.bt{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(200,70,43,.09);border-radius:50px;font-size:.75rem;font-weight:700;color:var(--a);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.ht{font-family:'Noto Serif TC',serif;font-size:3.8rem;font-weight:700;line-height:1.08;margin-bottom:1.2rem;letter-spacing:-.02em}
+.ht span{display:block;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hd{font-size:1.05rem;color:var(--muted);margin-bottom:2rem;max-width:460px;line-height:1.85}
+.hbs{display:flex;gap:.8rem;flex-wrap:wrap}
+.bp{padding:.85rem 1.8rem;background:var(--a);color:white;border:none;border-radius:50px;font-size:.9rem;font-weight:500;cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+.bp:hover{background:#A33A22;transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,70,43,.3)}
+.bs{padding:.85rem 1.8rem;background:transparent;color:var(--txt);border:1.5px solid var(--bd);border-radius:50px;font-size:.9rem;font-weight:500;cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+.bs:hover{border-color:var(--a);color:var(--a)}
+.hv{position:relative;animation:fu .8s ease-out .2s backwards}
+.hi{width:100%;aspect-ratio:4/5;border-radius:24px;overflow:hidden;box-shadow:var(--sh3);position:relative}
+.hi>div{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.hi span{font-size:7rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
+.hb{position:absolute;bottom:-1.5rem;left:-1.5rem;background:white;padding:1.2rem 1.6rem;border-radius:var(--r);box-shadow:var(--sh2);display:flex;align-items:center;gap:1rem}
+.hbi{width:52px;height:52px;background:linear-gradient(135deg,var(--a),var(--a2));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.6rem}
+.hbt{font-family:'Noto Serif TC',serif;font-size:1.6rem;font-weight:700;color:var(--txt);line-height:1.1}
+.hbt small{display:block;font-family:'Noto Sans TC',sans-serif;font-size:.72rem;font-weight:400;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.hst{position:absolute;top:2rem;right:-1rem;background:white;padding:1rem 1.4rem;border-radius:var(--r);box-shadow:var(--sh1);display:flex;flex-direction:column;gap:.8rem}
+.hs{text-align:center}
+.hsn{font-family:'Noto Serif TC',serif;font-size:1.8rem;font-weight:700;color:var(--a)}
+.hsl{font-size:.7rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.pr{padding:7rem 2rem;background:var(--bg)}
+.pi{max-width:1280px;margin:0 auto}
+.sh{text-align:center;margin-bottom:3rem}
+.sl{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--a);margin-bottom:.8rem;padding:.3rem 1rem;background:rgba(200,70,43,.08);border-radius:50px}
+.st{font-family:'Noto Serif TC',serif;font-size:2.6rem;font-weight:600;margin-bottom:.8rem}
+.sd{color:var(--muted);max-width:520px;margin:0 auto;font-size:1rem}
+.ct{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.t-btn{padding:.6rem 1.3rem;background:transparent;border:1.5px solid var(--bd);border-radius:50px;font-family:'Noto Sans TC',sans-serif;font-size:.88rem;cursor:pointer;transition:var(--tr);color:var(--muted);font-weight:500}
+.t-btn.active,.t-btn:hover{background:var(--a);color:white;border-color:var(--a);box-shadow:0 4px 12px rgba(200,70,43,.25)}
+.fb{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.8rem}
+.ft{display:flex;gap:.5rem}
+.f-btn{padding:.45rem 1rem;border:1.5px solid var(--bd);border-radius:50px;background:white;font-size:.82rem;cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif;color:var(--muted)}
+.f-btn.active{background:var(--a3);color:white;border-color:var(--a3)}
+.f-btn.out.active{background:#888;border-color:#888}
+.rc{font-size:.85rem;color:var(--muted)}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.5rem}
+.p-card{background:white;border-radius:16px;overflow:hidden;border:1px solid var(--bd);transition:var(--tr);cursor:pointer;position:relative}
+.p-card:hover{transform:translateY(-6px);box-shadow:var(--sh2);border-color:transparent}
+.p-card.hid{display:none}
+.p-img{aspect-ratio:1;position:relative;overflow:hidden;background:var(--bg2)}
+.p-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.p-card:hover .p-img img{transform:scale(1.06)}
+.grad-card{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.grad-ch{font-family:'Noto Serif TC',serif;font-size:2.8rem;font-weight:700;color:white;text-shadow:0 2px 8px rgba(0,0,0,.2);opacity:.9}
+.s-badge{position:absolute;top:.8rem;right:.8rem;z-index:2;padding:.3rem .7rem;border-radius:50px;font-size:.7rem;font-weight:600;letter-spacing:.05em}
+.s-badge.in{background:rgba(45,106,79,.9);color:white}
+.s-badge.out{background:rgba(0,0,0,.45);color:rgba(255,255,255,.85)}
+.pk-sw{position:absolute;bottom:.8rem;left:.8rem;z-index:2;display:flex;gap:.3rem;background:rgba(255,255,255,.95);padding:.25rem;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.pk-btn{padding:.2rem .6rem;border:none;border-radius:50px;background:transparent;font-size:.68rem;font-weight:600;color:var(--muted);cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif}
+.pk-btn.active{background:var(--a);color:white}
+.pk-btn:hover:not(.active){background:rgba(200,70,43,.1)}
+.p-info{padding:1rem 1.2rem 1.3rem}
+.p-cat{font-size:.68rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--a2);margin-bottom:.3rem}
+.p-name{font-family:'Noto Serif TC',serif;font-size:1.05rem;font-weight:600;margin-bottom:.4rem;line-height:1.3}
+.p-note{font-size:.75rem;color:var(--muted);margin-bottom:.5rem;line-height:1.5}
+.p-price{font-size:1.1rem;font-weight:700;color:var(--a)}
+.p-price.multi{font-size:.85rem;line-height:1.5}
+.ab{padding:8rem 2rem;background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
+.ai{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.aimg{aspect-ratio:4/3;border-radius:24px;overflow:hidden;box-shadow:var(--sh3);position:relative}
+.aimg>div{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.aimg span{font-size:5rem}
+.abadge{position:absolute;bottom:1.5rem;left:1.5rem;background:white;padding:.8rem 1.2rem;border-radius:12px;display:flex;align-items:center;gap:.8rem;z-index:2}
+.abi{width:40px;height:40px;background:linear-gradient(135deg,var(--a3),#52B788);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.abt{font-size:.85rem;font-weight:600;color:var(--txt)}
+.abt small{display:block;font-size:.7rem;color:var(--muted)}
+.ac h2{font-family:'Noto Serif TC',serif;font-size:2.4rem;font-weight:600;margin-bottom:1.5rem;line-height:1.3}
+.ac p{color:var(--muted);margin-bottom:1.2rem;line-height:1.9;font-size:1rem}
+.ast{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--bd)}
+.si{text-align:center;padding:1.2rem;background:white;border-radius:12px;border:1px solid var(--bd)}
+.sn{font-family:'Noto Serif TC',serif;font-size:2.2rem;font-weight:700;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.slabel{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.3rem;display:block}
+.cnt{padding:8rem 2rem;background:var(--txt);color:var(--bg);text-align:center}
+.ci{max-width:700px;margin:0 auto}
+.cnt h2{font-family:'Noto Serif TC',serif;font-size:2.6rem;font-weight:600;margin-bottom:1rem}
+.cnt p{color:rgba(250,250,248,.65);margin-bottom:2rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.8}
+.cnt .bwa{padding:1rem 2.5rem;font-size:1rem;border-radius:50px}
+.cdt{display:flex;justify-content:center;gap:2.5rem;margin-top:3rem;flex-wrap:wrap}
+.ci2{display:flex;align-items:center;gap:.6rem;color:rgba(250,250,248,.6);font-size:.88rem}
+footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255,255,.08)}
+.fi{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.flogo{font-family:'Noto Serif TC',serif;font-size:1.2rem;font-weight:600;color:var(--bg)}
+.fl{display:flex;gap:2rem;list-style:none}
+.fl a{color:rgba(250,250,248,.5);text-decoration:none;font-size:.82rem;transition:var(--tr)}
+.fl a:hover{color:var(--bg)}
+.fc{font-size:.78rem;color:rgba(250,250,248,.35)}
+@keyframes fu{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){.hri{grid-template-columns:1fr;gap:3rem}.ht{font-size:2.8rem}.ai{grid-template-columns:1fr;gap:3rem}.hst{position:static;flex-direction:row;margin-top:1.5rem}.nl{display:none}}
+@media(max-width:600px){.hr{padding:7rem 1.5rem 4rem}.pr{padding:5rem 1.5rem}.ht{font-size:2.2rem}.ct{gap:.3rem}.t-btn{padding:.5rem 1rem;font-size:.82rem}.pg{gap:1rem}.fi{flex-direction:column;text-align:center}.ast{grid-template-columns:1fr}}
+</style>
 </head>
-<body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="logo">祐興<span>食品</span></a>
-            <ul class="nav-links">
-                <li><a href="#products">產品</a></li>
-                <li><a href="#about">關於我們</a></li>
-                <li><a href="#contact">聯絡我們</a></li>
-            </ul>
-            <div class="nav-actions">
-                <button class="btn-member">會員登入</button>
-                <button class="btn-whatsapp">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    WhatsApp
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-container">
-            <div class="hero-content">
-                <span class="hero-label">自家製 · 嚴選進口</span>
-                <h1 class="hero-title">
-                    傳承匠心<span>品味生活</span>
-                </h1>
-                <p class="hero-desc">
-                    祐興食品專營自家乾麵及歐美進口食材，為您提供意大利墨魚汁麵、十年陳皮麵等特色產品，以及黑松露、陳醋、橄欖油等嚴選進口食材。
-                </p>
-                <div class="hero-buttons">
-                    <button class="btn-primary">探索產品</button>
-                    <button class="btn-secondary">聯絡我們</button>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="hero-image">
-                    <span style="font-size: 8rem;">麵</span>
-                </div>
-                <div class="hero-badge">
-                    <div class="badge-icon">🍜</div>
-                    <div class="badge-text">
-                        60+
-                        <small>年傳承</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Products Section -->
-    <section class="products" id="products">
-        <div class="products-container">
-            <div class="section-header">
-                <span class="section-label">產品系列</span>
-                <h2 class="section-title">嚴選 · 品質 · 堅持</h2>
-                <p class="section-desc">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p>
-            </div>
-            
-            <div class="product-tabs">
-                <button class="tab-btn active">全部產品</button>
-                <button class="tab-btn">自家乾麵</button>
-                <button class="tab-btn">進口食材</button>
-            </div>
-
-            <div class="product-grid">
-                <!-- 自家乾麵 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag">自家</span>
-                        🍜
-                    </div>
-                    <h3 class="product-name">意大利墨魚汁麵</h3>
-                    <p class="product-desc">選用優質墨魚汁製作，獨特黑色麵條，海鮮風味濃郁</p>
-                    <span class="product-origin">自家製作</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag">自家</span>
-                        🍝
-                    </div>
-                    <h3 class="product-name">十年陳皮麵</h3>
-                    <p class="product-desc">新會十年陳皮入麵，香氣獨特，滋養養生</p>
-                    <span class="product-origin">自家製作</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag">自家</span>
-                        🥢
-                    </div>
-                    <h3 class="product-name">上海麵</h3>
-                    <p class="product-desc">傳統上海風味，口感爽滑彈牙</p>
-                    <span class="product-origin">自家製作</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag">自家</span>
-                        🍲
-                    </div>
-                    <h3 class="product-name">油麵</h3>
-                    <p class="product-desc">香滑彈牙，適合拌炒皆宜</p>
-                    <span class="product-origin">自家製作</span>
-                </div>
-
-                <!-- 進口產品 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag import">進口</span>
-                        🍄
-                    </div>
-                    <h3 class="product-name">黑松露</h3>
-                    <p class="product-desc">意大利嚴選黑松露，香氣濃郁，提升料理層次</p>
-                    <span class="product-origin">意大利</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag import">進口</span>
-                        🫒
-                    </div>
-                    <h3 class="product-name">意大利陳醋</h3>
-                    <p class="product-desc">傳統陳年工藝，酸甜平衡，風味醇厚</p>
-                    <span class="product-origin">意大利</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag import">進口</span>
-                        🫗
-                    </div>
-                    <h3 class="product-name">高級橄欖油</h3>
-                    <p class="product-desc">意大利莊園冷壓初榨，果香清新</p>
-                    <span class="product-origin">意大利</span>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-image">
-                        <span class="product-tag import">進口</span>
-                        🌿
-                    </div>
-                    <h3 class="product-name">更多進口食材</h3>
-                    <p class="product-desc">持續引進歐美優質食材，詳情請聯絡查詢</p>
-                    <span class="product-origin">歐美地區</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="about-container">
-            <div class="about-image">🍜</div>
-            <div class="about-content">
-                <h2>傳承六十載<br>用心做好每一份麵</h2>
-                <p>
-                    祐興食品源自香港傳統粉麵廠，超過六十年歷史。我們堅持傳統工藝，同時不斷創新，研發墨魚汁麵、陳皮麵等特色產品。
-                </p>
-                <p>
-                    近年我們更引進意大利及歐美地區優質食材，包括黑松露、陳醋、橄欖油等，為客戶提供更多元的選擇。
-                </p>
-                <div class="about-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">60+</span>
-                        <span class="stat-label">年歷史</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">12+</span>
-                        <span class="stat-label">自家產品</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">歐美</span>
-                        <span class="stat-label">進口來源</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="contact-container">
-            <h2>立即查詢</h2>
-            <p>歡迎透過 WhatsApp 聯絡我們，查詢產品資訊或訂購事宜</p>
-            <button class="btn-whatsapp">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                WhatsApp 查詢
-            </button>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <span class="footer-logo">祐興食品</span>
-            <ul class="footer-links">
-                <li><a href="#products">產品</a></li>
-                <li><a href="#about">關於我們</a></li>
-                <li><a href="#contact">聯絡我們</a></li>
-            </ul>
-            <span class="footer-copy">© 2026 祐興食品 Yau Hing Food. All rights reserved.</span>
-        </div>
-    </footer>
-
-    <script>
-        // Tab switching
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+<nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><div class="nb"><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a></div></div></nav><section class="hr"><div class="hri"><div class="hc"><div class="bt">🍜 自家製 · 嚴選進口</div><h1 class="ht">傳承匠心<br><span>品味生活</span></h1><p class="hd">祐興食品專營自家乾麵及歐美進口食材，六十年傳統工藝，堅持為您呈獻最優質的麵食與調味料。</p><div class="hbs"><a href="#products" class="bp">探索產品</a><a href="#contact" class="bs">WhatsApp 查詢</a></div></div><div class="hv"><div class="hi"><div style="background:linear-gradient(135deg,#C8462B,#E07B3A);"><span>麵</span></div></div><div class="hb"><div class="hbi">🍜</div><div class="hbt">60+<small>年傳承</small></div></div><div class="hst"><div class="hs"><div class="hsn">56</div><div class="hsl">款產品</div></div><div class="hs"><div class="hsn" style="color:var(--a3)">39</div><div class="hsl">款有貨</div></div><div class="hs"><div class="hsn" style="color:var(--gold)">17</div><div class="hsl">款缺貨</div></div></div></div></div></section><section class="pr" id="products"><div class="pi"><div class="sh"><div class="sl">產品系列</div><h2 class="st">嚴選 · 品質 · 堅持</h2><p class="sd">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p></div><div class="ct"><button class="t-btn active" data-cat="全部">全部</button><button class="t-btn" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特式麵">特式麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="零售裝">零售裝</button><button class="t-btn" data-cat="罐頭">罐頭</button></div><div class="fb"><div class="ft"><button class="f-btn active" data-filter="all">全部</button><button class="f-btn" data-filter="in">只看有貨</button><button class="f-btn out" data-filter="out">只看缺貨</button></div><span class="rc" id="rc">56 款產品</span></div><div class="pg" id="pg"><div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#8B6914,#D4A843);"><span class="grad-ch">上海</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">上海麵 盒裝</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#C8A96E,#A0784A);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟幼麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#B8860B,#8B6508);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟粗麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#1C3030,#2F4F4F);"><span class="grad-ch">墨魚</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">墨魚汁粗麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#C8A200,#8B7500);"><span class="grad-ch">山藥</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">山藥粗麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#CD5C5C,#8B3A3A);"><span class="grad-ch">日式</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">日式拉麵 (盒裝)</h3><div class="p-price">HKD 15</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#4682B4,#2F5A7E);"><span class="grad-ch">水河</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">水河 (盒裝)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#CD853F,#A0522D);"><span class="grad-ch">油麵</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">油麵 (盒裝)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#DEB887,#D2B48C);"><span class="grad-ch">生幼</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">生幼麵 (盒裝)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#D2B48C,#BC9A6C);"><span class="grad-ch">生粗</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">生粗麵 (盒裝)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#B22222,#8B0000);"><span class="grad-ch">紅菜</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">紅菜頭麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#483D8B,#2E2B6B);"><span class="grad-ch">紫薯</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">紫薯粗麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#228B22,#006400);"><span class="grad-ch">菠菜</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">菠菜幼麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#CC3300,#992200);"><span class="grad-ch">蕃茄</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">蕃茄幼麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#FF4500,#CC3700);"><span class="grad-ch">蕃茄</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">蕃茄拉麵 (盒裝)</h3><div class="p-price">HKD 15</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#F5DEB3,#E8D1A0);"><span class="grad-ch">豆乳</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">豆乳幼麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card has-image" data-cat="特式麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_16.jpg" alt="冬陰功麵 (6個裝)" loading="lazy"></div><div class="p-info"><div class="p-cat">特式麵</div><h3 class="p-name">冬陰功麵 (6個裝)</h3><div class="p-price">HKD 70</div></div></div>
+<div class="p-card has-image" data-cat="特式麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_17.jpg" alt="墨汁龍蝦撈麵 (6個裝)" loading="lazy"></div><div class="p-info"><div class="p-cat">特式麵</div><h3 class="p-name">墨汁龍蝦撈麵 (6個裝)</h3><div class="p-price">HKD 70</div></div></div>
+<div class="p-card has-image" data-cat="特式麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_18.jpg" alt="海鮮麵 (6個裝)" loading="lazy"></div><div class="p-info"><div class="p-cat">特式麵</div><h3 class="p-name">海鮮麵 (6個裝)</h3><div class="p-price">HKD 70</div></div></div>
+<div class="p-card has-image" data-cat="特式麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_19.jpg" alt="超級菠菜雞湯麵 (6個裝)" loading="lazy"></div><div class="p-info"><div class="p-cat">特式麵</div><h3 class="p-name">超級菠菜雞湯麵 (6個裝)</h3><div class="p-price">HKD 70</div></div></div>
+<div class="p-card has-image" data-cat="特式麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_20.jpg" alt="魚蓉濃湯麵 (6個裝)" loading="lazy"></div><div class="p-info"><div class="p-cat">特式麵</div><h3 class="p-name">魚蓉濃湯麵 (6個裝)</h3><div class="p-price">HKD 70</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_21.jpg" alt="素纖麵5個+保溫壺套裝" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">素纖麵5個+保溫壺套裝</h3><div class="p-price">HKD 78</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">醬油裝</button><button class="pk-btn" data-pk="2">6麵裝</button></div><img src="images/經典蝦籽麵禮盒 醬油裝.jpg" alt="經典蝦籽麵禮盒" loading="lazy"><img src="images/經典蝦籽麵禮盒 6麵裝.jpg" alt="經典蝦籽麵禮盒" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">經典蝦籽麵禮盒</h3><div class="p-note">醬油裝 / 6麵裝</div><div class="p-price multi">HKD 88 (醬油裝) / HKD 88 (6麵裝)</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_23.jpg" alt="蝦子麵禮盒裝" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">蝦子麵禮盒裝</h3><div class="p-price">HKD 108</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">套裝</button><button class="pk-btn" data-pk="2">+保溫壺</button></div><img src="images/蝦籽麵+素纖麵(套裝).jpg" alt="蝦籽麵+素纖麵 (套裝)" loading="lazy"><img src="images/蝦籽麵+素纖麵(套裝)+保溫壺.jpg" alt="蝦籽麵+素纖麵 (套裝)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">蝦籽麵+素纖麵 (套裝)</h3><div class="p-note">+保溫壺 HKD 78</div><div class="p-price multi">HKD 68 (套裝) / HKD 78 (+保溫壺)</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_25.jpg" alt="蝦籽麵4隻+保溫壺套裝" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">蝦籽麵4隻+保溫壺套裝</h3><div class="p-price">HKD 88</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_26.jpg" alt="蝦籽麵雙重禮盒裝" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">蝦籽麵雙重禮盒裝</h3><div class="p-price">HKD 198</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_27.jpg" alt="陳皮鴨湯麵禮盒" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">陳皮鴨湯麵禮盒</h3><div class="p-price">HKD 108</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">醬油配蝦籽麵禮盒</button><button class="pk-btn" data-pk="2">蝦籽麵禮盒六個裝</button></div><img src="images/香港手信系列-蝦子麵套裝-醬油配蝦籽麵禮盒.jpg" alt="香港手信系列-蝦子麵套裝" loading="lazy"><img src="images/香港手信系列-蝦子麵套裝-蝦籽麵禮盒六個裝.jpg" alt="香港手信系列-蝦子麵套裝" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">香港手信系列-蝦子麵套裝</h3><div class="p-note">醬油 / 六個裝</div><div class="p-price multi">HKD 98 (醬油配蝦籽麵禮盒) / HKD 98 (蝦籽麵禮盒六個裝)</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_29.jpg" alt="鮑魚保溫壺收納套裝" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">鮑魚保溫壺收納套裝</h3><div class="p-price">HKD 88</div></div></div>
+<div class="p-card has-image" data-cat="禮盒套裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_30.jpg" alt="鮑魚禮盒" loading="lazy"></div><div class="p-info"><div class="p-cat">禮盒套裝</div><h3 class="p-name">鮑魚禮盒</h3><div class="p-price">HKD 168</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="罐頭" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">細罐</button><button class="pk-btn" data-pk="2">大罐</button></div><img src="images/鮑魚罐頭(細罐裝).jpg" alt="鮑魚罐頭" loading="lazy"><img src="images/飽魚(大罐裝).jpg" alt="鮑魚罐頭" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">罐頭</div><h3 class="p-name">鮑魚罐頭</h3><div class="p-note">細罐 HKD 28 / 大罐 HKD 80</div><div class="p-price multi">HKD 28 (細罐) / HKD 80 (大罐)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="罐頭" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">細罐×4</button><button class="pk-btn" data-pk="2">大罐×4</button></div><img src="images/四個鮑魚罐頭細罐裝.jpg" alt="鮑魚罐頭 (四罐優惠)" loading="lazy"><img src="images/四個鮑魚罐頭.jpg" alt="鮑魚罐頭 (四罐優惠)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">罐頭</div><h3 class="p-name">鮑魚罐頭 (四罐優惠)</h3><div class="p-note">細罐×4 HKD 100 / 大罐×4 HKD 300</div><div class="p-price multi">HKD 100 (細罐×4) / HKD 300 (大罐×4)</div></div></div>
+<div class="p-card has-image" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_33.jpg" alt="低鈉蝦籽麵 (幼麵) 6個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">低鈉蝦籽麵 (幼麵) 6個裝</h3><div class="p-price">HKD 60</div></div></div>
+<div class="p-card has-image" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_34.jpg" alt="低鈉蝦籽麵 (粗麵) 6個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">低鈉蝦籽麵 (粗麵) 6個裝</h3><div class="p-price">HKD 60</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/十年陳皮鴨湯麵.jpg" alt="十年陳皮鴨湯麵" loading="lazy"><img src="images/十年陳皮鴨湯麵6個裝.jpg" alt="十年陳皮鴨湯麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">十年陳皮鴨湯麵</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/古法大地魚蝦籽麵(幼).jpg" alt="古法大地魚蝦籽麵 (幼)" loading="lazy"><img src="images/古法大地魚蝦籽麵(幼)6個裝.jpg" alt="古法大地魚蝦籽麵 (幼)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">古法大地魚蝦籽麵 (幼)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/古法大地魚蝦籽麵(粗).jpg" alt="古法大地魚蝦籽麵 (粗)" loading="lazy"><img src="images/古法大地魚蝦籽麵(粗)6個裝.jpg" alt="古法大地魚蝦籽麵 (粗)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">古法大地魚蝦籽麵 (粗)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/瑤柱蝦籽麵 (幼).jpg" alt="瑤柱蝦籽麵 (幼)" loading="lazy"><img src="images/瑤柱蝦籽麵 (幼)6個裝.jpg" alt="瑤柱蝦籽麵 (幼)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">瑤柱蝦籽麵 (幼)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/瑤柱蝦籽麵 (粗).jpg" alt="瑤柱蝦籽麵 (粗)" loading="lazy"><img src="images/瑤柱蝦籽麵 (粗)6個裝.jpg" alt="瑤柱蝦籽麵 (粗)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">瑤柱蝦籽麵 (粗)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/鮑魚蝦籽麵(幼).jpg" alt="鮑魚蝦籽麵 (幼)" loading="lazy"><img src="images/鮑魚蝦籽麵(幼)6個裝.jpg" alt="鮑魚蝦籽麵 (幼)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">鮑魚蝦籽麵 (幼)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/鮑魚蝦籽麵(粗).jpg" alt="鮑魚蝦籽麵 (粗)" loading="lazy"><img src="images/鮑魚蝦籽麵(粗)6個裝.jpg" alt="鮑魚蝦籽麵 (粗)" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">鮑魚蝦籽麵 (粗)</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/黃金花膠海參蝦籽麵.jpg" alt="黃金花膠海參蝦籽麵" loading="lazy"><img src="images/黃金花膠海參蝦籽麵6個裝.jpg" alt="黃金花膠海參蝦籽麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">蝦籽麵</div><h3 class="p-name">黃金花膠海參蝦籽麵</h3><div class="p-note">單包 / 6個裝 HKD 80</div><div class="p-price multi">HKD 15 (單包) / HKD 80 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="醬汁配料" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">細樽裝</button><button class="pk-btn" data-pk="2">大樽裝</button></div><img src="images/秘製紅蔥油 細樽裝.jpg" alt="秘製紅蔥油" loading="lazy"><img src="images/秘製紅蔥油 大樽裝.jpg" alt="秘製紅蔥油" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">醬汁配料</div><h3 class="p-name">秘製紅蔥油</h3><div class="p-note">細樽 HKD 25 / 大樽 HKD 40</div><div class="p-price multi">HKD 25 (細樽裝) / HKD 40 (大樽裝)</div></div></div>
+<div class="p-card has-image" data-cat="醬汁配料" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_44.jpg" alt="秘製菌王醬" loading="lazy"></div><div class="p-info"><div class="p-cat">醬汁配料</div><h3 class="p-name">秘製菌王醬</h3><div class="p-price">HKD 40</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="醬汁配料" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">細樽裝</button><button class="pk-btn" data-pk="2">大樽裝</button></div><img src="images/秘製麻辣醬 細樽裝.jpg" alt="秘製麻辣醬" loading="lazy"><img src="images/秘製麻辣醬 大樽裝.jpg" alt="秘製麻辣醬" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">醬汁配料</div><h3 class="p-name">秘製麻辣醬</h3><div class="p-note">細樽 HKD 25 / 大樽 HKD 40</div><div class="p-price multi">HKD 25 (細樽裝) / HKD 40 (大樽裝)</div></div></div>
+<div class="p-card has-image" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_46.jpg" alt="五色素纖麵 5個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">五色素纖麵 5個裝</h3><div class="p-price">HKD 50</div></div></div>
+<div class="p-card has-image" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_47.jpg" alt="全蛋麵 (幼麵) 6個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">全蛋麵 (幼麵) 6個裝</h3><div class="p-price">HKD 60</div></div></div>
+<div class="p-card has-image" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_48.jpg" alt="全蛋麵 (粗麵) 6個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">全蛋麵 (粗麵) 6個裝</h3><div class="p-price">HKD 60</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/南瓜麵.jpg" alt="南瓜麵" loading="lazy"><img src="images/南瓜麵 5個裝.jpg" alt="南瓜麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">南瓜麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div>
+<div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#FF8C00,#CC7000);"><span class="grad-ch">南瓜</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">南瓜麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/意大利墨魚汁麵.jpg" alt="意大利墨魚汁麵" loading="lazy"><img src="images/意大利墨魚汁麵6個裝.jpg" alt="意大利墨魚汁麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">意大利墨魚汁麵</h3><div class="p-note">單包 HKD 12 / 6個裝 HKD 60</div><div class="p-price multi">HKD 12 (單包) / HKD 60 (6個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/紫薯麵.jpg" alt="紫薯麵" loading="lazy"><img src="images/紫薯麵 5個裝.jpg" alt="紫薯麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">紫薯麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/菠菜麵.jpg" alt="菠菜麵" loading="lazy"><img src="images/菠菜麵 5個裝.jpg" alt="菠菜麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">菠菜麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/蕃茄麵.jpg" alt="蕃茄麵" loading="lazy"><img src="images/蕃茄麵 5個裝.jpg" alt="蕃茄麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">蕃茄麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div>
+<div class="p-card has-image multi-pack" data-cat="零售裝" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/豆乳麵.jpg" alt="豆乳麵" loading="lazy"><img src="images/豆乳麵 5個裝.jpg" alt="豆乳麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">零售裝</div><h3 class="p-name">豆乳麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div></div></div></section><section class="ab" id="about"><div class="ai"><div class="aimg"><div style="background:linear-gradient(135deg,#F5EDE0,#D4A843);"><span>🍜</span></div><div class="abadge"><div class="abi">🏭</div><div class="abt">香港傳統<small>粉麵廠</small></div></div></div><div class="ac"><h2>傳承六十載<br>用心做好每一份麵</h2><p>祐興食品源自香港傳統粉麵廠，超過六十年歷史。我們堅持傳統工藝，同時不斷創新，研發墨魚汁麵、陳皮麵等特色產品。</p><p>近年我們更引進意大利及歐美地區優質食材，包括黑松露、陳醋、橄欖油等，為客戶提供更多元的選擇。</p><div class="ast"><div class="si"><span class="sn">60+</span><span class="slabel">年歷史</span></div><div class="si"><span class="sn">56</span><span class="slabel">款產品</span></div><div class="si"><span class="sn">39</span><span class="slabel">款有貨</span></div></div></div></div></section><section class="cnt" id="contact"><div class="ci"><h2>立即查詢</h2><p>歡迎透過 WhatsApp 聯絡我們，查詢產品資訊或訂購事宜</p><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="20" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp 查詢</a><div class="cdt"><div class="ci2">📍 香港</div><div class="ci2">📦 批發 · 零售</div><div class="ci2">🍜 自家製造</div></div></div></section><footer><div class="fi"><span class="flogo">祐興食品</span><ul class="fl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><span class="fc">© 2026 祐興食品 Yau Hing Food. All rights reserved.</span></div></footer><script>document.querySelectorAll('.ct .t-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.ct .t-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var cat=this.dataset.cat;document.querySelectorAll('.p-card').forEach(function(c){c.classList.toggle('hid',cat!=='全部'&&c.dataset.cat!==cat)});upd()}});document.querySelectorAll('.f-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.f-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var f=this.dataset.filter;document.querySelectorAll('.p-card').forEach(function(c){c.classList.toggle('hid',f!=='all'&&c.dataset.stock!==f)});upd()}});document.querySelectorAll('.pk-btn').forEach(function(b){b.onclick=function(e){e.stopPropagation();var sw=this.parentElement;sw.querySelectorAll('.pk-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var pk=this.dataset.pk;var card=this.closest('.p-card');var imgs=card.querySelectorAll('.p-img img');imgs.forEach(function(img,i){img.style.display=(i+1)==pk?'block':'none'});}});function upd(){document.getElementById('rc').textContent=document.querySelectorAll('.p-card:not(.hid)').length+' 款產品';}window.onscroll=function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>50)};document.querySelectorAll('a[href^="#"]').forEach(function(a){a.onclick=function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}});</script></body></html>
