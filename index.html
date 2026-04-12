@@ -188,9 +188,19 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 .user-menu-item:hover{background:var(--bg2)}
 .user-menu-item.danger{color:#e53935}
 .user-email{font-size:.72rem;color:var(--muted);padding:.4rem 1rem;word-break:break-all}
+.tier-badge{display:inline-flex;align-items:center;gap:.25rem;padding:.2rem .6rem;border-radius:50px;font-size:.7rem;font-weight:600;margin-left:.4rem}
+.tier-badge.bronze{background:linear-gradient(135deg,#CD7F32,#8B4513);color:white}
+.tier-badge.silver{background:linear-gradient(135deg,#C0C0C0,#808080);color:white}
+.tier-badge.gold{background:linear-gradient(135deg,#FFD700,#FFA500);color:white}
+.tier-display{padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--txt)}
+.tier-info{flex:1}
+.tier-name{font-weight:600;display:flex;align-items:center;gap:.3rem}
+.tier-desc{font-size:.72rem;color:var(--muted)}
+.discount-banner{padding:.6rem 1rem;background:linear-gradient(135deg,#FFF9E6,#FFF3CC);border-top:1px solid #F0D060;display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:#8B6914}
+.discount-banner svg{color:#D4A843;flex-shrink:0}
 </style>
 </head>
-<nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><div class="nb"><button class="cart-btn" id="cartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><span class="cart-badge" id="cartBadge">0</span></button><div class="nav-user" id="navUser"><button class="user-btn" id="userBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="userDisplayName">登入</span></button><div class="user-menu" id="userMenu"><div class="user-email" id="userEmail"></div><button class="user-menu-item" id="btnMyOrders">📦 我的訂單</button><button class="user-menu-item danger" id="btnLogout">🚪 登出</button></div></div><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a></div></div></nav><section class="hr"><div class="hri"><div class="hc"><div class="bt">🍜 自家製 · 嚴選進口</div><h1 class="ht">傳承匠心<br><span>品味生活</span></h1><p class="hd">祐興食品專營自家乾麵及歐美進口食材，六十年傳統工藝，堅持為您呈獻最優質的麵食與調味料。</p><div class="hbs"><a href="#products" class="bp">探索產品</a><a href="#contact" class="bs">WhatsApp 查詢</a></div></div><div class="hv"><div class="hi"><div style="background:linear-gradient(135deg,#C8462B,#E07B3A);"><span>麵</span></div></div><div class="hb"><div class="hbi">🍜</div><div class="hbt">60+<small>年傳承</small></div></div><div class="hst"><div class="hs"><div class="hsn">56</div><div class="hsl">款產品</div></div><div class="hs"><div class="hsn" style="color:var(--a3)">39</div><div class="hsl">款有貨</div></div><div class="hs"><div class="hsn" style="color:var(--gold)">17</div><div class="hsl">款缺貨</div></div></div></div></div></section><section class="pr" id="products"><div class="pi"><div class="sh"><div class="sl">產品系列</div><h2 class="st">嚴選 · 品質 · 堅持</h2><p class="sd">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p></div><div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特式麵">特式麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="零售裝">零售裝</button><button class="t-btn" data-cat="罐頭">罐頭</button></div><div class="fb"><div class="ft"><button class="f-btn" data-filter="all">全部</button><button class="f-btn active" data-filter="in">只看有貨</button><button class="f-btn out" data-filter="out">只看缺貨</button></div><span class="rc" id="rc">56 款產品</span></div><div class="pg" id="pg"><div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#8B6914,#D4A843);"><span class="grad-ch">上海</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">上海麵 盒裝</h3><div class="p-price">HKD 10</div></div></div>
+<nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><div class="nb"><button class="cart-btn" id="cartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><span class="cart-badge" id="cartBadge">0</span></button><div class="nav-user" id="navUser"><button class="user-btn" id="userBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="userDisplayName">登入</span><span id="tierBadge"></span></button><div class="user-menu" id="userMenu"><div class="tier-display" id="tierDisplay" style="display:none"><div class="tier-info"><div class="tier-name" id="tierName"></div><div class="tier-desc" id="tierDesc"></div></div></div><div class="discount-banner" id="discountBanner" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><span id="discountText"></span></div><div class="user-email" id="userEmail"></div><button class="user-menu-item" id="btnMyOrders">📦 我的訂單</button><button class="user-menu-item danger" id="btnLogout">🚪 登出</button></div></div><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a></div></div></nav><section class="hr"><div class="hri"><div class="hc"><div class="bt">🍜 自家製 · 嚴選進口</div><h1 class="ht">傳承匠心<br><span>品味生活</span></h1><p class="hd">祐興食品專營自家乾麵及歐美進口食材，六十年傳統工藝，堅持為您呈獻最優質的麵食與調味料。</p><div class="hbs"><a href="#products" class="bp">探索產品</a><a href="#contact" class="bs">WhatsApp 查詢</a></div></div><div class="hv"><div class="hi"><div style="background:linear-gradient(135deg,#C8462B,#E07B3A);"><span>麵</span></div></div><div class="hb"><div class="hbi">🍜</div><div class="hbt">60+<small>年傳承</small></div></div><div class="hst"><div class="hs"><div class="hsn">56</div><div class="hsl">款產品</div></div><div class="hs"><div class="hsn" style="color:var(--a3)">39</div><div class="hsl">款有貨</div></div><div class="hs"><div class="hsn" style="color:var(--gold)">17</div><div class="hsl">款缺貨</div></div></div></div></div></section><section class="pr" id="products"><div class="pi"><div class="sh"><div class="sl">產品系列</div><h2 class="st">嚴選 · 品質 · 堅持</h2><p class="sd">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p></div><div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特式麵">特式麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="零售裝">零售裝</button><button class="t-btn" data-cat="罐頭">罐頭</button></div><div class="fb"><div class="ft"><button class="f-btn" data-filter="all">全部</button><button class="f-btn active" data-filter="in">只看有貨</button><button class="f-btn out" data-filter="out">只看缺貨</button></div><span class="rc" id="rc">56 款產品</span></div><div class="pg" id="pg"><div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#8B6914,#D4A843);"><span class="grad-ch">上海</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">上海麵 盒裝</h3><div class="p-price">HKD 10</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#C8A96E,#A0784A);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟幼麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#B8860B,#8B6508);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟粗麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#1C3030,#2F4F4F);"><span class="grad-ch">墨魚</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">墨魚汁粗麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
@@ -250,7 +260,7 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <div class="cart-drawer" id="cartDrawer">
 <div class="cart-header"><h3 class="cart-title">🛒 購物車</h3><div class="cart-header-btns"><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home">🏠 返回首頁</a><button class="cart-close" id="cartClose">×</button></div></div>
 <div class="cart-items" id="cartItems"><div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><p>購物車仲空緊<br>去揀啲嘢啦！</p></div></div>
-<div class="cart-footer"><div class="cart-total"><span class="cart-total-label">總額</span><span class="cart-total-amount" id="cartTotal">HKD 0</span></div><button class="cart-checkout" id="cartCheckout"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> WhatsApp 落單</button><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home-btn">🏠 返回首頁</a></div>
+<div class="cart-footer"><div class="cart-total"><span class="cart-total-label">總額</span><span class="cart-total-amount" id="cartTotal">HKD 0</span></div><div class="tier-status-bar" id="tierStatusBar" style="display:none;padding:.5rem .8rem;background:var(--bg2);border-radius:8px;margin-bottom:.8rem;font-size:.82rem;color:var(--txt);display:flex;align-items:center;gap:.5rem"></div><button class="cart-checkout" id="cartCheckout"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> WhatsApp 落單</button><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home-btn">🏠 返回首頁</a></div>
 </div>
 <div class="auth-modal" id="authModal">
 <div class="auth-box">
@@ -300,14 +310,30 @@ function renderCart(){
     totalEl.textContent='HKD 0';
     return;
   }
-  var total=0,html='';
+  var total=0,totalOrig=0,html='';
   cart.forEach(function(item,idx){
-    var itemTotal=item.price*item.qty;
-    total+=itemTotal;
-    html+='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'')+'<div class="cart-item-price">HKD '+item.price+'</div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>';
+    var orig=item.price*item.qty;
+    var disc=currentUserTier&&currentUserTier.discount<1?Math.round(orig*(1-currentUserTier.discount)):0;
+    var sub=orig-disc;
+    total+=sub;
+    totalOrig+=orig;
+    html+='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'')+'<div class="cart-item-price"'+(disc>0?' style="color:var(--a3);text-decoration:line-through;font-size:.78rem"':'')+'>HKD '+orig+'</div>'+(disc>0?'<div class="cart-item-price" style="color:var(--a3)">HKD '+sub+' ('+Math.round((1-currentUserTier.discount)*100)+'折)</div>':'')+'<div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>';
   });
   itemsEl.innerHTML=html;
-  totalEl.textContent='HKD '+total;
+  if(currentUserTier&&currentUserTier.discount<1){
+    totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--muted);font-size:.9rem">HKD '+totalOrig+'</span> <span style="color:var(--a3)">HKD '+total+'</span>';
+  }else{
+    totalEl.textContent='HKD '+total;
+  }
+  // Tier status bar
+  var tierBarEl=document.getElementById('tierStatusBar');
+  if(currentUserTier){
+    var info=calcTier(currentUserTier&&currentUserTier.totalSpend?currentUserTier.totalSpend:0);
+    tierBarEl.innerHTML=info.tier.emoji+' '+info.tier.name+(info.next?'，消費滿 HK$'+info.next.minSpend+' 可升級 → '+info.next.emoji+' '+info.next.name:'');
+    tierBarEl.style.display='flex';
+  }else{
+    tierBarEl.style.display='none';
+  }
 }
 window.addToCart=function(name,price,variant,img){
   var existing=cart.find(function(i){return i.name===name&&i.variant===variant});
@@ -334,9 +360,22 @@ document.getElementById('cartOverlay').onclick=function(){
 };
 document.getElementById('cartCheckout').onclick=function(){
   if(cart.length===0){alert('購物車係空既！');return;}
-  var msg='🛒 祐興食品訂單\n\n',total=0;
-  cart.forEach(function(i){var sub=i.price*i.qty;total+=sub;msg+='• '+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+' - HKD '+sub+'\n';});
-  msg+='\n總額：HKD '+total+'\n\n請確認訂單，謝謝！';
+  var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
+  var msg='🛒 祐興食品訂單\n\n',total=0,totalDiscount=0;
+  cart.forEach(function(i){
+    var orig=i.price*i.qty;
+    var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
+    var sub=orig-disc;
+    total+=orig;
+    totalDiscount+=disc;
+    msg+='• '+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+' - HKD '+sub+(disc>0?' (原:'+orig+')':'')+'\n';
+  });
+  if(discountTier){
+    msg+='\n🥇 會員：'+discountTier.emoji+' '+discountTier.name+' - '+Math.round((1-discountTier.discount)*100)+'折\n';
+  }
+  msg+='\n總額：HKD '+(total-totalDiscount)+'';
+  if(totalDiscount>0)msg+=' (慬 HK$'+totalDiscount+')';
+  msg+='\n\n請確認訂單，謝謝！';
   window.open('https://wa.me/85254987070?text='+encodeURIComponent(msg),'_blank');
 };
 renderCart();
@@ -424,9 +463,31 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   a.onclick=function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});};
 });
 
+// ============ TIER SYSTEM ============
+var TIERS=[
+  {id:'bronze',name:'普通會員',discount:1.0,minSpend:0,emoji:'🥉',desc:'註冊即有'},
+  {id:'silver',name:'VIP 會員',discount:0.95,minSpend:500,emoji:'🥈',desc:'消費滿 HK$500，95折'},
+  {id:'gold',name:'鑽石會員',discount:0.9,minSpend:1000,emoji:'🥇',desc:'消費滿 HK$1,000，9折'}
+];
+function getTier(spend){
+  if(spend>=1000)return TIERS[2];
+  if(spend>=500)return TIERS[1];
+  return TIERS[0];
+}
+function calcTier(spend){
+  var tier=getTier(spend);
+  var next=tier===TIERS[2]?null:(tier===TIERS[1]?TIERS[2]:TIERS[1]);
+  var remaining=next?'，再消費 HK$'+(next.minSpend-spend)+' 可升級':'，已係最高等級';
+  return{tier:tier,next:next,remaining:remaining};
+}
+function applyDiscount(price,tier){
+  return Math.round(price*tier.discount);
+}
+
 // ============ FIREBASE AUTH ============
 if(firebaseReady&&auth&&db){
   var isLoginMode=true;
+  var currentUserTier=null;
   var authModal=document.getElementById('authModal');
   var authForm=document.getElementById('authForm');
   var authEmail=document.getElementById('authEmail');
@@ -492,7 +553,7 @@ if(firebaseReady&&auth&&db){
       if(!name){authError.textContent='請填寫姓名';return;}
       authSubmit.disabled=true;authSubmit.textContent='註冊中...';
       auth.createUserWithEmailAndPassword(email,pwd).then(function(cred){
-        return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',tierId:'bronze',totalSpend:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
       }).then(function(){
         authSuccess.textContent='註冊成功！🎉';
         setTimeout(function(){
@@ -511,13 +572,58 @@ if(firebaseReady&&auth&&db){
   auth.onAuthStateChanged(function(user){
     var displayName=document.getElementById('userDisplayName');
     var emailEl=document.getElementById('userEmail');
+    var tierBadgeEl=document.getElementById('tierBadge');
+    var tierDisplayEl=document.getElementById('tierDisplay');
+    var tierNameEl=document.getElementById('tierName');
+    var tierDescEl=document.getElementById('tierDesc');
+    var discountBannerEl=document.getElementById('discountBanner');
+    var discountTextEl=document.getElementById('discountText');
     if(user){
       db.collection('users').doc(user.uid).get().then(function(doc){
-        if(doc.exists){var data=doc.data();displayName.textContent=data.name||user.email;emailEl.textContent=user.email;}
-        else{displayName.textContent=user.email;emailEl.textContent=user.email;}
-      }).catch(function(){displayName.textContent=user.email;emailEl.textContent=user.email;});
+        if(doc.exists){
+          var data=doc.data();
+          displayName.textContent=data.name||user.email;
+          emailEl.textContent=user.email;
+          var spend=data.totalSpend||0;
+          var info=calcTier(spend);
+          currentUserTier=info.tier;
+          // Nav badge
+          tierBadgeEl.innerHTML='<span class="tier-badge '+info.tier.id+'">'+info.tier.emoji+'</span>';
+          // Menu tier info
+          tierDisplayEl.style.display='flex';
+          tierNameEl.innerHTML=info.tier.emoji+' '+info.tier.name;
+          tierDescEl.textContent=info.tier.desc+info.remaining;
+          // Discount banner
+          if(info.tier.discount<1){
+            discountBannerEl.style.display='flex';
+            discountTextEl.textContent=info.tier.emoji+' '+info.tier.name+'，'+Math.round((1-info.tier.discount)*100)+'折優惠已套用';
+          }else{
+            discountBannerEl.style.display='none';
+          }
+        }else{
+          displayName.textContent=user.email;
+          emailEl.textContent=user.email;
+          tierBadgeEl.innerHTML='';
+          tierDisplayEl.style.display='none';
+          discountBannerEl.style.display='none';
+        }
+      }).catch(function(){
+        displayName.textContent=user.email;
+        emailEl.textContent=user.email;
+        tierBadgeEl.innerHTML='';
+        tierDisplayEl.style.display='none';
+        discountBannerEl.style.display='none';
+        currentUserTier=null;
+      });
       document.getElementById('btnMyOrders').style.display='flex';
-    }else{displayName.textContent='登入';emailEl.textContent='';}
+    }else{
+      displayName.textContent='登入';
+      emailEl.textContent='';
+      tierBadgeEl.innerHTML='';
+      tierDisplayEl.style.display='none';
+      discountBannerEl.style.display='none';
+      currentUserTier=null;
+    }
   });
   document.getElementById('btnMyOrders').onclick=function(){alert('訂單功能開發中，敬請期待！');};
 }
