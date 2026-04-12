@@ -629,9 +629,60 @@ deliveryConfirm.onclick=async function(){
       }
     });
   }
-  window.open('https://wa.me/85254987070?text='+encodeURIComponent(msg),'_blank');
+  // Show payment modal instead of direct WhatsApp
+  window.lastOrderMsg=msg;
+  window.lastOrderId=orderId;
+  window.lastOrderTotal=total-totalDiscount;
+  showPaymentModal(orderId,total-totalDiscount,msg);
 };
 renderCart();
+
+// ============ PAYMENT MODAL ============
+var paymentModal=document.getElementById('paymentModal');
+var paymentClose=document.getElementById('paymentClose');
+var paymentOrderId=document.getElementById('paymentOrderId');
+var paymentAmount=document.getElementById('paymentAmount');
+var fpsNumber=document.getElementById('fpsNumber');
+var copyFps=document.getElementById('copyFps');
+var paymentConfirm=document.getElementById('paymentConfirm');
+var paymentWhatsapp=document.getElementById('paymentWhatsapp');
+
+function showPaymentModal(orderId,amount,msg){
+  paymentOrderId.textContent='#'+orderId;
+  paymentAmount.textContent='HK$'+amount;
+  paymentModal.classList.add('open');
+  window.lastOrderMsg=msg;
+}
+paymentClose.onclick=function(){paymentModal.classList.remove('open');};
+paymentModal.onclick=function(e){if(e.target===paymentModal)paymentModal.classList.remove('open');};
+
+copyFps.onclick=function(){
+  navigator.clipboard.writeText('161055256').then(function(){
+    copyFps.textContent='✓ 已複製';
+    setTimeout(function(){copyFps.textContent='複製';},2000);
+  });
+};
+
+paymentConfirm.onclick=function(){
+  // Update order status to 'paid' in Firestore
+  if(window.lastOrderId&&db){
+    db.collection('orders').where('orderId','==',window.lastOrderId).get().then(function(snap){
+      if(!snap.empty){
+        snap.forEach(function(doc){
+          db.collection('orders').doc(doc.id).update({status:'paid'});
+        });
+      }
+    });
+  }
+  paymentModal.classList.remove('open');
+  alert('付款確認已提交！我們會盡快處理您的訂單。');
+};
+
+paymentWhatsapp.onclick=function(){
+  if(window.lastOrderMsg){
+    window.open('https://wa.me/85254987070?text='+encodeURIComponent(window.lastOrderMsg),'_blank');
+  }
+};
 
 // ============ PRODUCT FILTERS ============
 function upd(){
@@ -1018,5 +1069,58 @@ async function saveOrder(orderData){
 .order-detail-row span:first-child{color:var(--muted)}
 .order-detail-products{margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--bd)}
 .order-detail-product{padding:.3rem 0;font-size:.8rem;display:flex;justify-content:space-between}
+</style>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+  <div class="modal-bg" id="paymentBg"></div>
+  <div class="modal-card payment-card">
+    <div class="modal-head">
+      <span>💳 付款資訊</span>
+      <button class="modal-x" id="paymentClose">×</button>
+    </div>
+    <div class="payment-content">
+      <div class="payment-order-id">訂單編號：<span id="paymentOrderId">#YH00000000</span></div>
+      <div class="payment-amount">應付金額：<span id="paymentAmount">HK$0</span></div>
+      <div class="payment-divider"></div>
+      <div class="payment-title">🏦 轉數快 FPS</div>
+      <div class="payment-shop">祐興粉麵廠有限公司</div>
+      <div class="fps-box">
+        <div class="fps-label">轉數快號碼</div>
+        <div class="fps-number" id="fpsNumber">161055256</div>
+        <button class="copy-btn" id="copyFps">複製</button>
+      </div>
+      <div class="payment-notice">
+        <div>⚠️ 轉賬時請備註訂單編號</div>
+        <div>完成轉賬後點擊「已付款」確認</div>
+      </div>
+      <div class="payment-actions">
+        <button class="payment-btn confirm" id="paymentConfirm">✓ 已付款</button>
+        <button class="payment-btn whatsapp" id="paymentWhatsapp">📱 通知客服</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.payment-card{max-width:400px}
+.payment-content{padding:1.5rem}
+.payment-order-id{font-size:.9rem;color:var(--muted);margin-bottom:.5rem}
+.payment-amount{font-size:1.3rem;font-weight:700;color:var(--a);margin-bottom:1rem}
+.payment-divider{height:1px;background:var(--bd);margin:1rem 0}
+.payment-title{font-size:1.1rem;font-weight:600;margin-bottom:.5rem}
+.payment-shop{font-size:.85rem;color:var(--muted);margin-bottom:1rem}
+.fps-box{background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:12px;padding:1.2rem;text-align:center;margin-bottom:1rem}
+.fps-label{font-size:.75rem;color:var(--muted);margin-bottom:.3rem}
+.fps-number{font-size:2rem;font-weight:700;color:#1565C0;letter-spacing:.1em;font-family:monospace}
+.copy-btn{margin-top:.8rem;padding:.5rem 1.5rem;background:#1565C0;color:white;border:none;border-radius:8px;cursor:pointer;font-size:.85rem;transition:var(--tr)}
+.copy-btn:hover{background:#0D47A1}
+.payment-notice{background:#FFF3E0;border-radius:8px;padding:.8rem;font-size:.8rem;color:#E65100;margin-bottom:1rem}
+.payment-notice div{margin:.2rem 0}
+.payment-actions{display:flex;gap:.8rem}
+.payment-btn{flex:1;padding:.8rem;border:none;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:600;transition:var(--tr)}
+.payment-btn.confirm{background:linear-gradient(135deg,#4CAF50,#2E7D32);color:white}
+.payment-btn.confirm:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,175,80,.3)}
+.payment-btn.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);color:white}
+.payment-btn.whatsapp:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,211,102,.3)}
 </style>
 </body></html>
