@@ -213,6 +213,12 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 .delivery-confirm-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--a2),var(--a3));color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:1rem;transition:transform .2s}
 .delivery-confirm-btn:hover{transform:translateY(-2px)}
 .delivery-confirm-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none}
+/* Points Display */
+.points-display{display:flex;align-items:center;gap:.8rem;padding:.8rem;background:linear-gradient(135deg,rgba(212,168,67,0.1),rgba(212,168,67,0.05));border-radius:10px;margin:.5rem 0}
+.points-icon{font-size:1.8rem}
+.points-info{flex:1}
+.points-label{font-size:.75rem;color:var(--muted)}
+.points-value{font-size:1.3rem;font-weight:700;color:var(--a2)}
 .member-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .7rem;background:linear-gradient(135deg,var(--gold),#D4A843);color:white;border-radius:50px;font-size:.7rem;font-weight:600;margin-left:.5rem}
 .nav-user{display:flex;align-items:center;gap:.5rem}
 .user-btn{background:none;border:none;cursor:pointer;padding:.4rem;border-radius:50%;transition:var(--tr);display:flex;align-items:center;gap:.3rem;color:var(--txt);font-size:.82rem;font-family:'Noto Sans TC',sans-serif}
@@ -235,7 +241,7 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 .discount-banner svg{color:#D4A843;flex-shrink:0}
 </style>
 </head>
-<nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><div class="nb"><button class="cart-btn" id="cartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><span class="cart-badge" id="cartBadge">0</span></button><div class="nav-user" id="navUser"><button class="user-btn" id="userBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="userDisplayName">登入</span><span id="tierBadge"></span></button><div class="user-menu" id="userMenu"><div class="tier-display" id="tierDisplay" style="display:none"><div class="tier-info"><div class="tier-name" id="tierName"></div><div class="tier-desc" id="tierDesc"></div></div></div><div class="discount-banner" id="discountBanner" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><span id="discountText"></span></div><div class="user-email" id="userEmail"></div><button class="user-menu-item" id="btnMyOrders">📦 我的訂單</button><button class="user-menu-item danger" id="btnLogout">🚪 登出</button></div></div><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a></div></div></nav><section class="hr"><div class="hri"><div class="hc"><div class="bt">🍜 自家製 · 嚴選進口</div><h1 class="ht">傳承匠心<br><span>品味生活</span></h1><p class="hd">祐興食品專營自家乾麵及歐美進口食材，六十年傳統工藝，堅持為您呈獻最優質的麵食與調味料。</p><div class="hbs"><a href="#products" class="bp">探索產品</a><a href="#contact" class="bs">WhatsApp 查詢</a></div></div><div class="hv"><div class="hi"><div style="background:linear-gradient(135deg,#C8462B,#E07B3A);"><span>麵</span></div></div><div class="hb"><div class="hbi">🍜</div><div class="hbt">60+<small>年傳承</small></div></div><div class="hst"><div class="hs"><div class="hsn">56</div><div class="hsl">款產品</div></div><div class="hs"><div class="hsn" style="color:var(--a3)">39</div><div class="hsl">款有貨</div></div><div class="hs"><div class="hsn" style="color:var(--gold)">17</div><div class="hsl">款缺貨</div></div></div></div></div></section><section class="pr" id="products"><div class="pi"><div class="sh"><div class="sl">產品系列</div><h2 class="st">嚴選 · 品質 · 堅持</h2><p class="sd">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p></div><div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特式麵">特式麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="零售裝">零售裝</button><button class="t-btn" data-cat="罐頭">罐頭</button></div><div class="fb"><div class="ft"><button class="f-btn" data-filter="all">全部</button><button class="f-btn active" data-filter="in">只看有貨</button><button class="f-btn out" data-filter="out">只看缺貨</button></div><span class="rc" id="rc">56 款產品</span></div><div class="pg" id="pg"><div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#8B6914,#D4A843);"><span class="grad-ch">上海</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">上海麵 盒裝</h3><div class="p-price">HKD 10</div></div></div>
+<nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a href="#products">產品</a></li><li><a href="#about">關於我們</a></li><li><a href="#contact">聯絡我們</a></li></ul><div class="nb"><button class="cart-btn" id="cartBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><span class="cart-badge" id="cartBadge">0</span></button><div class="nav-user" id="navUser"><button class="user-btn" id="userBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span id="userDisplayName">登入</span><span id="tierBadge"></span></button><div class="user-menu" id="userMenu"><div class="tier-display" id="tierDisplay" style="display:none"><div class="tier-info"><div class="tier-name" id="tierName"></div><div class="tier-desc" id="tierDesc"></div></div></div><div class="discount-banner" id="discountBanner" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><span id="discountText"></span></div><div class="points-display" id="pointsDisplay" style="display:none"><div class="points-icon">⭐</div><div class="points-info"><div class="points-label">累積積分</div><div class="points-value" id="pointsValue">0</div></div></div><div class="user-email" id="userEmail"></div><button class="user-menu-item" id="btnMyOrders">📦 我的訂單</button><button class="user-menu-item danger" id="btnLogout">🚪 登出</button></div></div><a href="https://wa.me/85254987070" class="bwa" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a></div></div></nav><section class="hr"><div class="hri"><div class="hc"><div class="bt">🍜 自家製 · 嚴選進口</div><h1 class="ht">傳承匠心<br><span>品味生活</span></h1><p class="hd">祐興食品專營自家乾麵及歐美進口食材，六十年傳統工藝，堅持為您呈獻最優質的麵食與調味料。</p><div class="hbs"><a href="#products" class="bp">探索產品</a><a href="#contact" class="bs">WhatsApp 查詢</a></div></div><div class="hv"><div class="hi"><div style="background:linear-gradient(135deg,#C8462B,#E07B3A);"><span>麵</span></div></div><div class="hb"><div class="hbi">🍜</div><div class="hbt">60+<small>年傳承</small></div></div><div class="hst"><div class="hs"><div class="hsn">56</div><div class="hsl">款產品</div></div><div class="hs"><div class="hsn" style="color:var(--a3)">39</div><div class="hsl">款有貨</div></div><div class="hs"><div class="hsn" style="color:var(--gold)">17</div><div class="hsl">款缺貨</div></div></div></div></div></section><section class="pr" id="products"><div class="pi"><div class="sh"><div class="sl">產品系列</div><h2 class="st">嚴選 · 品質 · 堅持</h2><p class="sd">自家乾麵傳承傳統工藝，進口食材嚴選歐美優質產地</p></div><div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特式麵">特式麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="零售裝">零售裝</button><button class="t-btn" data-cat="罐頭">罐頭</button></div><div class="fb"><div class="ft"><button class="f-btn" data-filter="all">全部</button><button class="f-btn active" data-filter="in">只看有貨</button><button class="f-btn out" data-filter="out">只看缺貨</button></div><span class="rc" id="rc">56 款產品</span></div><div class="pg" id="pg"><div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#8B6914,#D4A843);"><span class="grad-ch">上海</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">上海麵 盒裝</h3><div class="p-price">HKD 10</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#C8A96E,#A0784A);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟幼麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#B8860B,#8B6508);"><span class="grad-ch">半熟</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">半熟粗麵 (乾) 5個</h3><div class="p-price">HKD 50</div></div></div>
 <div class="p-card no-image" data-cat="手工麵" data-stock="out"><div class="p-img"><span class="s-badge out">缺貨</span><div class="grad-card" style="background:linear-gradient(135deg,#1C3030,#2F4F4F);"><span class="grad-ch">墨魚</span></div></div><div class="p-info"><div class="p-cat">手工麵</div><h3 class="p-name">墨魚汁粗麵 (手工麵)</h3><div class="p-price">HKD 10</div></div></div>
@@ -527,6 +533,23 @@ deliveryConfirm.onclick=function(){
   msg+='\n請確認訂單，謝謝！';
   // Close modal and open WhatsApp
   deliveryModal.classList.remove('open');
+  // Update user points in Firestore (HK$1 = 1 point)
+  var user=auth.currentUser;
+  if(user&&db){
+    var pointsEarned=cartOrderTotal; // HK$1 = 1 point
+    var userRef=db.collection('users').doc(user.uid);
+    userRef.get().then(function(doc){
+      if(doc.exists){
+        var currentPoints=doc.data().points||0;
+        var newPoints=currentPoints+pointsEarned;
+        userRef.update({points:newPoints}).then(function(){
+          console.log('Points updated: +'+pointsEarned+', total: '+newPoints);
+          pointsValueEl.textContent=newPoints;
+          pointsDisplayEl.style.display='flex';
+        }).catch(function(e){console.error('Failed to update points:',e);});
+      }
+    });
+  }
   window.open('https://wa.me/85254987070?text='+encodeURIComponent(msg),'_blank');
 };
 renderCart();
@@ -704,7 +727,7 @@ if(firebaseReady&&auth&&db){
       if(!name){authError.textContent='請填寫姓名';return;}
       authSubmit.disabled=true;authSubmit.textContent='註冊中...';
       auth.createUserWithEmailAndPassword(email,pwd).then(function(cred){
-        return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',tierId:'bronze',totalSpend:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+        return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',tierId:'bronze',totalSpend:0,points:0,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
       }).then(function(){
         authSuccess.textContent='註冊成功！🎉';
         setTimeout(function(){
@@ -729,6 +752,8 @@ if(firebaseReady&&auth&&db){
     var tierDescEl=document.getElementById('tierDesc');
     var discountBannerEl=document.getElementById('discountBanner');
     var discountTextEl=document.getElementById('discountText');
+    var pointsDisplayEl=document.getElementById('pointsDisplay');
+    var pointsValueEl=document.getElementById('pointsValue');
     if(user){
       db.collection('users').doc(user.uid).get().then(function(doc){
         if(doc.exists){
@@ -751,6 +776,10 @@ if(firebaseReady&&auth&&db){
           }else{
             discountBannerEl.style.display='none';
           }
+          // Points display
+          var points=data.points||0;
+          pointsValueEl.textContent=points;
+          pointsDisplayEl.style.display='flex';
         }else{
           displayName.textContent=user.email;
           emailEl.textContent=user.email;
@@ -773,6 +802,7 @@ if(firebaseReady&&auth&&db){
       tierBadgeEl.innerHTML='';
       tierDisplayEl.style.display='none';
       discountBannerEl.style.display='none';
+      pointsDisplayEl.style.display='none';
       currentUserTier=null;
     }
   });
