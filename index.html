@@ -605,7 +605,7 @@ deliveryConfirm.onclick=async function(){
     sfAddress:deliveryMethod==='sf'?document.getElementById('sfAddress').value.trim():'',
     freeShipping:cartOrderTotal>=300,
     status:'pending',
-    createdAt:new Date()
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
   };
   saveOrder(orderToSave);
   // Clear cart
@@ -904,9 +904,9 @@ function openOrdersModal(){
 }
 
 function loadOrders(uid){
-  if(!db)return;
+  if(!db){ordersList.innerHTML='<div class="orders-empty"><div style="font-size:2rem">❌</div><div>資料庫未連線</div></div>';return;}
   ordersList.innerHTML='<div class="orders-empty"><div style="font-size:2rem">⏳</div><div>載入中...</div></div>';
-  db.collection('orders').where('uid','==',uid).orderBy('createdAt','desc').limit(20).get().then(function(snap){
+  db.collection('orders').where('uid','==',uid).limit(20).get().then(function(snap){
     if(snap.empty){
       ordersList.innerHTML='<div class="orders-empty"><div style="font-size:3rem;margin-bottom:1rem">📭</div><div>暫無訂單記錄</div><div style="font-size:.8rem;color:var(--muted);margin-top:.5rem">落單後會顯示在這裡</div></div>';
       return;
@@ -925,7 +925,8 @@ function loadOrders(uid){
       var itemsPreview=o.items?o.items.slice(0,2).map(function(i){return i.name;}).join('、'):'';
       if(o.items&&o.items.length>2)itemsPreview+=' 等'+o.items.length+'件';
       var dateStr='';
-      if(o.createdAt){var d=o.createdAt.toDate();dateStr=d.toLocaleDateString('zh-TW')+' '+d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});}
+      if(o.createdAt&&o.createdAt.toDate){var d=o.createdAt.toDate();dateStr=d.toLocaleDateString('zh-TW')+' '+d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});}
+      else if(o.createdAt){dateStr='剛剛';}
       html+='<div class="order-item" onclick="toggleOrderDetail(\''+doc.id+'\')">';
       html+='<div class="order-head">';
       html+='<span class="order-id">#'+o.orderId+'</span>';
