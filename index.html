@@ -500,9 +500,11 @@ deliveryConfirm.onclick=function(){
       return;
     }
   }
+  // Generate order ID
+  var orderId='YH'+Date.now().toString().slice(-8);
   // Build WhatsApp message
   var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
-  var msg='🛒 祐興食品訂單\n\n',total=0,totalDiscount=0;
+  var msg='🛒 祐興食品訂單\n訂單編號：#'+orderId+'\n\n',total=0,totalDiscount=0;
   cart.forEach(function(i){
     var orig=i.price*i.qty;
     var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
