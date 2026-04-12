@@ -178,6 +178,41 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 .auth-success{color:var(--a3);font-size:.8rem;margin-top:.5rem;min-height:1.2rem}
 .auth-switch{font-size:.82rem;color:var(--muted);text-align:center;margin-top:1rem}
 .auth-switch a{color:var(--a);cursor:pointer;text-decoration:underline;font-weight:500}
+/* Delivery Modal */
+.delivery-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:2000}
+.delivery-modal.open{display:flex}
+.delivery-box{background:var(--bg);border-radius:16px;padding:1.5rem;width:90%;max-width:420px;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.2)}
+.delivery-close{position:absolute;top:.8rem;right:.8rem;background:none;border:none;font-size:1.5rem;color:var(--muted);cursor:pointer;line-height:1}
+.delivery-close:hover{color:var(--txt)}
+.delivery-title{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;color:var(--txt)}
+.delivery-subtitle{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+.delivery-option{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.8rem;cursor:pointer;transition:all .2s}
+.delivery-option:hover{border-color:var(--a2)}
+.delivery-option.selected{border-color:var(--a2);background:linear-gradient(135deg,rgba(212,168,67,0.05),rgba(212,168,67,0.1))}
+.delivery-option-header{display:flex;align-items:center;gap:.5rem;font-weight:600;color:var(--txt);margin-bottom:.3rem}
+.delivery-option-desc{font-size:.82rem;color:var(--muted)}
+.delivery-option-badge{font-size:.7rem;padding:.2rem .5rem;border-radius:50px;background:var(--a3);color:white}
+.delivery-shops{margin-top:.8rem;padding:.8rem;background:var(--bg);border-radius:8px}
+.delivery-shop{display:flex;align-items:center;gap:.5rem;padding:.5rem;margin-bottom:.5rem;border-radius:8px;cursor:pointer;transition:background .2s}
+.delivery-shop:hover{background:var(--bg2)}
+.delivery-shop.selected{background:linear-gradient(135deg,rgba(212,168,67,0.1),rgba(212,168,67,0.15))}
+.delivery-shop-radio{width:18px;height:18px;border:2px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.delivery-shop.selected .delivery-shop-radio{border-color:var(--a2)}
+.delivery-shop.selected .delivery-shop-radio::after{content:'';width:10px;height:10px;background:var(--a2);border-radius:50%}
+.delivery-shop-info{flex:1}
+.delivery-shop-name{font-size:.85rem;font-weight:600;color:var(--txt)}
+.delivery-shop-addr{font-size:.75rem;color:var(--muted)}
+.delivery-form{margin-top:1rem;display:none}
+.delivery-form.show{display:block}
+.delivery-field{margin-bottom:.8rem}
+.delivery-field label{display:block;font-size:.82rem;font-weight:600;color:var(--txt);margin-bottom:.3rem}
+.delivery-field input,.delivery-field textarea{width:100%;padding:.7rem .9rem;border:2px solid var(--border);border-radius:8px;font-size:.9rem;color:var(--txt);background:var(--bg2);transition:border-color .2s}
+.delivery-field input:focus,.delivery-field textarea:focus{outline:none;border-color:var(--a2)}
+.delivery-field textarea{resize:vertical;min-height:80px}
+.delivery-free-notice{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);padding:.6rem .8rem;border-radius:8px;font-size:.82rem;color:#2E7D32;display:flex;align-items:center;gap:.5rem;margin-top:.8rem}
+.delivery-confirm-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--a2),var(--a3));color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:1rem;transition:transform .2s}
+.delivery-confirm-btn:hover{transform:translateY(-2px)}
+.delivery-confirm-btn:disabled{background:var(--muted);cursor:not-allowed;transform:none}
 .member-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .7rem;background:linear-gradient(135deg,var(--gold),#D4A843);color:white;border-radius:50px;font-size:.7rem;font-weight:600;margin-left:.5rem}
 .nav-user{display:flex;align-items:center;gap:.5rem}
 .user-btn{background:none;border:none;cursor:pointer;padding:.4rem;border-radius:50%;transition:var(--tr);display:flex;align-items:center;gap:.3rem;color:var(--txt);font-size:.82rem;font-family:'Noto Sans TC',sans-serif}
@@ -280,6 +315,32 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <div class="auth-switch" id="authSwitch">還未是會員？<a id="switchLink">立即註冊</a></div>
 </div>
 </div>
+<div class="delivery-modal" id="deliveryModal">
+<div class="delivery-box">
+<button class="delivery-close" id="deliveryClose">×</button>
+<h3 class="delivery-title">🚚 配送方式</h3>
+<p class="delivery-subtitle">請選擇收貨方式</p>
+<div class="delivery-option selected" id="optPickup">
+<div class="delivery-option-header">🏪 到店自取 <span class="delivery-option-badge">免運費</span></div>
+<div class="delivery-option-desc">選擇分店自取</div>
+<div class="delivery-shops">
+<div class="delivery-shop selected" data-shop="central"><div class="delivery-shop-radio"></div><div class="delivery-shop-info"><div class="delivery-shop-name">① 中環街市</div><div class="delivery-shop-addr">中環街市1樓P04C舖</div></div></div>
+<div class="delivery-shop" data-shop="mongkok"><div class="delivery-shop-radio"></div><div class="delivery-shop-info"><div class="delivery-shop-name">② 旺角始創中心</div><div class="delivery-shop-addr">旺角始創中心地下KIOSK J舖</div></div></div>
+</div>
+</div>
+<div class="delivery-option" id="optSf">
+<div class="delivery-option-header">📦 順豐快遞 <span class="delivery-option-badge" id="sfBadge">到付</span></div>
+<div class="delivery-option-desc" id="sfDesc">運費由收件人支付</div>
+</div>
+<div class="delivery-form" id="sfForm">
+<div class="delivery-field"><label>收件人姓名</label><input type="text" id="sfName" placeholder="收件人姓名"></div>
+<div class="delivery-field"><label>聯絡電話</label><input type="tel" id="sfPhone" placeholder="852-XXXX XXXX"></div>
+<div class="delivery-field"><label>收貨地址</label><textarea id="sfAddress" placeholder="詳細地址"></textarea></div>
+</div>
+<div class="delivery-free-notice" id="freeNotice" style="display:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> 滿 HK$300 免運費，順豐運費由我們承擔！</div>
+<button class="delivery-confirm-btn" id="deliveryConfirm">確認並送出訂單</button>
+</div>
+</div>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -358,8 +419,82 @@ document.getElementById('cartOverlay').onclick=function(){
   document.getElementById('cartDrawer').classList.remove('open');
   this.classList.remove('open');
 };
+// ============ DELIVERY SYSTEM ============
+var deliveryMethod='pickup'; // pickup | sf
+var pickupShop='central'; // central | mongkok
+var deliveryModal=document.getElementById('deliveryModal');
+var deliveryClose=document.getElementById('deliveryClose');
+var optPickup=document.getElementById('optPickup');
+var optSf=document.getElementById('optSf');
+var sfForm=document.getElementById('sfForm');
+var sfBadge=document.getElementById('sfBadge');
+var sfDesc=document.getElementById('sfDesc');
+var freeNotice=document.getElementById('freeNotice');
+var deliveryConfirm=document.getElementById('deliveryConfirm');
+var cartOrderTotal=0;
+// Pickup option
+optPickup.onclick=function(){
+  optPickup.classList.add('selected');
+  optSf.classList.remove('selected');
+  sfForm.classList.remove('show');
+  deliveryMethod='pickup';
+};
+optSf.onclick=function(){
+  optSf.classList.add('selected');
+  optPickup.classList.remove('selected');
+  sfForm.classList.add('show');
+  deliveryMethod='sf';
+};
+// Shop selection
+document.querySelectorAll('.delivery-shop').forEach(function(shop){
+  shop.onclick=function(e){
+    e.stopPropagation();
+    document.querySelectorAll('.delivery-shop').forEach(function(s){s.classList.remove('selected');});
+    this.classList.add('selected');
+    pickupShop=this.dataset.shop;
+  };
+});
+deliveryClose.onclick=function(){
+  deliveryModal.classList.remove('open');
+};
+// Show delivery modal on checkout
 document.getElementById('cartCheckout').onclick=function(){
   if(cart.length===0){alert('購物車係空既！');return;}
+  // Calculate total for free shipping check
+  var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
+  cartOrderTotal=0;
+  cart.forEach(function(i){
+    var orig=i.price*i.qty;
+    var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
+    cartOrderTotal+=orig-disc;
+  });
+  // Update SF badge based on total
+  if(cartOrderTotal>=300){
+    sfBadge.textContent='免運費';
+    sfBadge.style.background='linear-gradient(135deg,#4CAF50,#2E7D32)';
+    sfDesc.textContent='滿 HK$300，運費由我們承擔';
+    freeNotice.style.display='flex';
+  }else{
+    sfBadge.textContent='到付';
+    sfBadge.style.background='var(--a3)';
+    sfDesc.textContent='運費由收件人支付';
+    freeNotice.style.display='none';
+  }
+  deliveryModal.classList.add('open');
+};
+// Confirm delivery and send WhatsApp
+deliveryConfirm.onclick=function(){
+  // Validate SF form if needed
+  if(deliveryMethod==='sf'){
+    var sfName=document.getElementById('sfName').value.trim();
+    var sfPhone=document.getElementById('sfPhone').value.trim();
+    var sfAddr=document.getElementById('sfAddress').value.trim();
+    if(!sfName||!sfPhone||!sfAddr){
+      alert('請填寫收件人資料');
+      return;
+    }
+  }
+  // Build WhatsApp message
   var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
   var msg='🛒 祐興食品訂單\n\n',total=0,totalDiscount=0;
   cart.forEach(function(i){
@@ -375,7 +510,23 @@ document.getElementById('cartCheckout').onclick=function(){
   }
   msg+='\n總額：HKD '+(total-totalDiscount)+'';
   if(totalDiscount>0)msg+=' (慬 HK$'+totalDiscount+')';
-  msg+='\n\n請確認訂單，謝謝！';
+  // Delivery info
+  msg+='\n\n--- 配送方式 ---\n';
+  if(deliveryMethod==='pickup'){
+    var shopAddr=pickupShop==='central'?'中環街市1樓P04C舖':'旺角始創中心地下KIOSK J舖';
+    var shopName=pickupShop==='central'?'① 中環街市':'② 旺角始創中心';
+    msg+='📍 到店自取\n'+shopName+'\n'+shopAddr+'\n';
+  }else{
+    var sfName=document.getElementById('sfName').value.trim();
+    var sfPhone=document.getElementById('sfPhone').value.trim();
+    var sfAddr=document.getElementById('sfAddress').value.trim();
+    msg+='📦 順豐快遞\n';
+    if(cartOrderTotal>=300){msg+='✅ 免運費（滿HK$300）\n';}else{msg+='💰 到付（運費由收件人支付）\n';}
+    msg+='收件人：'+sfName+'\n電話：'+sfPhone+'\n地址：'+sfAddr+'\n';
+  }
+  msg+='\n請確認訂單，謝謝！';
+  // Close modal and open WhatsApp
+  deliveryModal.classList.remove('open');
   window.open('https://wa.me/85254987070?text='+encodeURIComponent(msg),'_blank');
 };
 renderCart();
