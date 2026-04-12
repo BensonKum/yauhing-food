@@ -273,26 +273,253 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script>console.log('Firebase libs loaded');</script>
-<script>var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};console.log('Config:',firebaseConfig);try{firebase.initializeApp(firebaseConfig);console.log('Firebase initialized');var auth=firebase.auth();var db=firebase.firestore();console.log('Auth/Firestore ready');}catch(e){console.error('Firebase init error:',e);}
-var isLoginMode=true;
-var authModal=document.getElementById('authModal');var authForm=document.getElementById('authForm');var authEmail=document.getElementById('authEmail');var authPassword=document.getElementById('authPassword');var authName=document.getElementById('authName');var authPhone=document.getElementById('authPhone');var authError=document.getElementById('authError');var authSuccess=document.getElementById('authSuccess');var authSubmit=document.getElementById('authSubmit');var authTitle=document.getElementById('authTitle');var tabLogin=document.getElementById('tabLogin');var tabRegister=document.getElementById('tabRegister');var nameField=document.getElementById('nameField');var phoneField=document.getElementById('phoneField');var authSwitch=document.getElementById('authSwitch');var switchLink=document.getElementById('switchLink');
-function switchMode(login){isLoginMode=login;tabLogin.classList.toggle('active',login);tabRegister.classList.toggle('active',!login);nameField.style.display=login?'none':'block';phoneField.style.display=login?'none':'block';authSubmit.textContent=login?'登入':'註冊';authTitle.textContent=login?'會員登入':'會員註冊';authSwitch.innerHTML=login?'還未是會員？<a id="switchLink">立即註冊</a>':'已有帳號？<a id="switchLink">立即登入</a>';document.getElementById('switchLink').onclick=function(){switchMode(!isLoginMode)};authError.textContent='';authSuccess.textContent=''}
-tabLogin.onclick=function(){switchMode(true)};tabRegister.onclick=function(){switchMode(false)};switchLink.onclick=function(){switchMode(false)};
-document.getElementById('userBtn').onclick=function(){var user=auth.currentUser;if(user){var m=document.getElementById('userMenu');m.classList.toggle('open')}else{authModal.classList.add('open');switchMode(true)}};document.getElementById('authClose').onclick=function(){authModal.classList.remove('open')};authModal.onclick=function(e){if(e.target===authModal)authModal.classList.remove('open')};
-document.addEventListener('click',function(e){var um=document.getElementById('userMenu');if(!e.target.closest('.nav-user'))um.classList.remove('open')});
-authForm.onsubmit=function(e){e.preventDefault();authError.textContent='';authSuccess.textContent='';var email=authEmail.value.trim();var pwd=authPassword.value;if(!email||!pwd){authError.textContent='請填寫電郵和密碼';return}
-if(isLoginMode){authSubmit.disabled=true;authSubmit.textContent='登入中...';auth.signInWithEmailAndPassword(email,pwd).then(function(cred){authModal.classList.remove('open');authEmail.value='';authPassword.value='';authSubmit.disabled=false;authSubmit.textContent='登入'}).catch(function(err){authSubmit.disabled=false;authSubmit.textContent='登入';var msg={'auth/user-not-found':'帳號不存在','auth/wrong-password':'密碼錯誤','auth/invalid-credential':'電郵或密碼不正確','auth/too-many-requests':'嘗試太多，請稍後再試'};authError.textContent=msg[err.code]||'登入失敗：'+err.message})}else{var name=authName.value.trim();var phone=authPhone.value.trim();if(!name){authError.textContent='請填寫姓名';return}authSubmit.disabled=true;authSubmit.textContent='註冊中...';auth.createUserWithEmailAndPassword(email,pwd).then(function(cred){return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',createdAt:firebase.firestore.FieldValue.serverTimestamp()})}).then(function(){authSuccess.textContent='註冊成功！🎉';setTimeout(function(){authModal.classList.remove('open');authEmail.value='';authPassword.value='';authName.value='';authPhone.value='';authSubmit.disabled=false;authSubmit.textContent='註冊'},1000)}).catch(function(err){authSubmit.disabled=false;authSubmit.textContent='註冊';var msg={'auth/email-already-in-use':'此電郵已註冊','auth/weak-password':'密碼太弱，至少6位','auth/invalid-email':'電郵格式不正確'};authError.textContent=msg[err.code]||'註冊失敗：'+err.message})}}};
-document.getElementById('btnLogout').onclick=function(){auth.signOut();document.getElementById('userMenu').classList.remove('open')};
-auth.onAuthStateChanged(function(user){var displayName=document.getElementById('userDisplayName');var emailEl=document.getElementById('userEmail');if(user){db.collection('users').doc(user.uid).get().then(function(doc){if(doc.exists){var data=doc.data();displayName.textContent=data.name||user.email;emailEl.textContent=user.email}else{displayName.textContent=user.email;emailEl.textContent=user.email}}).catch(function(){displayName.textContent=user.email;emailEl.textContent=user.email});document.getElementById('btnMyOrders').style.display='flex'}else{displayName.textContent='登入';emailEl.textContent=''}});
-document.getElementById('btnMyOrders').onclick=function(){alert('訂單功能開發中，敬請期待！')};
+<script>
+// Firebase config
+var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};
+var firebaseReady=false;
+var auth=null,db=null;
+if(typeof firebase!=='undefined'){
+  try{firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();firebaseReady=true;console.log('Firebase OK');}catch(e){console.error('Firebase error:',e);}
+}
+document.addEventListener('DOMContentLoaded',function(){
 
-document.querySelectorAll('.p-card').forEach(function(c){var isShrimp=c.dataset.cat==='蝦籽麵';var isIn=c.dataset.stock==='in';c.classList.toggle('hid',!isShrimp||!isIn)});
-function upd(){document.getElementById('rc').textContent=document.querySelectorAll('.p-card:not(.hid)').length+' 款產品';}upd();
-document.querySelectorAll('.ct .t-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.ct .t-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var cat=this.dataset.cat;var stockFilter=document.querySelector('.f-btn.active').dataset.filter;document.querySelectorAll('.p-card').forEach(function(c){var matchCat=cat==='全部'||c.dataset.cat===cat;var matchStock=stockFilter==='all'||c.dataset.stock===stockFilter;c.classList.toggle('hid',!matchCat||!matchStock)});upd()}});document.querySelectorAll('.f-btn').forEach(function(b){b.onclick=function(){document.querySelectorAll('.f-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var f=this.dataset.filter;var catFilter=document.querySelector('.ct .t-btn.active').dataset.cat;document.querySelectorAll('.p-card').forEach(function(c){var matchCat=catFilter==='全部'||c.dataset.cat===catFilter;var matchStock=f==='all'||c.dataset.stock===f;c.classList.toggle('hid',!matchCat||!matchStock)});upd()}});document.querySelectorAll('.pk-btn').forEach(function(b){b.onclick=function(e){e.stopPropagation();var sw=this.parentElement;sw.querySelectorAll('.pk-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active');var pk=this.dataset.pk;var card=this.closest('.p-card');var imgs=card.querySelectorAll('.p-img img');imgs.forEach(function(img,i){img.style.display=(i+1)==pk?'block':'none'});}});function upd(){document.getElementById('rc').textContent=document.querySelectorAll('.p-card:not(.hid)').length+' 款產品';}window.onscroll=function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>50)};document.querySelectorAll('a[href^="#"]').forEach(function(a){a.onclick=function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}});var cart=JSON.parse(localStorage.getItem('yauhingCart')||'[]');function saveCart(){localStorage.setItem('yauhingCart',JSON.stringify(cart));renderCart()}
-function renderCart(){var badge=document.getElementById('cartBadge');var itemsEl=document.getElementById('cartItems');var totalEl=document.getElementById('cartTotal');var count=cart.reduce(function(s,i){return s+i.qty},0);badge.textContent=count;badge.style.display=count>0?'flex':'none';if(cart.length===0){itemsEl.innerHTML='<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><p>購物車仲空緊<br>去揀啲嘢啦！</p></div>';totalEl.textContent='HKD 0';return}var total=0;var html='';cart.forEach(function(item,idx){var itemTotal=item.price*item.qty;total+=itemTotal;html+='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'')+'<div class="cart-item-price">HKD '+item.price+'</div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>'});itemsEl.innerHTML=html;totalEl.textContent='HKD '+total}
-function updateQty(idx,delta){cart[idx].qty+=delta;if(cart[idx].qty<1){cart.splice(idx,1)}else{cart[idx].qty=cart[idx].qty}saveCart()}
-function removeItem(idx){cart.splice(idx,1);saveCart()}
-function addToCart(name,price,variant,img){var existing=cart.find(function(i){return i.name===name&&i.variant===variant});if(existing){existing.qty+=1}else{cart.push({name:name,price:price,variant:variant||null,img:img||null,qty:1})}saveCart();var btns=document.querySelectorAll('.add-cart-btn');btns.forEach(function(b){if(b.dataset.name===name&&b.dataset.variant===(variant||'')){b.innerHTML='✓ 已加入';b.classList.add('added');setTimeout(function(){b.innerHTML='+ 加入購物車';b.classList.remove('added')},1500)}})}
-document.getElementById('cartBtn').onclick=function(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open')};window.addEventListener('resize',function(){var d=document.getElementById('cartDrawer');if(d.classList.contains('open')){var i=document.getElementById('cartItems'),h=d.querySelector('.cart-header'),f=d.querySelector('.cart-footer'),t=h.offsetHeight,b=f.offsetHeight,vh=window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;d.style.height=Math.max(vh,window.screen.availHeight)+'px';i.style.top=t+'px';i.style.bottom=b+'px'}});document.getElementById('cartClose').onclick=function(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open')};document.getElementById('cartOverlay').onclick=function(){document.getElementById('cartDrawer').classList.remove('open');this.classList.remove('open')};document.getElementById('cartCheckout').onclick=function(){if(cart.length===0){alert('購物車係空既！');return}var msg='🛒 祐興食品訂單\n\n';var total=0;cart.forEach(function(i){var sub=i.price*i.qty;total+=sub;msg+='• '+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+' - HKD '+sub+'\n'});msg+='\n總額：HKD '+total+'\n\n請確認訂單，謝謝！';var waUrl='https://wa.me/85254987070?text='+encodeURIComponent(msg);window.open(waUrl,'_blank')};renderCart()
-document.querySelectorAll('.p-card[data-stock="in"]').forEach(function(card){var name=card.querySelector('.p-name').textContent;var priceEl=card.querySelector('.p-price');var isMulti=card.classList.contains('multi-pack');var img=null;var imgEl=card.querySelector('.p-img img');if(imgEl&&imgEl.src){img='images/'+imgEl.src.split('/').pop()}var priceText=priceEl.textContent;var match=priceText.match(/HKD (\d+)/);var price=match?parseInt(match[1]):0;var btn=document.createElement('button');btn.className='add-cart-btn';btn.dataset.name=name;btn.dataset.variant=isMulti?(card.querySelector('.pk-btn.active')?card.querySelector('.pk-btn.active').textContent:''):'';btn.dataset.price=price;btn.dataset.img=img||'';btn.innerHTML='+ 加入購物車';btn.onclick=function(e){e.stopPropagation();var variant=isMulti?card.querySelector('.pk-btn.active').textContent:null;addToCart(name,price,variant,img)};card.querySelector('.p-info').appendChild(btn)});</script></body></html>
+// ============ SHOPPING CART ============
+var cart=JSON.parse(localStorage.getItem('yauhingCart')||'[]');
+function saveCart(){localStorage.setItem('yauhingCart',JSON.stringify(cart));renderCart()}
+window.updateQty=function(idx,delta){cart[idx].qty+=delta;if(cart[idx].qty<1)cart.splice(idx,1);saveCart()};
+window.removeItem=function(idx){cart.splice(idx,1);saveCart()};
+function renderCart(){
+  var badge=document.getElementById('cartBadge');
+  var itemsEl=document.getElementById('cartItems');
+  var totalEl=document.getElementById('cartTotal');
+  var count=cart.reduce(function(s,i){return s+i.qty},0);
+  badge.textContent=count;
+  badge.style.display=count>0?'flex':'none';
+  if(cart.length===0){
+    itemsEl.innerHTML='<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><p>購物車仲空緊<br>去揀啲嘢啦！</p></div>';
+    totalEl.textContent='HKD 0';
+    return;
+  }
+  var total=0,html='';
+  cart.forEach(function(item,idx){
+    var itemTotal=item.price*item.qty;
+    total+=itemTotal;
+    html+='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'')+'<div class="cart-item-price">HKD '+item.price+'</div><div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>';
+  });
+  itemsEl.innerHTML=html;
+  totalEl.textContent='HKD '+total;
+}
+window.addToCart=function(name,price,variant,img){
+  var existing=cart.find(function(i){return i.name===name&&i.variant===variant});
+  if(existing){existing.qty+=1;}else{cart.push({name:name,price:price,variant:variant||null,img:img||null,qty:1});}
+  saveCart();
+  document.querySelectorAll('.add-cart-btn').forEach(function(b){
+    if(b.dataset.name===name&&b.dataset.variant===(variant||'')){
+      b.innerHTML='✓ 已加入';b.classList.add('added');
+      setTimeout(function(){b.innerHTML='+ 加入購物車';b.classList.remove('added');},1500);
+    }
+  });
+};
+document.getElementById('cartBtn').onclick=function(){
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+};
+document.getElementById('cartClose').onclick=function(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+};
+document.getElementById('cartOverlay').onclick=function(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  this.classList.remove('open');
+};
+document.getElementById('cartCheckout').onclick=function(){
+  if(cart.length===0){alert('購物車係空既！');return;}
+  var msg='🛒 祐興食品訂單\n\n',total=0;
+  cart.forEach(function(i){var sub=i.price*i.qty;total+=sub;msg+='• '+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+' - HKD '+sub+'\n';});
+  msg+='\n總額：HKD '+total+'\n\n請確認訂單，謝謝！';
+  window.open('https://wa.me/85254987070?text='+encodeURIComponent(msg),'_blank');
+};
+renderCart();
+
+// ============ PRODUCT FILTERS ============
+function upd(){
+  document.getElementById('rc').textContent=document.querySelectorAll('.p-card:not(.hid)').length+' 款產品';
+}
+// Category buttons
+document.querySelectorAll('.ct .t-btn').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.ct .t-btn').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+    var cat=this.dataset.cat;
+    var stockFilter=(document.querySelector('.f-btn.active')||{}).dataset.filter||'in';
+    document.querySelectorAll('.p-card').forEach(function(c){
+      var matchCat=cat==='全部'||c.dataset.cat===cat;
+      var matchStock=stockFilter==='all'||c.dataset.stock===stockFilter;
+      c.classList.toggle('hid',!matchCat||!matchStock);
+    });
+    upd();
+  };
+});
+// Stock filter buttons
+document.querySelectorAll('.f-btn').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.f-btn').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+    var f=this.dataset.filter;
+    var catFilter=(document.querySelector('.ct .t-btn.active')||{}).dataset.cat||'全部';
+    document.querySelectorAll('.p-card').forEach(function(c){
+      var matchCat=catFilter==='全部'||c.dataset.cat===catFilter;
+      var matchStock=f==='all'||c.dataset.stock===f;
+      c.classList.toggle('hid',!matchCat||!matchStock);
+    });
+    upd();
+  };
+});
+// Package buttons (multi-pack switching)
+document.querySelectorAll('.pk-btn').forEach(function(b){
+  b.onclick=function(e){
+    e.stopPropagation();
+    var sw=this.parentElement;
+    sw.querySelectorAll('.pk-btn').forEach(function(x){x.classList.remove('active');});
+    this.classList.add('active');
+    var card=this.closest('.p-card');
+    var imgs=card.querySelectorAll('.p-img img');
+    var pk=this.dataset.pk;
+    imgs.forEach(function(img,i){img.style.display=(i+1)==pk?'block':'none';});
+  };
+});
+// Add cart buttons to all in-stock products
+document.querySelectorAll('.p-card[data-stock="in"]').forEach(function(card){
+  var name=card.querySelector('.p-name').textContent;
+  var priceEl=card.querySelector('.p-price');
+  var isMulti=card.classList.contains('multi-pack');
+  var img=null;
+  var imgEl=card.querySelector('.p-img img');
+  if(imgEl&&imgEl.src)img='images/'+imgEl.src.split('/').pop();
+  var priceText=priceEl.textContent;
+  var match=priceText.match(/HKD (\d+)/);
+  var price=match?parseInt(match[1]):0;
+  var btn=document.createElement('button');
+  btn.className='add-cart-btn';
+  btn.dataset.name=name;
+  btn.dataset.variant='';
+  btn.dataset.price=price;
+  btn.dataset.img=img||'';
+  btn.innerHTML='+ 加入購物車';
+  btn.onclick=function(e){
+    e.stopPropagation();
+    var variant=isMulti?(card.querySelector('.pk-btn.active')||{}).textContent||null:null;
+    window.addToCart(name,price,variant,img);
+  };
+  card.querySelector('.p-info').appendChild(btn);
+});
+// Initial filter: show 蝦籽麵 + in-stock by default
+var firstCatBtn=document.querySelector('.ct .t-btn.active');
+if(firstCatBtn)firstCatBtn.click();
+upd();
+
+// ============ NAV & SCROLL ============
+window.onscroll=function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>50);};
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.onclick=function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});};
+});
+
+// ============ FIREBASE AUTH ============
+if(firebaseReady&&auth&&db){
+  var isLoginMode=true;
+  var authModal=document.getElementById('authModal');
+  var authForm=document.getElementById('authForm');
+  var authEmail=document.getElementById('authEmail');
+  var authPassword=document.getElementById('authPassword');
+  var authName=document.getElementById('authName');
+  var authPhone=document.getElementById('authPhone');
+  var authError=document.getElementById('authError');
+  var authSuccess=document.getElementById('authSuccess');
+  var authSubmit=document.getElementById('authSubmit');
+  var authTitle=document.getElementById('authTitle');
+  var tabLogin=document.getElementById('tabLogin');
+  var tabRegister=document.getElementById('tabRegister');
+  var nameField=document.getElementById('nameField');
+  var phoneField=document.getElementById('phoneField');
+  var authSwitch=document.getElementById('authSwitch');
+  function switchMode(login){
+    isLoginMode=login;
+    tabLogin.classList.toggle('active',login);
+    tabRegister.classList.toggle('active',!login);
+    nameField.style.display=login?'none':'block';
+    phoneField.style.display=login?'none':'block';
+    authSubmit.textContent=login?'登入':'註冊';
+    authTitle.textContent=login?'會員登入':'會員註冊';
+    authSwitch.innerHTML=login?'還未是會員？<a href="#" id="switchLink">立即註冊</a>':'已有帳號？<a href="#" id="switchLink">立即登入</a>';
+    document.getElementById('switchLink').onclick=function(e){e.preventDefault();switchMode(!isLoginMode);};
+    authError.textContent='';
+    authSuccess.textContent='';
+  }
+  tabLogin.onclick=function(){switchMode(true);};
+  tabRegister.onclick=function(){switchMode(false);};
+  document.getElementById('userBtn').onclick=function(){
+    var user=auth.currentUser;
+    if(user){document.getElementById('userMenu').classList.toggle('open');}
+    else{authModal.classList.add('open');switchMode(true);}
+  };
+  document.getElementById('authClose').onclick=function(){authModal.classList.remove('open');};
+  authModal.onclick=function(e){if(e.target===authModal)authModal.classList.remove('open');};
+  document.addEventListener('click',function(e){
+    var um=document.getElementById('userMenu');
+    if(!e.target.closest('.nav-user'))um.classList.remove('open');
+  });
+  authForm.onsubmit=function(e){
+    e.preventDefault();
+    authError.textContent='';
+    authSuccess.textContent='';
+    var email=authEmail.value.trim();
+    var pwd=authPassword.value;
+    if(!email||!pwd){authError.textContent='請填寫電郵和密碼';return;}
+    if(isLoginMode){
+      authSubmit.disabled=true;authSubmit.textContent='登入中...';
+      auth.signInWithEmailAndPassword(email,pwd).then(function(){
+        authModal.classList.remove('open');
+        authEmail.value='';authPassword.value='';
+        authSubmit.disabled=false;authSubmit.textContent='登入';
+      }).catch(function(err){
+        authSubmit.disabled=false;authSubmit.textContent='登入';
+        var msg={'auth/user-not-found':'帳號不存在','auth/wrong-password':'密碼錯誤','auth/invalid-credential':'電郵或密碼不正確','auth/too-many-requests':'嘗試太多，請稍後再試'};
+        authError.textContent=msg[err.code]||'登入失敗：'+err.message;
+      });
+    }else{
+      var name=authName.value.trim();
+      var phone=authPhone.value.trim();
+      if(!name){authError.textContent='請填寫姓名';return;}
+      authSubmit.disabled=true;authSubmit.textContent='註冊中...';
+      auth.createUserWithEmailAndPassword(email,pwd).then(function(cred){
+        return db.collection('users').doc(cred.user.uid).set({name:name,email:email,phone:phone||null,role:'member',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+      }).then(function(){
+        authSuccess.textContent='註冊成功！🎉';
+        setTimeout(function(){
+          authModal.classList.remove('open');
+          authEmail.value='';authPassword.value='';authName.value='';authPhone.value='';
+          authSubmit.disabled=false;authSubmit.textContent='註冊';
+        },1000);
+      }).catch(function(err){
+        authSubmit.disabled=false;authSubmit.textContent='註冊';
+        var msg={'auth/email-already-in-use':'此電郵已註冊','auth/weak-password':'密碼太弱，至少6位','auth/invalid-email':'電郵格式不正確'};
+        authError.textContent=msg[err.code]||'註冊失敗：'+err.message;
+      });
+    }
+  };
+  document.getElementById('btnLogout').onclick=function(){auth.signOut();document.getElementById('userMenu').classList.remove('open');};
+  auth.onAuthStateChanged(function(user){
+    var displayName=document.getElementById('userDisplayName');
+    var emailEl=document.getElementById('userEmail');
+    if(user){
+      db.collection('users').doc(user.uid).get().then(function(doc){
+        if(doc.exists){var data=doc.data();displayName.textContent=data.name||user.email;emailEl.textContent=user.email;}
+        else{displayName.textContent=user.email;emailEl.textContent=user.email;}
+      }).catch(function(){displayName.textContent=user.email;emailEl.textContent=user.email;});
+      document.getElementById('btnMyOrders').style.display='flex';
+    }else{displayName.textContent='登入';emailEl.textContent='';}
+  });
+  document.getElementById('btnMyOrders').onclick=function(){alert('訂單功能開發中，敬請期待！');};
+}
+}); // end DOMContentLoaded
+</script></body></html>
