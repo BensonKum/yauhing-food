@@ -531,8 +531,11 @@ deliveryConfirm.onclick=function(){
     msg+='收件人：'+sfName+'\n電話：'+sfPhone+'\n地址：'+sfAddr+'\n';
   }
   msg+='\n請確認訂單，謝謝！';
-  // Close modal and open WhatsApp
+  // Close modal and clear cart
   deliveryModal.classList.remove('open');
+  cart=[];
+  saveCart();
+  renderCart();
   // Update user points in Firestore (HK$1 = 1 point)
   var user=auth.currentUser;
   if(user&&db){
