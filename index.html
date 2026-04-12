@@ -489,7 +489,7 @@ document.getElementById('cartCheckout').onclick=function(){
   deliveryModal.classList.add('open');
 };
 // Confirm delivery and send WhatsApp
-deliveryConfirm.onclick=function(){
+deliveryConfirm.onclick=async function(){
   // Validate SF form if needed
   if(deliveryMethod==='sf'){
     var sfName=document.getElementById('sfName').value.trim();
@@ -502,37 +502,82 @@ deliveryConfirm.onclick=function(){
   }
   // Generate order ID
   var orderId='YH'+Date.now().toString().slice(-8);
+  var orderDate=new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'2-digit',day:'2-digit'});
+  var orderTime=new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+  // Get customer info
+  var customerName='訪客';
+  var customerPhone='';
+  var user=auth.currentUser;
+  if(user&&db){
+    var userDoc=await db.collection('users').doc(user.uid).get();
+    if(userDoc.exists){
+      var userData=userDoc.data();
+      customerName=userData.name||user.email;
+      customerPhone=userData.phone||'';
+    }
+  }
   // Build WhatsApp message
   var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
-  var msg='🛒 祐興食品訂單\n訂單編號：#'+orderId+'\n\n',total=0,totalDiscount=0;
+  var msg='════════════════════════\n';
+  msg+='🛒 祐興食品 訂單\n';
+  msg+='════════════════════════\n\n';
+  msg+='📋 訂單編號：#'+orderId+'\n';
+  msg+='📅 訂單日期：'+orderDate+' '+orderTime+'\n';
+  msg+='👤 客人名稱：'+customerName+'\n';
+  if(customerPhone)msg+='📞 聯絡電話：'+customerPhone+'\n';
+  msg+='\n────────────────────\n';
+  msg+='📦 訂購商品\n';
+  msg+='────────────────────\n';
+  var total=0,totalDiscount=0;
   cart.forEach(function(i){
     var orig=i.price*i.qty;
     var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
     var sub=orig-disc;
     total+=orig;
     totalDiscount+=disc;
-    msg+='• '+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+' - HKD '+sub+(disc>0?' (原:'+orig+')':'')+'\n';
+    msg+='\n• '+i.name+(i.variant?' ('+i.variant+')':'')+'\n';
+    msg+='  數量：'+i.qty+' | 單價：HK$'+i.price+'\n';
+    msg+='  小計：HK$'+sub;
+    if(disc>0)msg+=' (原價 HK$'+orig+'，-'+Math.round((1-discountTier.discount)*100)+'折)';
+    msg+='\n';
   });
+  msg+='\n────────────────────\n';
+  msg+='💰 金額明細\n';
+  msg+='────────────────────\n';
   if(discountTier){
-    msg+='\n🥇 會員：'+discountTier.emoji+' '+discountTier.name+' - '+Math.round((1-discountTier.discount)*100)+'折\n';
+    msg+='商品原價：HK$'+total+'\n';
+    msg+='會員折扣：-HK$'+totalDiscount+' ('+Math.round((1-discountTier.discount)*100)+'折)\n';
+    msg+='應付金額：HK$'+(total-totalDiscount)+'\n';
+  }else{
+    msg+='商品總額：HK$'+total+'\n';
   }
-  msg+='\n總額：HKD '+(total-totalDiscount)+'';
-  if(totalDiscount>0)msg+=' (慬 HK$'+totalDiscount+')';
   // Delivery info
-  msg+='\n\n--- 配送方式 ---\n';
+  msg+='\n────────────────────\n';
+  msg+='🚚 配送方式\n';
+  msg+='────────────────────\n';
   if(deliveryMethod==='pickup'){
     var shopAddr=pickupShop==='central'?'中環街市1樓P04C舖':'旺角始創中心地下KIOSK J舖';
     var shopName=pickupShop==='central'?'① 中環街市':'② 旺角始創中心';
-    msg+='📍 到店自取\n'+shopName+'\n'+shopAddr+'\n';
+    msg+='\n📍 到店自取\n';
+    msg+='取貨地點：'+shopName+'\n';
+    msg+='地址：'+shopAddr+'\n';
   }else{
     var sfName=document.getElementById('sfName').value.trim();
     var sfPhone=document.getElementById('sfPhone').value.trim();
     var sfAddr=document.getElementById('sfAddress').value.trim();
-    msg+='📦 順豐快遞\n';
-    if(cartOrderTotal>=300){msg+='✅ 免運費（滿HK$300）\n';}else{msg+='💰 到付（運費由收件人支付）\n';}
-    msg+='收件人：'+sfName+'\n電話：'+sfPhone+'\n地址：'+sfAddr+'\n';
+    msg+='\n📦 順豐快遞\n';
+    if(cartOrderTotal>=300){
+      msg+='運費：免運費（滿HK$300）✅\n';
+    }else{
+      msg+='運費：到付（收件人支付）\n';
+    }
+    msg+='收件人：'+sfName+'\n';
+    msg+='聯絡電話：'+sfPhone+'\n';
+    msg+='收貨地址：'+sfAddr+'\n';
   }
-  msg+='\n請確認訂單，謝謝！';
+  msg+='\n════════════════════════\n';
+  msg+='✅ 訂單已確認，請儘快安排付款\n';
+  msg+='════════════════════════';
   // Close modal and clear cart
   deliveryModal.classList.remove('open');
   cart=[];
