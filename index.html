@@ -580,6 +580,27 @@ deliveryConfirm.onclick=async function(){
   msg+='════════════════════════';
   // Close modal and clear cart
   deliveryModal.classList.remove('open');
+  // Save order to Firestore before clearing cart
+  var orderToSave={
+    orderId:orderId,
+    uid:auth.currentUser?auth.currentUser.uid:null,
+    customerName:customerName,
+    customerPhone:customerPhone||'',
+    items:cart.map(function(i){return{name:i.name,variant:i.variant||'',price:i.price,qty:i.qty};}),
+    total:total,
+    discount:totalDiscount,
+    finalTotal:total-totalDiscount,
+    deliveryMethod:deliveryMethod,
+    pickupShop:deliveryMethod==='pickup'?(pickupShop==='central'?'① 中環街市':'② 旺角始創中心'):'',
+    sfName:deliveryMethod==='sf'?document.getElementById('sfName').value.trim():'',
+    sfPhone:deliveryMethod==='sf'?document.getElementById('sfPhone').value.trim():'',
+    sfAddress:deliveryMethod==='sf'?document.getElementById('sfAddress').value.trim():'',
+    freeShipping:cartOrderTotal>=300,
+    status:'pending',
+    createdAt:new Date()
+  };
+  saveOrder(orderToSave);
+  // Clear cart
   cart=[];
   saveCart();
   renderCart();
@@ -856,7 +877,137 @@ if(firebaseReady&&auth&&db){
       currentUserTier=null;
     }
   });
-  document.getElementById('btnMyOrders').onclick=function(){alert('訂單功能開發中，敬請期待！');};
+  document.getElementById('btnMyOrders').onclick=function(){openOrdersModal();};
+}
+// ============ Orders Functions ============
+var ordersModal=document.getElementById('ordersModal');
+var ordersClose=document.getElementById('ordersClose');
+var ordersBg=document.getElementById('ordersBg');
+var ordersList=document.getElementById('ordersList');
+
+ordersClose.onclick=function(){ordersModal.classList.remove('open');};
+ordersBg.onclick=function(){ordersModal.classList.remove('open');};
+
+function openOrdersModal(){
+  var user=auth.currentUser;
+  if(!user){alert('請先登入');return;}
+  ordersModal.classList.add('open');
+  loadOrders(user.uid);
+}
+
+function loadOrders(uid){
+  if(!db)return;
+  ordersList.innerHTML='<div class="orders-empty"><div style="font-size:2rem">⏳</div><div>載入中...</div></div>';
+  db.collection('orders').where('uid','==',uid).orderBy('createdAt','desc').limit(20).get().then(function(snap){
+    if(snap.empty){
+      ordersList.innerHTML='<div class="orders-empty"><div style="font-size:3rem;margin-bottom:1rem">📭</div><div>暫無訂單記錄</div><div style="font-size:.8rem;color:var(--muted);margin-top:.5rem">落單後會顯示在這裡</div></div>';
+      return;
+    }
+    var html='';
+    snap.forEach(function(doc){
+      var o=doc.data();
+      var statusMap={
+        'pending':{label:'待付款',cls:'pending',icon:'💳'},
+        'paid':{label:'已付款',cls:'paid',icon:'✅'},
+        'shipped':{label:'已發貨',cls:'shipped',icon:'📦'},
+        'completed':{label:'已完成',cls:'completed',icon:'🎉'},
+        'cancelled':{label:'已取消',cls:'cancelled',icon:'❌'}
+      };
+      var st=statusMap[o.status]||statusMap['pending'];
+      var itemsPreview=o.items?o.items.slice(0,2).map(function(i){return i.name;}).join('、'):'';
+      if(o.items&&o.items.length>2)itemsPreview+=' 等'+o.items.length+'件';
+      var dateStr='';
+      if(o.createdAt){var d=o.createdAt.toDate();dateStr=d.toLocaleDateString('zh-TW')+' '+d.toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});}
+      html+='<div class="order-item" onclick="toggleOrderDetail(\''+doc.id+'\')">';
+      html+='<div class="order-head">';
+      html+='<span class="order-id">#'+o.orderId+'</span>';
+      html+='<span class="order-status '+st.cls+'">'+st.icon+' '+st.label+'</span>';
+      html+='</div>';
+      html+='<div class="order-date">'+dateStr+'</div>';
+      html+='<div class="order-total">HK$'+(o.total||0)+'</div>';
+      html+='<div class="order-items-preview">'+itemsPreview+'</div>';
+      html+='<div class="order-detail" id="od-'+doc.id+'">';
+      if(o.items&&o.items.length){
+        html+='<div class="order-detail-products">';
+        o.items.forEach(function(i){
+          html+='<div class="order-detail-product"><span>'+i.name+(i.variant?' ('+i.variant+')':'')+' x'+i.qty+'</span><span>HK$'+(i.price*i.qty)+'</span></div>';
+        });
+        html+='</div>';
+      }
+      if(o.discount){html+='<div class="order-detail-row"><span>會員折扣</span><span>-HK$'+o.discount+'</span></div>';}
+      html+='<div class="order-detail-row"><span>應付金額</span><span style="color:var(--a);font-weight:700">HK$'+(o.finalTotal||o.total)+'</span></div>';
+      if(o.deliveryMethod==='pickup'){
+        html+='<div class="order-detail-row"><span>配送方式</span><span>📍 到店自取</span></div>';
+        html+='<div class="order-detail-row"><span>取貨地點</span><span>'+(o.pickupShop||'')+'</span></div>';
+      }else{
+        html+='<div class="order-detail-row"><span>配送方式</span><span>📦 順豐快遞</span></div>';
+        html+='<div class="order-detail-row"><span>收件人</span><span>'+(o.sfName||'')+'</span></div>';
+        html+='<div class="order-detail-row"><span>收貨地址</span><span>'+(o.sfAddress||'')+'</span></div>';
+      }
+      html+='</div></div>';
+    });
+    ordersList.innerHTML=html;
+  }).catch(function(e){
+    console.error('Load orders error:',e);
+    ordersList.innerHTML='<div class="orders-empty"><div style="font-size:2rem">❌</div><div>載入失敗</div></div>';
+  });
+}
+
+function toggleOrderDetail(docId){
+  var el=document.getElementById('od-'+docId);
+  if(el)el.classList.toggle('show');
+}
+
+async function saveOrder(orderData){
+  if(!db||!auth.currentUser)return;
+  try{
+    await db.collection('orders').add(orderData);
+    console.log('Order saved:',orderData.orderId);
+  }catch(e){
+    console.error('Save order error:',e);
+  }
 }
 }); // end DOMContentLoaded
-</script></body></html>
+</script><!-- Orders Modal -->
+<div id="ordersModal" class="modal">
+  <div class="modal-bg" id="ordersBg"></div>
+  <div class="modal-card orders-card">
+    <div class="modal-head">
+      <span>📦 我的訂單</span>
+      <button class="modal-x" id="ordersClose">×</button>
+    </div>
+    <div class="orders-list" id="ordersList">
+      <div class="orders-empty">
+        <div style="font-size:3rem;margin-bottom:1rem">📭</div>
+        <div>暫無訂單記錄</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:.5rem">落單後會顯示在這裡</div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.orders-card{max-width:480px;max-height:80vh}
+.orders-list{padding:0;overflow-y:auto;max-height:60vh}
+.orders-empty{padding:3rem 1rem;text-align:center;color:var(--muted)}
+.order-item{border-bottom:1px solid var(--bd);padding:1rem;cursor:pointer;transition:background .2s}
+.order-item:hover{background:var(--bg)}
+.order-item:last-child{border-bottom:none}
+.order-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.order-id{font-weight:700;color:var(--txt);font-size:.9rem}
+.order-status{font-size:.7rem;padding:.2rem .5rem;border-radius:20px;font-weight:600}
+.order-status.pending{background:#FFF3E0;color:#E65100}
+.order-status.paid{background:#E3F2FD;color:#1565C0}
+.order-status.shipped{background:#F3E5F5;color:#7B1FA2}
+.order-status.completed{background:#E8F5E9;color:#2E7D32}
+.order-status.cancelled{background:#FFEBEE;color:#C62828}
+.order-date{font-size:.75rem;color:var(--muted)}
+.order-total{font-weight:700;color:var(--a);margin-top:.3rem}
+.order-items-preview{font-size:.75rem;color:var(--muted);margin-top:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-detail{display:none;padding:1rem;background:var(--bg);border-top:1px solid var(--bd)}
+.order-detail.show{display:block}
+.order-detail-row{display:flex;justify-content:space-between;padding:.4rem 0;font-size:.85rem}
+.order-detail-row span:first-child{color:var(--muted)}
+.order-detail-products{margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--bd)}
+.order-detail-product{padding:.3rem 0;font-size:.8rem;display:flex;justify-content:space-between}
+</style>
+</body></html>
