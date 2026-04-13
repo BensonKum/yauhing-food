@@ -140,11 +140,30 @@
   .scan-section p { font-size: 0.78rem; color: #888; margin-bottom: 0.5rem; }
   #qrcode { display: inline-block; margin: 0.5rem auto; }
   #qrcode canvas { border-radius: 8px; }
+
+  .scan-btn-section {
+    padding: 0 1.2rem 1rem;
+    text-align: center;
+  }
+  .scan-btn-section button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .scan-btn-section button:hover { background: #555; }
+  #reader video { border-radius: 12px; }
 </style>
 </head>
 <body>
 <!-- QR Code library -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <div class="container">
   <div class="header">
@@ -155,6 +174,11 @@
   <div class="search-box">
     <input type="text" id="orderInput" placeholder="例如：YH20260413001" onkeydown="if(event.key==='Enter')searchOrder()">
     <button onclick="searchOrder()">🔍 查詢</button>
+  </div>
+
+  <div class="scan-btn-section">
+    <button id="scanBtn" onclick="startScanner()">📷 掃描 QR Code</button>
+    <div id="reader" style="display:none; margin-top:1rem;"></div>
   </div>
 
   <div class="result" id="result">
@@ -308,6 +332,70 @@ function renderOrder(data, docId) {
     qr.make();
     qrDiv.innerHTML = qr.createSvgTag(6, 4);
   }
+}
+
+// ── QR Scanner ──────────────────────────────────────────
+let html5QrCode = null;
+
+async function startScanner() {
+  const btn = document.getElementById("scanBtn");
+  const readerDiv = document.getElementById("reader");
+
+  if (html5QrCode && html5QrCode.isScanning) {
+    // Stop scanner
+    await html5QrCode.stop();
+    readerDiv.style.display = "none";
+    btn.textContent = "📷 掃描 QR Code";
+    btn.style.background = "#333";
+    return;
+  }
+
+  // Start scanner
+  readerDiv.style.display = "block";
+  btn.textContent = "⏹️ 停止掃描";
+  btn.style.background = "#C8462B";
+
+  try {
+    html5QrCode = new Html5Qrcode("reader");
+    await html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      onScanSuccess,
+      onScanFailure
+    );
+  } catch (e) {
+    alert("無法啟動相機：" + e.message);
+    readerDiv.style.display = "none";
+    btn.textContent = "📷 掃描 QR Code";
+    btn.style.background = "#333";
+  }
+}
+
+function onScanSuccess(decodedText) {
+  // Parse QR content: YH-PICKUP:orderId|name|phone|total
+  let orderId = decodedText;
+
+  if (decodedText.startsWith("YH-PICKUP:")) {
+    const parts = decodedText.split("|");
+    orderId = parts[0].replace("YH-PICKUP:", "");
+  }
+
+  // Stop scanner
+  if (html5QrCode && html5QrCode.isScanning) {
+    html5QrCode.stop();
+    document.getElementById("reader").style.display = "none";
+    const btn = document.getElementById("scanBtn");
+    btn.textContent = "📷 掃描 QR Code";
+    btn.style.background = "#333";
+  }
+
+  // Fill input and search
+  document.getElementById("orderInput").value = orderId;
+  searchOrder();
+}
+
+function onScanFailure(error) {
+  // Ignore scan failures (happens frequently)
 }
 </script>
 </body>
