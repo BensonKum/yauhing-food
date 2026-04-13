@@ -974,17 +974,24 @@ if(firebaseReady&&auth&&db){
   }
   document.getElementById('pendingAlertBtn').onclick=function(){
     var user=auth.currentUser;
-    if(!user){console.log('[pendingBtn] no user');return;}
-    // 用緩存的待付款訂單
+    // DEBUG: 顯示診斷信息
+    var dbg='user: '+(user?user.uid:'null');
+    dbg+='\ncache: '+pendingOrderCache.length;
+    dbg+='\nallOrders: '+(typeof allOrders!=='undefined'?allOrders.length:'undef');
+    dbg+='\npaymentModal: '+(paymentModal?'ok':'null');
+    dbg+='\npayFromOrder: '+(typeof payFromOrder==='function'?'ok':'missing');
+    if(pendingOrderCache.length>0){
+      dbg+='\norder1: '+JSON.stringify(pendingOrderCache[0].data).substring(0,200);
+    }
+    alert('[DEBUG]\n'+dbg);
+    return;
+    /* 暫時停用正常流程做 debug
+    if(!user){return;}
     var pendingItems=pendingOrderCache;
-    console.log('[pendingBtn] cache size:',pendingItems.length);
     if(pendingItems.length===1){
-      // 只有1筆 → 直接跳付款
       var o=pendingItems[0].data;
-      console.log('[pendingBtn] single order, payFromOrder:',o.orderId,o.finalTotal||o.total);
       payFromOrder(pendingItems[0].id,o.orderId,o.finalTotal||o.total);
     }else{
-      // 多筆 → 打開訂單列表，篩選待付款
       openOrdersModal();
       setTimeout(function(){
         var filters=document.querySelectorAll('.order-filter');
@@ -993,6 +1000,7 @@ if(firebaseReady&&auth&&db){
         if(pendingBtn){pendingBtn.classList.add('active');currentFilter='pending';renderOrders();}
       },300);
     }
+    */
   };
   document.getElementById('pendingAlertClose').onclick=function(){
     document.getElementById('pendingAlert').style.display='none';
