@@ -423,6 +423,7 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <script>
 // Firebase config
 var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};
@@ -754,8 +755,25 @@ paymentConfirm.onclick=function(){
       if(auth.currentUser)checkPendingOrders(auth.currentUser.uid);
     });
   }
-  paymentModal.classList.remove('open');
-  alert('付款確認已提交！我們會盡快處理您的訂單。');
+  // Generate pickup QR code
+  var oid=window.lastOrderId||'';
+  var amt=window.lastOrderTotal||0;
+  var cust=window.lastCustomerName||'';
+  var phone=window.lastCustomerPhone||'';
+  if(oid){
+    var qr=qrcode(0,'M');
+    qr.addData(oid);
+    qr.make();
+    var qrSvg=qr.createSvgTag(6,4);
+    document.getElementById('pickupQRBox').innerHTML=qrSvg;
+    document.getElementById('pickupQRInfo').innerHTML=
+      '<strong>'+cust+'</strong>｜'+phone+'｜<strong>HK$'+amt+'</strong>';
+    document.getElementById('pickupQRSection').style.display='block';
+  }
+  // Replace alert with friendly message
+  document.getElementById('paymentConfirm').textContent='✅ 已確認';
+  document.getElementById('paymentConfirm').style.opacity='0.6';
+  document.getElementById('paymentConfirm').style.pointerEvents='none';
 };
 
 paymentWhatsapp.onclick=function(){
@@ -977,7 +995,7 @@ if(firebaseReady&&auth&&db){
     var pendingOnly=pendingOrderCache.filter(function(x){return x.data.status==='pending';});
     if(pendingOnly.length===1){
       var o=pendingOnly[0].data;
-      payFromOrder(pendingOnly[0].id,o.orderId,o.finalTotal||o.total);
+      payFromOrder(pendingOnly[0].id,o.orderId,o.finalTotal||o.total,o);
     }else if(pendingOnly.length>1){
       openOrdersModal();
       setTimeout(function(){
@@ -1161,7 +1179,7 @@ function renderOrders(){
     // 待付款/已付款顯示「去付款」按鈕
     if(o.status==='pending'||o.status==='paid'){
       html+='<div class="order-actions">';
-      html+='<button class="order-pay-btn" onclick="event.stopPropagation();payFromOrder(\''+docId+'\',\''+o.orderId+'\','+(o.finalTotal||o.total)+')">💳 去付款</button>';
+      html+='<button class="order-pay-btn" onclick="event.stopPropagation();payFromOrder(\''+docId+'\',\''+o.orderId+'\','+(o.finalTotal||o.total)+','+JSON.stringify(o).replace(/'/g,"\\'")+')">💳 去付款</button>';
       if(o.status==='pending'){
         html+='<button class="order-cancel-btn" onclick="event.stopPropagation();cancelOrder(\''+docId+'\')">取消訂單</button>';
       }
@@ -1171,12 +1189,20 @@ function renderOrders(){
   });
   ordersList.innerHTML=html;
 }
-function payFromOrder(docId,orderId,amount){
+function payFromOrder(docId,orderId,amount,orderData){
   // 打開付款 Modal
   paymentOrderId.textContent='#'+orderId;
   paymentAmount.textContent='HK$'+amount;
+  // Reset QR section
+  var qrSection=document.getElementById('pickupQRSection');
+  if(qrSection)qrSection.style.display='none';
+  var confirmBtn=document.getElementById('paymentConfirm');
+  if(confirmBtn){confirmBtn.textContent='✓ 已付款';confirmBtn.style.opacity='1';confirmBtn.style.pointerEvents='auto';}
   paymentModal.classList.add('open');
   window.lastOrderId=orderId;
+  window.lastOrderTotal=amount;
+  window.lastCustomerName=(orderData&&orderData.customerName)||'';
+  window.lastCustomerPhone=(orderData&&orderData.customerPhone)||'';
   window.lastOrderMsg='訂單 #'+orderId+' 付款 HK$'+amount;
 }
 function cancelOrder(docId){
@@ -1314,6 +1340,12 @@ async function saveOrder(orderData){
         <button class="payment-btn confirm" id="paymentConfirm">✓ 已付款</button>
         <button class="payment-btn whatsapp" id="paymentWhatsapp">📱 通知客服</button>
       </div>
+      <!-- Pickup QR Code (hidden until payment confirmed) -->
+      <div class="pickup-qr-section" id="pickupQRSection" style="display:none;margin-top:1rem">
+        <div class="pickup-qr-title">✅ 請截圖以下 QR Code 取貨時出示</div>
+        <div class="pickup-qr-box" id="pickupQRBox"></div>
+        <div class="pickup-qr-info" id="pickupQRInfo"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1337,6 +1369,12 @@ async function saveOrder(orderData){
 .payment-btn.confirm{background:linear-gradient(135deg,#4CAF50,#2E7D32);color:white}
 .payment-btn.confirm:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,175,80,.3)}
 .payment-btn.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E);color:white}
+.pickup-qr-section{background:linear-gradient(135deg,#f0f7f4,#e8f5e9);border:2px solid #4CAF50;border-radius:12px;padding:1rem;text-align:center}
+.pickup-qr-title{font-size:.82rem;font-weight:700;color:#2E7D32;margin-bottom:.6rem}
+.pickup-qr-box{display:inline-block;background:white;border-radius:10px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.pickup-qr-box img,.pickup-qr-box canvas{border-radius:6px}
+.pickup-qr-info{font-size:.75rem;color:#666;margin-top:.5rem}
+.pickup-qr-info strong{color:#2E7D32}
 .payment-btn.whatsapp:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(37,211,102,.3)}
 .payment-method-tabs{display:flex;gap:.5rem;margin-bottom:1rem}
 .payment-tab{flex:1;padding:.6rem .5rem;background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:500;transition:var(--tr)}
