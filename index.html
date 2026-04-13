@@ -956,21 +956,19 @@ if(firebaseReady&&auth&&db){
   // 待付款訂單偵測 + 提醒
   var pendingOrderCache=[];
   function checkPendingOrders(uid){
-    if(!db){console.log('[checkPending] no db');return;}
-    db.collection('orders').where('uid','==',uid).where('status','in',['pending','paid']).get().then(function(snap){
+    if(!db)return;
+    db.collection('orders').where('uid','==',uid).where('status','==','pending').get().then(function(snap){
       var pendingAlert=document.getElementById('pendingAlert');
       var pendingCount=document.getElementById('pendingCount');
       pendingOrderCache=[];
-      console.log('[checkPending] found:',snap.size);
       if(!snap.empty){
         pendingCount.textContent=snap.size;
         pendingAlert.style.display='block';
         snap.forEach(function(doc){pendingOrderCache.push({id:doc.id,data:doc.data()});});
-        console.log('[checkPending] cached:',pendingOrderCache.length);
       }else{
         pendingAlert.style.display='none';
       }
-    }).catch(function(e){console.error('[checkPending] error:',e);});
+    }).catch(function(){});
   }
   document.getElementById('pendingAlertBtn').onclick=function(){
     var user=auth.currentUser;
