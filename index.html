@@ -969,14 +969,23 @@ if(firebaseReady&&auth&&db){
   }
   document.getElementById('pendingAlertBtn').onclick=function(){
     var user=auth.currentUser;
-    if(user)openOrdersModal();
-    // 切換到待付款篩選
-    setTimeout(function(){
-      var filters=document.querySelectorAll('.order-filter');
-      filters.forEach(function(f){f.classList.remove('active');});
-      var pendingBtn=document.querySelector('.order-filter[data-filter="pending"]');
-      if(pendingBtn){pendingBtn.classList.add('active');currentFilter='pending';renderOrders();}
-    },300);
+    if(!user)return;
+    // 找出待付款訂單
+    var pendingItems=allOrders.filter(function(x){return x.data.status==='pending'||x.data.status==='paid';});
+    if(pendingItems.length===1){
+      // 只有1筆 → 直接跳付款
+      var o=pendingItems[0].data;
+      payFromOrder(pendingItems[0].id,o.orderId,o.finalTotal||o.total);
+    }else{
+      // 多筆 → 打開訂單列表，篩選待付款
+      openOrdersModal();
+      setTimeout(function(){
+        var filters=document.querySelectorAll('.order-filter');
+        filters.forEach(function(f){f.classList.remove('active');});
+        var pendingBtn=document.querySelector('.order-filter[data-filter="pending"]');
+        if(pendingBtn){pendingBtn.classList.add('active');currentFilter='pending';renderOrders();}
+      },300);
+    }
   };
   document.getElementById('pendingAlertClose').onclick=function(){
     document.getElementById('pendingAlert').style.display='none';
