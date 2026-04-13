@@ -954,14 +954,17 @@ if(firebaseReady&&auth&&db){
   };
   document.getElementById('btnLogout').onclick=function(){auth.signOut();document.getElementById('userMenu').classList.remove('open');};
   // 待付款訂單偵測 + 提醒
+  var pendingOrderCache=[];
   function checkPendingOrders(uid){
     if(!db)return;
     db.collection('orders').where('uid','==',uid).where('status','in',['pending','paid']).get().then(function(snap){
       var pendingAlert=document.getElementById('pendingAlert');
       var pendingCount=document.getElementById('pendingCount');
+      pendingOrderCache=[];
       if(!snap.empty){
         pendingCount.textContent=snap.size;
         pendingAlert.style.display='block';
+        snap.forEach(function(doc){pendingOrderCache.push({id:doc.id,data:doc.data()});});
       }else{
         pendingAlert.style.display='none';
       }
@@ -970,8 +973,8 @@ if(firebaseReady&&auth&&db){
   document.getElementById('pendingAlertBtn').onclick=function(){
     var user=auth.currentUser;
     if(!user)return;
-    // 找出待付款訂單
-    var pendingItems=allOrders.filter(function(x){return x.data.status==='pending'||x.data.status==='paid';});
+    // 用緩存的待付款訂單
+    var pendingItems=pendingOrderCache;
     if(pendingItems.length===1){
       // 只有1筆 → 直接跳付款
       var o=pendingItems[0].data;
