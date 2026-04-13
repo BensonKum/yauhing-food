@@ -164,6 +164,17 @@
 <!-- QR Code library -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script>
+// Library load check
+window.addEventListener("load", function() {
+  var btn = document.getElementById("scanBtn");
+  if (typeof Html5Qrcode === "undefined") {
+    btn.textContent = "掃描庫加載失敗 - 請重新整理";
+    btn.style.background = "#E07B3A";
+    btn.onclick = function() { alert("QR掃描庫未加載，請重新整理網頁。\n如仍失敗，請手動輸入訂單編號查詢。"); };
+  }
+});
+</script>
 
 <div class="container">
   <div class="header">
@@ -177,7 +188,7 @@
   </div>
 
   <div class="scan-btn-section">
-    <button id="scanBtn" onclick="startScanner()">📷 掃描 QR Code</button>
+    <button id="scanBtn" onclick="startScanner()">&#x1F4F7; 掃描 QR Code</button>
     <div id="reader" style="display:none; margin-top:1rem;"></div>
   </div>
 
@@ -341,66 +352,64 @@ async function startScanner() {
   const btn = document.getElementById("scanBtn");
   const readerDiv = document.getElementById("reader");
 
+  if (typeof Html5Qrcode === "undefined") {
+    alert("QR掃描庫未加載，請重新整理網頁。\n如仍失敗，請手動輸入訂單編號。");
+    return;
+  }
+
   if (html5QrCode && html5QrCode.isScanning) {
-    await html5QrCode.stop();
+    await html5QrCode.stop().catch(function(){});
     readerDiv.style.display = "none";
     readerDiv.innerHTML = "";
-    btn.textContent = "📷 掃描 QR Code";
+    btn.textContent = "\u5FEB\u7167 QR Code";
     btn.style.background = "#333";
     return;
   }
 
-  btn.textContent = "⏳ 啟動相機...";
+  btn.textContent = "\u5553\u52D5\u4E2D...";
   btn.disabled = true;
+  readerDiv.style.display = "block";
+  readerDiv.innerHTML = '<p style="padding:1rem;text-align:center;color:#888;">\u6B63\u5728\u5553\u52D5\u76F8\u6A5F...</p>';
 
   try {
-    readerDiv.style.display = "block";
-    readerDiv.innerHTML = "";
     html5QrCode = new Html5Qrcode("reader");
     await html5QrCode.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: { width: 250, height: 250 } },
       onScanSuccess,
-      onScanFailure
+      function() {}
     );
-    btn.textContent = "⏹️ 停止掃描";
+    btn.textContent = "\u505C\u6B62\u6383\u63CF";
     btn.style.background = "#C8462B";
     btn.disabled = false;
   } catch (e) {
-    alert("無法啟動相機：" + e.message + "\n\n請確認已授予相機權限，並使用 HTTPS 網址。");
+    var msg = e.message || String(e);
+    alert("\u7121\u6CD5\u5553\u52D5\u76F8\u6A5F\uFF1A" + msg);
     readerDiv.style.display = "none";
     readerDiv.innerHTML = "";
-    btn.textContent = "📷 掃描 QR Code";
+    btn.textContent = "\u5FEB\u7167 QR Code";
     btn.style.background = "#333";
     btn.disabled = false;
   }
 }
 
 function onScanSuccess(decodedText) {
-  // Parse QR content: YH-PICKUP:orderId|name|phone|total
-  let orderId = decodedText;
-
-  if (decodedText.startsWith("YH-PICKUP:")) {
-    const parts = decodedText.split("|");
-    orderId = parts[0].replace("YH-PICKUP:", "");
+  var orderId = decodedText;
+  if (decodedText.indexOf("YH-PICKUP:") === 0) {
+    orderId = decodedText.split("|")[0].replace("YH-PICKUP:", "");
   }
 
-  // Stop scanner
   if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop();
+    html5QrCode.stop().catch(function(){});
     document.getElementById("reader").style.display = "none";
-    const btn = document.getElementById("scanBtn");
-    btn.textContent = "📷 掃描 QR Code";
+    document.getElementById("reader").innerHTML = "";
+    var btn = document.getElementById("scanBtn");
+    btn.textContent = "\u5FEB\u7167 QR Code";
     btn.style.background = "#333";
   }
 
-  // Fill input and search
   document.getElementById("orderInput").value = orderId;
   searchOrder();
-}
-
-function onScanFailure(error) {
-  // Ignore scan failures (happens frequently)
 }
 </script>
 </body>
