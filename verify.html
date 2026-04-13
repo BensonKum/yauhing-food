@@ -342,20 +342,20 @@ async function startScanner() {
   const readerDiv = document.getElementById("reader");
 
   if (html5QrCode && html5QrCode.isScanning) {
-    // Stop scanner
     await html5QrCode.stop();
     readerDiv.style.display = "none";
+    readerDiv.innerHTML = "";
     btn.textContent = "📷 掃描 QR Code";
     btn.style.background = "#333";
     return;
   }
 
-  // Start scanner
-  readerDiv.style.display = "block";
-  btn.textContent = "⏹️ 停止掃描";
-  btn.style.background = "#C8462B";
+  btn.textContent = "⏳ 啟動相機...";
+  btn.disabled = true;
 
   try {
+    readerDiv.style.display = "block";
+    readerDiv.innerHTML = "";
     html5QrCode = new Html5Qrcode("reader");
     await html5QrCode.start(
       { facingMode: "environment" },
@@ -363,11 +363,16 @@ async function startScanner() {
       onScanSuccess,
       onScanFailure
     );
+    btn.textContent = "⏹️ 停止掃描";
+    btn.style.background = "#C8462B";
+    btn.disabled = false;
   } catch (e) {
-    alert("無法啟動相機：" + e.message);
+    alert("無法啟動相機：" + e.message + "\n\n請確認已授予相機權限，並使用 HTTPS 網址。");
     readerDiv.style.display = "none";
+    readerDiv.innerHTML = "";
     btn.textContent = "📷 掃描 QR Code";
     btn.style.background = "#333";
+    btn.disabled = false;
   }
 }
 
