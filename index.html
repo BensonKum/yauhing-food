@@ -956,28 +956,32 @@ if(firebaseReady&&auth&&db){
   // 待付款訂單偵測 + 提醒
   var pendingOrderCache=[];
   function checkPendingOrders(uid){
-    if(!db)return;
+    if(!db){console.log('[checkPending] no db');return;}
     db.collection('orders').where('uid','==',uid).where('status','in',['pending','paid']).get().then(function(snap){
       var pendingAlert=document.getElementById('pendingAlert');
       var pendingCount=document.getElementById('pendingCount');
       pendingOrderCache=[];
+      console.log('[checkPending] found:',snap.size);
       if(!snap.empty){
         pendingCount.textContent=snap.size;
         pendingAlert.style.display='block';
         snap.forEach(function(doc){pendingOrderCache.push({id:doc.id,data:doc.data()});});
+        console.log('[checkPending] cached:',pendingOrderCache.length);
       }else{
         pendingAlert.style.display='none';
       }
-    }).catch(function(){});
+    }).catch(function(e){console.error('[checkPending] error:',e);});
   }
   document.getElementById('pendingAlertBtn').onclick=function(){
     var user=auth.currentUser;
-    if(!user)return;
+    if(!user){console.log('[pendingBtn] no user');return;}
     // 用緩存的待付款訂單
     var pendingItems=pendingOrderCache;
+    console.log('[pendingBtn] cache size:',pendingItems.length);
     if(pendingItems.length===1){
       // 只有1筆 → 直接跳付款
       var o=pendingItems[0].data;
+      console.log('[pendingBtn] single order, payFromOrder:',o.orderId,o.finalTotal||o.total);
       payFromOrder(pendingItems[0].id,o.orderId,o.finalTotal||o.total);
     }else{
       // 多筆 → 打開訂單列表，篩選待付款
