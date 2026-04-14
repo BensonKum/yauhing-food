@@ -153,7 +153,8 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
 <script>
-// Firebase
+// Firebase - init immediately, store readiness flag
+window.dbReady = false;
 (function(){
   try {
     var fc = {
@@ -166,7 +167,11 @@
     };
     if(!firebase.apps.length) firebase.initializeApp(fc);
     window.db = firebase.firestore();
-  } catch(e) { console.error(e); }
+    window.dbReady = true;
+  } catch(e) {
+    console.error("Firebase init failed:", e);
+    setStatus("Firebase 初始化失敗，請稍後重試", "err");
+  }
 })();
 
 // Show status message
@@ -199,6 +204,10 @@ document.getElementById("txt").onkeydown = function(e) {
 async function doSearch(oid) {
   var res = document.getElementById("res");
   res.innerHTML = '<div class="empty">查詢中...</div>';
+  if(!window.db || !window.dbReady) {
+    res.innerHTML = '<div class="empty">Firebase 未連接<br>請確保網絡正常，稍後重試<br><br><button class="btn" onclick="location.reload()">重新整理</button></div>';
+    return;
+  }
   try {
     var snap = await db.collection("orders").where("orderId","==",oid).get();
     if(!snap.empty) {
