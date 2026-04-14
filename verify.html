@@ -209,13 +209,13 @@ async function doSearch(oid) {
     return;
   }
   try {
-    var snap = await db.collection("orders").where("orderId","==",oid).get();
+    var snap = await window.db.collection("orders").where("orderId","==",oid).get();
     if(!snap.empty) {
       showOrder(snap.docs[0].data(), snap.docs[0].id);
       return;
     }
     // partial match
-    var snap2 = await db.collection("orders").orderBy("createdAt","desc").limit(30).get();
+    var snap2 = await window.db.collection("orders").orderBy("createdAt","desc").limit(30).get();
     var found = null;
     for(var i=0;i<snap2.docs.length;i++) {
       var d = snap2.docs[i].data();
@@ -227,7 +227,13 @@ async function doSearch(oid) {
       res.innerHTML = '<div class="empty">找不到訂單：' + oid + '<br><br>請確認訂單編號是否正確</div>';
     }
   } catch(e) {
-    res.innerHTML = '<div class="empty">查詢失敗：' + e.message + '</div>';
+    console.error("Firestore error:", e);
+    var msg = "查詢失敗";
+    if(e.code === "permission-denied") msg = "無權限讀取訂單，請確認 Firestore 規則";
+    else if(e.code === "unavailable") msg = "網絡不穩定，請稍後重試";
+    else if(e.code === "not-found") msg = "找不到訂單";
+    else msg = "查詢失敗：" + (e.message || e.code || "未知錯誤");
+    res.innerHTML = '<div class="empty">' + msg + '<br><br><button class="btn" onclick="location.reload()">重新整理</button></div>';
   }
 }
 

@@ -1,14 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 用戶只能讀寫自己的資料
+    // 會員：只能讀寫自己的資料
     match /users/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if request.auth != null && request.auth.uid == userId;
     }
-    // 訂單：用戶可讀取和創建自己的訂單
+    // 訂單：顧客需登入讀取自己的訂單；員工核實頁(verify.html)不需登入
     match /orders/{orderId} {
-      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow read: if true;  // verify.html 匿名查詢，無需登入
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
       allow update, delete: if false;
     }
