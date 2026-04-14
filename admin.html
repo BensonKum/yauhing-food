@@ -1,0 +1,642 @@
+﻿<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祐興食品 - 管理後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F0EB;--white:#fff;--a:#C8462B;--a2:#E07B3A;--a3:#2E6A4F;--txt:#2D2D2D;--muted:#6B6B6B;--bd:#E0D8C8;--warn:#FFC107;--r:14px;--sh:0 2px 8px rgba(0,0,0,.08);--tr:all .25s ease}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+
+/* ── LOGIN ─────────────────────────────── */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+.login-box{background:var(--white);border-radius:20px;padding:2.5rem;width:100%;max-width:380px;box-shadow:var(--sh)}
+.login-logo{font-size:1.5rem;font-weight:700;color:var(--a);text-align:center;margin-bottom:.3rem}
+.login-sub{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:2rem}
+.login-field{margin-bottom:1rem}
+.login-label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:.4rem;font-weight:500}
+.login-input{width:100%;padding:.75rem .9rem;border:2px solid var(--bd);border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:var(--tr)}
+.login-input:focus{border-color:var(--a)}
+.login-btn{width:100%;padding:.8rem;background:var(--a);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.login-btn:hover{background:#A33A22}
+.login-error{color:var(--a);font-size:.82rem;margin-top:.6rem;text-align:center;display:none}
+.login-btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* ── LAYOUT ────────────────────────────── */
+.admin-wrap{display:none;min-height:100vh}
+.admin-wrap.show{display:block}
+
+/* ── TOPBAR ───────────────────────────── */
+.topbar{background:var(--white);border-bottom:1px solid var(--bd);padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:1rem}
+.topbar-logo{font-weight:700;font-size:1.1rem;color:var(--a)}
+.topbar-badge{display:inline-block;padding:.2rem .6rem;background:var(--bg);border-radius:50px;font-size:.7rem;font-weight:600;color:var(--muted)}
+.topbar-right{display:flex;align-items:center;gap:.8rem}
+.topbar-user{font-size:.85rem;color:var(--muted)}
+.topbar-logout{background:none;border:1.5px solid var(--bd);padding:.45rem .9rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.topbar-logout:hover{background:var(--a);color:white;border-color:var(--a)}
+
+/* ── STATS ────────────────────────────── */
+.stats{padding:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+.stat-card{background:var(--white);border-radius:14px;padding:1.1rem;border:1px solid var(--bd)}
+.stat-label{font-size:.75rem;color:var(--muted);margin-bottom:.4rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.stat-value{font-size:1.8rem;font-weight:700;color:var(--txt)}
+.stat-value.red{color:var(--a)}
+.stat-value.green{color:var(--a3)}
+
+/* ── TABS ────────────────────────────── */
+.tabs{padding:0 1.5rem;background:var(--white);border-bottom:1px solid var(--bd);display:flex;gap:0}
+.tab{padding:.9rem 1.2rem;font-size:.88rem;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:var(--tr);font-family:inherit;white-space:nowrap}
+.tab:hover{color:var(--txt)}
+.tab.active{color:var(--a);border-bottom-color:var(--a)}
+
+/* ── PANELS ──────────────────────────── */
+.panel{display:none;padding:1.5rem}
+.panel.active{display:block}
+
+/* ── FILTER BAR ─────────────────────── */
+.filter-bar{display:flex;flex-wrap:wrap;gap:.7rem;margin-bottom:1.2rem;align-items:center}
+.filter-bar select,.filter-bar input{padding:.55rem .9rem;border:1.5px solid var(--bd);border-radius:8px;font-size:.85rem;font-family:inherit;background:white;outline:none;transition:var(--tr)}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--a)}
+.filter-bar input{width:180px}
+.filter-reset{background:none;border:1.5px solid var(--bd);padding:.55rem .9rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.filter-reset:hover{background:var(--a);color:white;border-color:var(--a)}
+
+/* ── ORDER TABLE ────────────────────── */
+.order-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd);background:var(--white)}
+.order-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:700px}
+.order-table th{background:#F5F0EB;padding:.7rem .9rem;text-align:left;font-weight:600;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.order-table td{padding:.75rem .9rem;border-top:1px solid #F0EBE0;vertical-align:middle}
+.order-table tr:hover td{background:#FAFAF5}
+.order-id{font-weight:700;color:var(--a);font-size:.82rem}
+.order-status{display:inline-block;padding:.22rem .65rem;border-radius:50px;font-size:.72rem;font-weight:600}
+.order-status.pending{background:#FFF3CD;color:#856404}
+.order-status.paid{background:#D4EDDA;color:#155724}
+.order-status.shipped{background:#CCE5FF;color:#004085}
+.order-status.completed{background:#E8F5E9;color:#2E7D32}
+.order-status.cancelled{background:#F8F8F8;color:#888;text-decoration:line-through}
+.order-items{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+.confirm-btn{padding:.45rem .9rem;background:var(--a3);color:white;border:none;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.confirm-btn:hover{background:#1B5E3A}
+.confirm-btn:disabled{background:#ccc;cursor:not-allowed}
+.order-table tr.processing td{background:#FFF9E6}
+
+/* ── ACCOUNTS ──────────────────────── */
+.acct-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
+.acct-add-btn{padding:.7rem 1.2rem;background:var(--a);color:white;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.acct-add-btn:hover{background:#A33A22}
+.acct-table{background:var(--white);border-radius:12px;border:1px solid var(--bd);overflow:hidden}
+.acct-table table{width:100%;border-collapse:collapse}
+.acct-table th{background:#F5F0EB;padding:.7rem 1rem;text-align:left;font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase}
+.acct-table td{padding:.75rem 1rem;border-top:1px solid #F0EBE0;font-size:.85rem;vertical-align:middle}
+.acct-role{display:inline-block;padding:.2rem .55rem;border-radius:50px;font-size:.7rem;font-weight:600}
+.acct-role.admin{background:#FCE4EC;color:#880E4F}
+.acct-role.central{background:#E3F2FD;color:#0D47A1}
+.acct-role.shatin{background:#FFF3E0;color:#E65100}
+.acct-active{color:var(--a3);font-weight:600}
+.acct-inactive{color:#999}
+.acct-actions{display:flex;gap:.4rem}
+.acct-btn{padding:.35rem .7rem;border-radius:7px;font-size:.78rem;cursor:pointer;font-family:inherit;transition:var(--tr);border:1.5px solid var(--bd);background:white}
+.acct-btn:hover{background:var(--a);color:white;border-color:var(--a)}
+.acct-btn.danger:hover{background:var(--a2);border-color:var(--a2)}
+
+/* ── MODAL ─────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:5000;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px;padding:2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;color:var(--txt)}
+.modal-field{margin-bottom:1rem}
+.modal-label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:.4rem;font-weight:500}
+.modal-input{width:100%;padding:.7rem .9rem;border:2px solid var(--bd);border-radius:10px;font-size:.9rem;font-family:inherit;outline:none;transition:var(--tr)}
+.modal-input:focus{border-color:var(--a)}
+.modal-select{width:100%;padding:.7rem .9rem;border:2px solid var(--bd);border-radius:10px;font-size:.9rem;font-family:inherit;background:white;outline:none}
+.modal-actions{display:flex;gap:.7rem;margin-top:1.5rem}
+.modal-cancel{flex:1;padding:.7rem;border:2px solid var(--bd);border-radius:10px;background:white;font-size:.9rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.modal-cancel:hover{background:var(--bg)}
+.modal-save{flex:1;padding:.7rem;background:var(--a);color:white;border:none;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.modal-save:hover{background:#A33A22}
+.modal-save:disabled{opacity:.6;cursor:not-allowed}
+.modal-msg{font-size:.8rem;margin-top:.7rem;display:none}
+.modal-msg.err{color:var(--a)}
+.modal-msg.ok{color:var(--a3)}
+
+/* ── LOADING ────────────────────────── */
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid #F0EBE0;border-top-color:var(--a);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-row td{color:var(--muted);font-style:italic}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.9rem}
+.empty-state svg{width:48px;height:48px;margin-bottom:.8rem;opacity:.3}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ═══════════════════════════════════ -->
+<div class="login-wrap" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">祐興食品</div>
+    <div class="login-sub">管理後台</div>
+    <div class="login-field">
+      <label class="login-label">電郵</label>
+      <input class="login-input" type="email" id="loginEmail" placeholder="admin@yauhing.hk" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label class="login-label">密碼</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">登入</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ═════════════════════════════ -->
+<div class="admin-wrap" id="adminPanel">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">祐興食品</span>
+      <span class="topbar-badge" id="roleBadge"></span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="userEmail"></span>
+      <button class="topbar-logout" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="statsCards"></div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="orders" onclick="switchTab('orders')">訂單</button>
+    <button class="tab" data-tab="accounts" id="acctTab" style="display:none" onclick="switchTab('accounts')">帳號管理</button>
+  </div>
+
+  <!-- Orders panel -->
+  <div class="panel active" id="ordersPanel">
+    <div class="filter-bar">
+      <select id="filterShop" onchange="renderOrders()">
+        <option value="">全部店舖</option>
+        <option value="① 中環街市">中環街市</option>
+        <option value="② 始創中心">始創中心</option>
+      </select>
+      <select id="filterStatus" onchange="renderOrders()">
+        <option value="">全部狀態</option>
+        <option value="pending">待付款</option>
+        <option value="paid">已付款</option>
+        <option value="shipped">已發貨</option>
+        <option value="completed">已完成</option>
+        <option value="cancelled">已取消</option>
+      </select>
+      <input type="date" id="filterDate" onchange="renderOrders()">
+      <button class="filter-reset" onclick="document.getElementById('filterShop').value='';document.getElementById('filterStatus').value='';document.getElementById('filterDate').value='';renderOrders()">重置</button>
+    </div>
+    <div class="order-table-wrap">
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>訂單編號</th>
+            <th>時間</th>
+            <th>顧客</th>
+            <th>電話</th>
+            <th>店舖</th>
+            <th>金額</th>
+            <th>狀態</th>
+            <th>商品</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Accounts panel (admin only) -->
+  <div class="panel" id="accountsPanel">
+    <div class="acct-header">
+      <div style="font-size:1rem;font-weight:700">帳號列表</div>
+      <button class="acct-add-btn" onclick="openAddAcct()">+ 新增帳號</button>
+    </div>
+    <div class="acct-table">
+      <table>
+        <thead>
+          <tr>
+            <th>電郵</th>
+            <th>角色</th>
+            <th>店舖權限</th>
+            <th>狀態</th>
+            <th>創建時間</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="acctsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ ADD / EDIT ACCOUNT MODAL ════════════ -->
+<div class="modal-overlay" id="acctModal">
+  <div class="modal">
+    <div class="modal-title" id="acctModalTitle">新增帳號</div>
+    <input type="hidden" id="acctEditId">
+    <div class="modal-field" id="newEmailField">
+      <label class="modal-label">電郵 *</label>
+      <input class="modal-input" type="email" id="acctEmail" placeholder="shop@domain.hk">
+    </div>
+    <div class="modal-field" id="newPwField">
+      <label class="modal-label" id="acctPwLabel">密碼 *</label>
+      <input class="modal-input" type="password" id="acctPw">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">角色 *</label>
+      <select class="modal-select" id="acctRole" onchange="onRoleChange()">
+        <option value="admin">admin（全部權限）</option>
+        <option value="central">中環店</option>
+        <option value="shatin">始創中心</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">狀態</label>
+      <select class="modal-select" id="acctActive">
+        <option value="true">啟用</option>
+        <option value="false">停用</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeAcctModal()">取消</button>
+      <button class="modal-save" id="acctSaveBtn" onclick="saveAcct()">儲存</button>
+    </div>
+    <div class="modal-msg" id="acctMsg"></div>
+  </div>
+</div>
+
+<!-- ══ FIREBASE ═══════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+// ── Firebase Config ────────────────────────────
+var firebaseConfig = {
+  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food",
+  storageBucket: "yauhing-food.firebasestorage.app",
+  messagingSenderId: "215564521673",
+  appId: "1:215564521673:web:2529129a767231e348bd18"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var auth = firebase.auth();
+
+// ── State ───────────────────────────────────
+var currentUser = null; // {uid, email, role, shop, active}
+var allOrders = [];
+
+// ── Auth ────────────────────────────────────
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var pw = document.getElementById('loginPassword').value;
+  var btn = document.getElementById('loginBtn');
+  var err = document.getElementById('loginError');
+  if (!email || !pw) { err.textContent = '請輸入電郵和密碼'; err.style.display = 'block'; return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 登入中...';
+  err.style.display = 'none';
+  auth.signInWithEmailAndPassword(email, pw).then(function(cred) {
+    return checkUserPerms(cred.user);
+  }).catch(function(e) {
+    err.textContent = '登入失敗：' + e.message;
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '登入';
+  });
+}
+
+function checkUserPerms(user) {
+  db.collection('admins').doc(user.uid).get().then(function(doc) {
+    if (!doc.exists) {
+      auth.signOut();
+      document.getElementById('loginError').textContent = '此帳號未被授權使用管理後台';
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginBtn').disabled = false;
+      document.getElementById('loginBtn').textContent = '登入';
+      return;
+    }
+    var d = doc.data();
+    if (d.active === false) {
+      auth.signOut();
+      document.getElementById('loginError').textContent = '此帳號已被停用，請聯絡管理員';
+      document.getElementById('loginError').style.display = 'block';
+      document.getElementById('loginBtn').disabled = false;
+      document.getElementById('loginBtn').textContent = '登入';
+      return;
+    }
+    currentUser = { uid: user.uid, email: user.email, role: d.role, shop: d.shop };
+    showAdminPanel();
+  }).catch(function(e) {
+    auth.signOut();
+    document.getElementById('loginError').textContent = '無法讀取權限：' + e.message;
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('loginBtn').disabled = false;
+    document.getElementById('loginBtn').textContent = '登入';
+  });
+}
+
+function doLogout() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    checkUserPerms(user);
+  } else {
+    showLoginPage();
+  }
+});
+
+// ── UI ──────────────────────────────────────
+function showLoginPage() {
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('adminPanel').classList.remove('show');
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').textContent = '登入';
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+function showAdminPanel() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('adminPanel').classList.add('show');
+  document.getElementById('userEmail').textContent = currentUser.email;
+  var badge = document.getElementById('roleBadge');
+  var roleMap = {admin:'admin',central:'中環店',shatin:'始創中心'};
+  badge.textContent = roleMap[currentUser.role] || currentUser.role;
+  // Admin sees accounts tab
+  var acctTab = document.getElementById('acctTab');
+  acctTab.style.display = currentUser.role === 'admin' ? '' : 'none';
+  switchTab('orders');
+  loadOrders();
+  if (currentUser.role === 'admin') loadAccounts();
+}
+
+// ── Tabs ────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  var tab = document.querySelector('.tab[data-tab="'+name+'"]');
+  if (tab) tab.classList.add('active');
+  var panel = document.getElementById(name + 'Panel');
+  if (panel) panel.classList.add('active');
+}
+
+// ── Orders ─────────────────────────────────
+function loadOrders() {
+  var body = document.getElementById('ordersBody');
+  body.innerHTML = '<tr class="loading-row"><td colspan="9" style="text-align:center;padding:2rem">載入中...</td></tr>';
+  db.collection('orders').orderBy('createdAt','desc').limit(200).get().then(function(snap) {
+    allOrders = [];
+    snap.forEach(function(d){ var o = d.data(); o._id = d.id; allOrders.push(o); });
+    renderOrders();
+  }).catch(function(e) {
+    body.innerHTML = '<tr><td colspan="9" style="color:var(--a);text-align:center;padding:2rem">載入失敗：'+e.message+'</td></tr>';
+  });
+}
+
+function renderOrders() {
+  var body = document.getElementById('ordersBody');
+  var shopF = document.getElementById('filterShop').value;
+  var statusF = document.getElementById('filterStatus').value;
+  var dateF = document.getElementById('filterDate').value; // YYYY-MM-DD
+
+  var filtered = allOrders.filter(function(o) {
+    // Shop permission filter
+    if (currentUser.role === 'central' && o.pickupShop && o.pickupShop.indexOf('①') === -1) return false;
+    if (currentUser.role === 'shatin' && o.pickupShop && o.pickupShop.indexOf('②') === -1) return false;
+    // UI filters
+    if (shopF && (!o.pickupShop || o.pickupShop.indexOf(shopF) === -1)) return false;
+    if (statusF && o.status !== statusF) return false;
+    if (dateF) {
+      var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+      var ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      if (ds !== dateF) return false;
+    }
+    return true;
+  });
+
+  // Stats
+  var today = new Date().toISOString().slice(0,10);
+  var todayOrders = allOrders.filter(function(o){
+    var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+    var ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    return ds === today;
+  });
+  var totalAmt = todayOrders.reduce(function(s,o){ return s + (o.finalTotal||o.total||0); }, 0);
+  var pendingCnt = todayOrders.filter(function(o){ return o.status==='pending'; }).length;
+  var paidCnt = todayOrders.filter(function(o){ return o.status==='paid'||o.status==='shipped'||o.status==='completed'; }).length;
+
+  document.getElementById('statsCards').innerHTML =
+    '<div class="stat-card"><div class="stat-label">今日訂單</div><div class="stat-value">'+todayOrders.length+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">待確認</div><div class="stat-value red">'+pendingCnt+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">已確認</div><div class="stat-value green">'+paidCnt+'</div></div>'+
+    '<div class="stat-card"><div class="stat-label">今日金額</div><div class="stat-value">HK$'+totalAmt+'</div></div>';
+
+  if (filtered.length === 0) {
+    body.innerHTML = '<tr><td colspan="9"><div class="empty-state"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-4-4 1.4-1.4 2.6 2.6 6.6-6.6L17 11z"/></svg>暫無訂單</div></td></tr>';
+    return;
+  }
+
+  var html = '';
+  var statusLabel = {pending:'待付款',paid:'已付款',shipped:'已發貨',completed:'已完成',cancelled:'已取消'};
+  filtered.forEach(function(o) {
+    var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+    var timeStr = (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    var items = (o.items||[]).map(function(i){ return (i.name||'')+(i.variant?' ('+i.variant+')':''); }).join(', ');
+    var isPending = o.status === 'pending';
+    var canConfirm = (currentUser.role==='admin') ||
+      (currentUser.role==='central' && o.pickupShop && o.pickupShop.indexOf('①')>=0) ||
+      (currentUser.role==='shatin' && o.pickupShop && o.pickupShop.indexOf('②')>=0);
+    html += '<tr>'+
+      '<td class="order-id">#'+(o.orderId||o._id)+'</td>'+
+      '<td style="font-size:.78rem;color:var(--muted)">'+timeStr+'</td>'+
+      '<td>'+(o.customerName||'-')+'</td>'+
+      '<td style="font-size:.78rem">'+(o.customerPhone||'-')+'</td>'+
+      '<td style="font-size:.78rem">'+(o.pickupShop||'-')+'</td>'+
+      '<td style="font-weight:700;color:var(--a)">HK$'+(o.finalTotal||o.total||0)+'</td>'+
+      '<td><span class="order-status '+(o.status||'pending')+'">'+statusLabel[o.status]||'未知'+'</span></td>'+
+      '<td style="max-width:180px"><div class="order-items" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+items+'">'+items+'</div></td>'+
+      '<td>'+
+        (isPending && canConfirm ?
+          '<button class="confirm-btn" onclick="confirmPayment(\''+o._id+'\')">確認收款</button>' :
+          '<span style="font-size:.75rem;color:var(--muted)">-</span>')+
+      '</td>'+
+    '</tr>';
+  });
+  body.innerHTML = html;
+}
+
+function confirmPayment(orderId) {
+  if (!confirm('確認已收款？')) return;
+  var btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '處理中...';
+  db.collection('orders').doc(orderId).update({status:'paid'}).then(function() {
+    // Update local cache
+    for (var i=0;i<allOrders.length;i++) {
+      if (allOrders[i]._id === orderId) { allOrders[i].status = 'paid'; break; }
+    }
+    renderOrders();
+  }).catch(function(e) {
+    btn.disabled = false;
+    btn.textContent = '確認收款';
+    alert('更新失敗：'+e.message);
+  });
+}
+
+// ── Accounts (admin only) ─────────────────────
+function loadAccounts() {
+  if (currentUser.role !== 'admin') return;
+  var body = document.getElementById('acctsBody');
+  body.innerHTML = '<tr class="loading-row"><td colspan="6" style="text-align:center;padding:2rem">載入中...</td></tr>';
+  db.collection('admins').get().then(function(snap) {
+    var html = '';
+    var roleMap = {admin:'admin',central:'中環店',shatin:'始創中心'};
+    snap.forEach(function(d) {
+      var o = d.data();
+      html += '<tr>'+
+        '<td>'+d.id+'</td>'+
+        '<td><span class="acct-role '+o.role+'">'+roleMap[o.role]+'</span></td>'+
+        '<td>'+(o.shop||'-')+'</td>'+
+        '<td class="'+(o.active===false?'acct-inactive':'acct-active')+'">'+(o.active===false?'停用':'啟用')+'</td>'+
+        '<td style="font-size:.78rem;color:var(--muted)">'+(o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().toLocaleDateString('zh-HK'):'-')+'</td>'+
+        '<td class="acct-actions">'+
+          '<button class="acct-btn" onclick="openEditAcct(\''+d.id+'\')">編輯</button>'+
+          (o.role!=='admin'?' <button class="acct-btn danger" onclick="toggleAcct(\''+d.id+'\','+!o.active+')">'+(o.active===false?'啟用':'停用')+'</button>':'')+
+        '</td>'+
+      '</tr>';
+    });
+    body.innerHTML = html || '<tr><td colspan="6"><div class="empty-state">暫無其他帳號</div></td></tr>';
+  }).catch(function(e) {
+    body.innerHTML = '<tr><td colspan="6" style="color:var(--a)">載入失敗：'+e.message+'</td></tr>';
+  });
+}
+
+function openAddAcct() {
+  document.getElementById('acctModalTitle').textContent = '新增帳號';
+  document.getElementById('acctEditId').value = '';
+  document.getElementById('acctEmail').value = '';
+  document.getElementById('acctPw').value = '';
+  document.getElementById('acctPw').placeholder = '';
+  document.getElementById('acctEmail').parentElement.style.display = '';
+  document.getElementById('acctPwLabel').textContent = '密碼 *';
+  document.getElementById('acctRole').value = 'central';
+  document.getElementById('acctActive').value = 'true';
+  document.getElementById('acctMsg').style.display = 'none';
+  document.getElementById('acctModal').classList.add('open');
+}
+
+function openEditAcct(uid) {
+  document.getElementById('acctModalTitle').textContent = '編輯帳號';
+  document.getElementById('acctEditId').value = uid;
+  document.getElementById('acctEmail').value = uid;
+  document.getElementById('acctEmail').parentElement.style.display = 'none';
+  document.getElementById('acctPw').value = '';
+  document.getElementById('acctPwLabel').textContent = '新密碼（不改留空）';
+  db.collection('admins').doc(uid).get().then(function(doc) {
+    if (doc.exists) {
+      var o = doc.data();
+      document.getElementById('acctRole').value = o.role||'central';
+      document.getElementById('acctActive').value = String(o.active!==false);
+    }
+    document.getElementById('acctMsg').style.display = 'none';
+    document.getElementById('acctModal').classList.add('open');
+  });
+}
+
+function onRoleChange() {
+  // No special action needed yet
+}
+
+function closeAcctModal() {
+  document.getElementById('acctModal').classList.remove('open');
+}
+
+function saveAcct() {
+  var uid = document.getElementById('acctEditId').value;
+  var email = document.getElementById('acctEmail').value.trim();
+  var pw = document.getElementById('acctPw').value;
+  var role = document.getElementById('acctRole').value;
+  var active = document.getElementById('acctActive').value === 'true';
+  var msg = document.getElementById('acctMsg');
+  var btn = document.getElementById('acctSaveBtn');
+  msg.style.display = 'none';
+
+  if (!uid && !email) { msg.textContent = '請填寫電郵'; msg.className='modal-msg err'; msg.style.display='block'; return; }
+  if (!uid && !pw) { msg.textContent = '請填寫密碼'; msg.className='modal-msg err'; msg.style.display='block'; return; }
+
+  btn.disabled = true;
+  btn.textContent = '處理中...';
+
+  var shopMap = {admin:'', central:'① 中環街市', shatin:'② 始創中心'};
+
+  if (!uid) {
+    // Create new auth user + user doc
+    auth.createUserWithEmailAndPassword(email, pw).then(function(cred) {
+      return db.collection('admins').doc(cred.user.uid).set({
+        role: role, shop: shopMap[role]||'', active: true,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function() {
+        msg.textContent = '帳號已創建！';
+        msg.className = 'modal-msg ok';
+        msg.style.display = 'block';
+        btn.textContent = '儲存';
+        btn.disabled = false;
+        loadAccounts();
+        setTimeout(closeAcctModal, 1200);
+      });
+    }).catch(function(e) {
+      msg.textContent = '錯誤：'+e.message;
+      msg.className = 'modal-msg err';
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '儲存';
+    });
+  } else {
+    // Update user doc only
+    var updates = {role: role, shop: shopMap[role]||'', active: active};
+    db.collection('admins').doc(uid).update(updates).then(function() {
+      // If password changed, would need to use Firebase Auth Admin SDK (not possible client-side)
+      msg.textContent = '已更新！';
+      msg.className = 'modal-msg ok';
+      msg.style.display = 'block';
+      btn.textContent = '儲存';
+      btn.disabled = false;
+      loadAccounts();
+      setTimeout(closeAcctModal, 1200);
+    }).catch(function(e) {
+      msg.textContent = '錯誤：'+e.message;
+      msg.className = 'modal-msg err';
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '儲存';
+    });
+  }
+}
+
+function toggleAcct(uid, activate) {
+  if (!confirm(activate ? '啟用此帳號？' : '停用此帳號？')) return;
+  db.collection('admins').doc(uid).update({active: activate}).then(function() {
+    loadAccounts();
+  }).catch(function(e) {
+    alert('操作失敗：'+e.message);
+  });
+}
+</script>
+</body>
+</html>
