@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<title>祐興食品 - 管理員設定</title>
+<style>
+body{font-family:sans-serif;max-width:500px;margin:4rem auto;padding:2rem;background:#F5F0EB}
+h2{color:#C8462B;margin-bottom:.5rem}
+p{color:#6B6B6B;font-size:.9rem;margin-bottom:2rem;line-height:1.6}
+.card{background:white;border-radius:16px;padding:1.5rem;margin-bottom:1rem;border:1px solid #E0D8C8}
+.card h3{font-size:.95rem;margin-bottom:.6rem;color:#2D2D2D}
+.info{background:#FFF3CD;border-radius:8px;padding:.8rem;font-size:.82rem;color:#856404;margin-bottom:1rem}
+.error{background:#FFEAEA;border-radius:8px;padding:.8rem;font-size:.82rem;color:#C8462B;margin-bottom:1rem}
+.success{background:#E8F5E9;border-radius:8px;padding:.8rem;font-size:.82rem;color:#2E6A4F;margin-bottom:1rem}
+button{width:100%;padding:.8rem;background:#C8462B;color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:.7rem;font-family:inherit}
+button:hover{background:#A33A22}
+button:disabled{opacity:.5;cursor:not-allowed}
+.status{font-size:.82rem;color:#6B6B6B;margin-top:.4rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+td{padding:.4rem 0;border-bottom:1px solid #F0EBE0}
+td:first-child{font-weight:600;color:#C8462B}
+</style>
+</head>
+<body>
+
+<h2>祐興食品 - 管理員設定</h2>
+<p>一次性設定頁面。請在 Firebase Console 確認 Auth 規則允許新用戶註冊後，點下方按鈕創建管理員帳號。</p>
+
+<div class="info">⚠️ 此頁面只應使用一次。設定完成後建議刪除。</div>
+
+<div id="msg"></div>
+
+<h3 style="margin:1.5rem 0 .5rem;font-size:.9rem;color:#6B6B6B;text-transform:uppercase;letter-spacing:.05em">將創建以下帳號</h3>
+<table>
+<tr><td>admin@yauhing.hk</td><td>admin（全部權限）</td></tr>
+<tr><td>central@yauhing.hk</td><td>中環店</td></tr>
+<tr><td>pioneer@yauhing.hk</td><td>始創中心</td></tr>
+</table>
+
+<br>
+
+<button id="btn1" onclick="createAll()">🔧 建立管理員帳號</button>
+<button onclick="checkFirestore()" style="background:#2E6A4F">📋 檢查 Firestore 現有資料</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food",
+  storageBucket: "yauhing-food.firebasestorage.app",
+  messagingSenderId: "215564521673",
+  appId: "1:215564521673:web:2529129a767231e348bd18"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+var auth = firebase.auth();
+
+var accounts = [
+  {email:'admin@yauhing.hk', pw:'Bk83958339', role:'admin', shop:''},
+  {email:'central@yauhing.hk', pw:'yh123456', role:'central', shop:'① 中環街市'},
+  {email:'pioneer@yauhing.hk', pw:'yh123456', role:'shatin', shop:'② 始創中心'}
+];
+
+function log(msg, type) {
+  var el = document.getElementById('msg');
+  var cls = type || 'info';
+  el.innerHTML = '<div class="'+cls+'">'+msg+'</div>' + el.innerHTML;
+}
+
+async function createAll() {
+  var btn = document.getElementById('btn1');
+  btn.disabled = true;
+  btn.textContent = '🔄 設定中...';
+  log('開始建立帳號...');
+
+  // Sign in as a temp admin to get write access
+  // Actually we just need the users created, then we add Firestore docs
+  // For Firestore admin docs, we need an existing admin user
+  // Let's try: first check if any admin already exists
+  try {
+    var snap = await db.collection('admins').limit(1).get();
+    if (snap.empty) {
+      log('錯誤：需要先用 Firebase Console 創建一個初始 admin 帳號，並在 Firestore admins collection 建立記錄', 'error');
+      log('步驟：<br>1. Firebase Console → Authentication → 新增用戶 → 填 admin@yauhing.hk / Bk83958339<br>2. 取得該用戶 UID<br>3. Firebase Console → Firestore → 新增文檔 ID=該UID → 欄位 role="admin"', 'error');
+      btn.disabled = false; btn.textContent = '🔧 重新建立';
+      return;
+    }
+  } catch(e) {
+    log('Firestore 讀取失敗：'+e.message, 'error');
+    btn.disabled = false; btn.textContent = '🔧 重新建立';
+    return;
+  }
+
+  // Get current user (should be signed in as admin)
+  var user = auth.currentUser;
+  if (!user) {
+    log('請先以 admin 帳號登入本頁', 'error');
+    btn.disabled = false; btn.textContent = '🔧 重新建立';
+    return;
+  }
+
+  var step = 0;
+  for (var i = 0; i < accounts.length; i++) {
+    var acct = accounts[i];
+    try {
+      // Check if user already exists in admins
+      var existing = await db.collection('admins').doc(acct.email).get();
+      if (existing.exists) {
+        log('✓ ' + acct.email + ' 已有記錄，跳過', 'info');
+        step++;
+        continue;
+      }
+
+      // Create Auth user (may fail if email already exists)
+      var cred;
+      try {
+        cred = await auth.createUserWithEmailAndPassword(acct.email, acct.pw);
+      } catch(createErr) {
+        if (createErr.code === 'auth/email-already-in-use') {
+          // User exists in Auth but not in admins - find their UID by listing?
+          // Can't list all users client-side. Let's just try to add a doc with a placeholder UID
+          // Actually, we need to handle this case differently
+          log('⚠ ' + acct.email + ' 已存在於 Auth 但未在 admins 找到，需要手動處理', 'error');
+          continue;
+        }
+        throw createErr;
+      }
+
+      // Add to admins collection
+      await db.collection('admins').doc(cred.user.uid).set({
+        role: acct.role,
+        shop: acct.shop,
+        active: true,
+        email: acct.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      log('✓ ' + acct.email + ' 創建成功（UID: ' + cred.user.uid + '）', 'success');
+    } catch(e) {
+      log('✗ ' + acct.email + ' 失敗：' + e.message, 'error');
+    }
+  }
+  log('✅ 設定完成！');
+  btn.disabled = false;
+  btn.textContent = '🔧 重新設定';
+  btn.style.display = 'none';
+}
+
+async function checkFirestore() {
+  log('檢查中...');
+  try {
+    var snap = await db.collection('admins').get();
+    var html = '<table><tr><td>Doc ID</td><td>role</td><td>shop</td><td>active</td></tr>';
+    snap.forEach(function(d) {
+      var o = d.data();
+      html += '<tr><td>'+d.id+'</td><td>'+(o.role||'-')+'</td><td>'+(o.shop||'-')+'</td><td>'+o.active+'</td></tr>';
+    });
+    html += '</table>';
+    log(html);
+  } catch(e) {
+    log('Firestore 讀取失敗：'+e.message, 'error');
+  }
+}
+</script>
+</body>
+</html>
