@@ -1247,11 +1247,16 @@ function showOrderQR(orderId,customerName,customerPhone,total){
   }
   paymentModal.classList.add('open');
 }
+window.showOrderQR=showOrderQR;
 
 function toggleOrderDetail(docId){
   var el=document.getElementById('od-'+docId);
   if(el)el.classList.toggle('show');
 }
+window.toggleOrderDetail=toggleOrderDetail;
+window.payFromOrder=payFromOrder;
+window.cancelOrder=cancelOrder;
+window.searchOrder=searchOrder;
 
 async function saveOrder(orderData){
   if(!db||!auth.currentUser)return;
