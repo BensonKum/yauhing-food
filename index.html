@@ -1181,6 +1181,10 @@ function renderOrders(){
       html+='<div class="order-detail-row"><span>收件人</span><span>'+(o.sfName||'')+'</span></div>';
       html+='<div class="order-detail-row"><span>收貨地址</span><span>'+(o.sfAddress||'')+'</span></div>';
     }
+    // 已付款訂單顯示「查看取貨 QR」
+    if(o.status==='paid'||o.status==='shipped'||o.status==='completed'){
+      html+='<div style="margin-top:0.8rem"><button class="order-qr-btn" onclick="event.stopPropagation();showOrderQR(\''+o.orderId+'\',\''+(o.customerName||'')+'\',\''+(o.customerPhone||'')+'\','+(o.finalTotal||o.total)+')">顯示取貨 QR Code</button></div>';
+    }
     // 待付款/已付款顯示「去付款」按鈕
     if(o.status==='pending'||o.status==='paid'){
       html+='<div class="order-actions">';
@@ -1215,6 +1219,33 @@ function cancelOrder(docId){
   db.collection('orders').doc(docId).update({status:'cancelled'}).then(function(){
     if(auth.currentUser)loadOrders(auth.currentUser.uid);
   });
+}
+
+function showOrderQR(orderId,customerName,customerPhone,total){
+  // 打開付款 Modal 顯示 QR Code
+  paymentOrderId.textContent='#'+orderId;
+  paymentAmount.textContent='HK$'+total;
+  // 直接生成 QR 並顯示
+  var qrBox=document.getElementById('pickupQRBox');
+  var qrInfo=document.getElementById('pickupQRInfo');
+  var qrSection=document.getElementById('pickupQRSection');
+  var confirmBtn=document.getElementById('paymentConfirm');
+  if(qrBox&&qrSection){
+    // 隱藏未付款的確認按鈕
+    if(confirmBtn){confirmBtn.style.display='none';}
+    // 生成 QR
+    var qr=qrcode(0,'M');
+    qr.addData(orderId);
+    qr.make();
+    qrBox.innerHTML=qr.createSvgTag(6,4);
+    if(qrInfo)qrInfo.innerHTML='<strong>'+customerName+'</strong>｜'+customerPhone+'｜<strong>HK$'+total+'</strong>';
+    qrSection.style.display='block';
+    // 滾動到 QR
+    setTimeout(function(){
+      qrSection.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
+  }
+  paymentModal.classList.add('open');
 }
 
 function toggleOrderDetail(docId){
@@ -1276,6 +1307,7 @@ async function saveOrder(orderData){
 .order-pay-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(76,175,80,.3)}
 .order-cancel-btn{padding:.7rem 1rem;background:transparent;color:#C62828;border:1.5px solid #C62828;border-radius:10px;cursor:pointer;font-size:.85rem;font-weight:500;transition:var(--tr)}
 .order-cancel-btn:hover{background:#FFEBEE}
+.order-qr-btn{width:100%;margin-top:.5rem;background:linear-gradient(135deg,#2E6A4F,#52B788);color:white;border:none;padding:.65rem;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit}
 .orders-list{padding:0;overflow-y:auto;max-height:60vh}
 .orders-empty{padding:3rem 1rem;text-align:center;color:var(--muted)}
 .order-item{border-bottom:1px solid var(--bd);padding:1rem;cursor:pointer;transition:background .2s}
