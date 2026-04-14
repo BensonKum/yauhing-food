@@ -5,412 +5,348 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>祐興食品 - 訂單核實</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: 'Noto Sans TC', sans-serif;
-    background: #f5f0eb;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    font-family:'Noto Sans TC',sans-serif;
+    background:#f5f0eb;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
   }
-  .container {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 480px;
-    overflow: hidden;
+  .wrap {
+    background:white;
+    border-radius:16px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.1);
+    width:100%;
+    max-width:480px;
+    overflow:hidden;
   }
-  .header {
-    background: #C8462B;
-    color: white;
-    padding: 1.5rem;
-    text-align: center;
+  .top {
+    background:#C8462B;
+    color:white;
+    padding:1.5rem;
+    text-align:center;
   }
-  .header h1 { font-size: 1.4rem; font-weight: 700; }
-  .header p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.3rem; }
+  .top h1 { font-size:1.4rem; font-weight:700; }
+  .top p { font-size:0.8rem; opacity:0.85; margin-top:0.3rem; }
 
-  .search-box {
-    padding: 1.2rem;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    gap: 0.5rem;
+  .row { padding:1.2rem; border-bottom:1px solid #eee; display:flex; gap:0.5rem; }
+  input {
+    flex:1;
+    padding:0.8rem 1rem;
+    border:2px solid #eee;
+    border-radius:10px;
+    font-size:1rem;
+    font-family:inherit;
+    outline:none;
   }
-  .search-box input {
-    flex: 1;
-    padding: 0.8rem 1rem;
-    border: 2px solid #eee;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .search-box input:focus { border-color: #C8462B; }
-  .search-box button {
-    padding: 0.8rem 1.2rem;
-    background: #C8462B;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .search-box button:hover { background: #A33A22; }
+  input:focus { border-color:#C8462B; }
 
-  .result { padding: 1.5rem; }
-  .result-empty {
-    text-align: center;
-    color: #999;
-    padding: 2rem;
-    font-size: 0.9rem;
+  .btn {
+    padding:0.8rem 1.2rem;
+    background:#C8462B;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:1rem;
+    cursor:pointer;
+    font-family:inherit;
+    white-space:nowrap;
   }
-  .result-card { border-radius: 12px; overflow: hidden; border: 2px solid #eee; }
-  .result-card .card-header {
-    background: #C8462B;
-    color: white;
-    padding: 1rem 1.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .card-header .order-id { font-weight: 700; font-size: 1.1rem; }
-  .card-header .status-badge {
-    padding: 0.3rem 0.8rem;
-    border-radius: 50px;
-    font-size: 0.78rem;
-    font-weight: 600;
-  }
-  .status-badge.paid { background: #2E6A4F; }
-  .status-badge.pending { background: #E07B3A; }
-  .status-badge.shipped { background: #1565C0; }
-  .status-badge.completed { background: #388E3C; }
-  .status-badge.cancelled { background: #999; }
+  .btn:hover { background:#A33A22; }
+  .btn.block { display:block; width:100%; margin:0 1.2rem 1rem; padding:0.9rem; background:#333; }
+  .btn:hover.block { background:#555; }
 
-  .card-body { padding: 1.2rem; }
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.88rem;
+  .status-box {
+    display:none;
+    margin:0 1.2rem 1rem;
+    padding:0.7rem;
+    border-radius:8px;
+    font-size:0.85rem;
+    text-align:center;
   }
-  .info-row:last-child { border-bottom: none; }
-  .info-label { color: #888; }
-  .info-value { font-weight: 600; color: #333; }
-  .info-value.highlight { color: #C8462B; font-size: 1.1rem; }
+  .status-box.warn { background:#FFF3CD; color:#856404; }
+  .status-box.err { background:#F8D7DA; color:#721C24; }
 
-  .items-section { margin-top: 1rem; }
-  .items-title { font-size: 0.78rem; color: #888; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  .item-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.4rem 0;
-    font-size: 0.85rem;
-    color: #555;
-  }
-  .item-name { flex: 1; }
-  .item-qty { color: #888; margin-right: 1rem; }
-  .item-price { font-weight: 600; }
+  #cam { display:none; margin:0 1.2rem 1rem; border-radius:12px; overflow:hidden; }
 
-  .verified-badge {
-    display: none;
-    margin-top: 1rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, #2E6A4F, #52B788);
-    color: white;
-    border-radius: 12px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 1.1rem;
+  .result { padding:1.5rem; }
+  .empty { text-align:center; color:#999; padding:2rem; font-size:0.9rem; }
+  .card { border-radius:12px; overflow:hidden; border:2px solid #eee; }
+  .card-head {
+    background:#C8462B;
+    color:white;
+    padding:1rem 1.2rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
   }
-  .verified-badge.show { display: block; }
-  .verified-badge .sub { font-size: 0.8rem; opacity: 0.85; font-weight: 400; margin-top: 0.3rem; }
-
-  .scan-section {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f8f4ef;
-    border-radius: 12px;
-    text-align: center;
+  .oid { font-weight:700; font-size:1.1rem; }
+  .badge { padding:0.3rem 0.8rem; border-radius:50px; font-size:0.78rem; font-weight:600; }
+  .badge.paid { background:#2E6A4F; }
+  .badge.pending { background:#E07B3A; }
+  .badge.shipped { background:#1565C0; }
+  .badge.completed { background:#388E3C; }
+  .badge.cancelled { background:#999; }
+  .body { padding:1.2rem; }
+  .info { display:flex; justify-content:space-between; padding:0.6rem 0; border-bottom:1px solid #f0f0f0; font-size:0.88rem; }
+  .info:last-child { border-bottom:none; }
+  .lbl { color:#888; }
+  .val { font-weight:600; color:#333; }
+  .val.red { color:#C8462B; font-size:1.1rem; }
+  .val.grn { color:#2E6A4F; }
+  .items { margin-top:1rem; }
+  .items-title { font-size:0.78rem; color:#888; margin-bottom:0.5rem; text-transform:uppercase; }
+  .item { display:flex; justify-content:space-between; padding:0.4rem 0; font-size:0.85rem; color:#555; }
+  .item span:first-child { flex:1; }
+  .item span:nth-child(2) { color:#888; margin-right:1rem; }
+  .item span:last-child { font-weight:600; }
+  .ok {
+    display:none;
+    margin-top:1rem;
+    padding:1rem;
+    background:linear-gradient(135deg,#2E6A4F,#52B788);
+    color:white;
+    border-radius:12px;
+    text-align:center;
+    font-weight:700;
+    font-size:1.1rem;
   }
-  .scan-section p { font-size: 0.78rem; color: #888; margin-bottom: 0.5rem; }
-  #qrcode { display: inline-block; margin: 0.5rem auto; }
-  #qrcode canvas { border-radius: 8px; }
-
-  .scan-btn-section {
-    padding: 0 1.2rem 1rem;
-    text-align: center;
+  .ok.show { display:block; }
+  .ok small { display:block; font-size:0.8rem; opacity:0.85; font-weight:400; margin-top:0.3rem; }
+  .warn2 {
+    display:none;
+    margin-top:1rem;
+    padding:1rem;
+    background:#FFF3CD;
+    border-radius:12px;
+    font-size:0.85rem;
+    color:#856404;
+    text-align:center;
   }
-  .scan-btn-section button {
-    width: 100%;
-    padding: 0.8rem;
-    background: #333;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .scan-btn-section button:hover { background: #555; }
-  #reader video { border-radius: 12px; }
 </style>
 </head>
 <body>
-<!-- QR Code library -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script>
-// Library load check
-window.addEventListener("load", function() {
-  var btn = document.getElementById("scanBtn");
-  if (typeof Html5Qrcode === "undefined") {
-    btn.textContent = "掃描庫加載失敗 - 請重新整理";
-    btn.style.background = "#E07B3A";
-    btn.onclick = function() { alert("QR掃描庫未加載，請重新整理網頁。\n如仍失敗，請手動輸入訂單編號查詢。"); };
-  }
-});
-</script>
-
-<div class="container">
-  <div class="header">
-    <h1>🏪 祐興食品 訂單核實</h1>
+<div class="wrap">
+  <div class="top">
+    <h1>祐興食品 訂單核實</h1>
     <p>輸入訂單編號或掃描 QR Code</p>
   </div>
 
-  <div class="search-box">
-    <input type="text" id="orderInput" placeholder="例如：YH20260413001" onkeydown="if(event.key==='Enter')searchOrder()">
-    <button onclick="searchOrder()">🔍 查詢</button>
+  <div class="row">
+    <input type="text" id="txt" placeholder="例如：YH20260413001">
+    <button class="btn" id="qbtn">查詢</button>
   </div>
 
-  <div class="scan-btn-section">
-    <button id="scanBtn" onclick="startScanner()">&#x1F4F7; 掃描 QR Code</button>
-    <div id="reader" style="display:none; margin-top:1rem;"></div>
-  </div>
+  <button class="btn block" id="sbtn">掃描 QR Code</button>
+  <div class="status-box" id="sstatus"></div>
+  <div id="cam"></div>
 
-  <div class="result" id="result">
-    <div class="result-empty">請輸入訂單編號查詢</div>
+  <div class="result" id="res">
+    <div class="empty">請輸入訂單編號查詢</div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 <script>
-// ── Firebase SDK ──────────────────────────────────────────
-const firebaseConfig = {
-  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
-  authDomain: "yauhing-food.firebaseapp.com",
-  projectId: "yauhing-food",
-  storageBucket: "yauhing-food.firebasestorage.app",
-  messagingSenderId: "215564521673",
-  appId: "1:215564521673:web:2529129a767231e348bd18",
-};
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Firebase
+(function(){
+  try {
+    var fc = {
+      apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+      authDomain: "yauhing-food.firebaseapp.com",
+      projectId: "yauhing-food",
+      storageBucket: "yauhing-food.firebasestorage.app",
+      messagingSenderId: "215564521673",
+      appId: "1:215564521673:web:2529129a767231e348bd18"
+    };
+    if(!firebase.apps.length) firebase.initializeApp(fc);
+    window.db = firebase.firestore();
+  } catch(e) { console.error(e); }
+})();
 
-const STATUS_MAP = {
-  pending: { label: "💳 待付款", cls: "pending" },
-  paid:    { label: "✅ 已付款", cls: "paid" },
-  shipped: { label: "📦 已發貨", cls: "shipped" },
-  completed: { label: "🎉 已完成", cls: "completed" },
-  cancelled:{ label: "❌ 已取消", cls: "cancelled" },
-};
-
-const PICKUP_SHOPS = {
-  "[1] 中環街市1樓P04C舖": "① 中環街市1樓P04C舖",
-  "[2] 旺角始創中心地下KIOSK J舖": "② 旺角始創中心地下KIOSK J舖",
-};
-
-function renderStatus(status) {
-  const s = STATUS_MAP[status] || STATUS_MAP.pending;
-  return `<span class="status-badge ${s.cls}">${s.label}</span>`;
+// Show status message
+function setStatus(msg, type) {
+  var el = document.getElementById("sstatus");
+  el.textContent = msg;
+  el.className = "status-box " + type;
+  el.style.display = "block";
+}
+function hideStatus() {
+  document.getElementById("sstatus").style.display = "none";
 }
 
-async function searchOrder() {
-  const input = document.getElementById("orderInput").value.trim();
-  if (!input) return;
+// Query button
+document.getElementById("qbtn").onclick = function() {
+  var v = document.getElementById("txt").value.trim();
+  if(!v) return;
+  doSearch(v);
+};
 
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = '<div class="result-empty">🔄 查詢中...</div>';
+// Enter key
+document.getElementById("txt").onkeydown = function(e) {
+  if(e.key === "Enter") {
+    e.preventDefault();
+    var v = this.value.trim();
+    if(v) doSearch(v);
+  }
+};
 
+async function doSearch(oid) {
+  var res = document.getElementById("res");
+  res.innerHTML = '<div class="empty">查詢中...</div>';
   try {
-    const snap = await db.collection("orders")
-      .where("orderId", "==", input)
-      .get();
-
-    if (snap.empty) {
-      // Try partial match
-      const snap2 = await db.collection("orders")
-        .orderBy("createdAt", "desc")
-        .limit(20)
-        .get();
-      const found = snap2.docs.find(d => d.data().orderId && d.data().orderId.includes(input));
-      if (found) {
-        renderOrder(found.data(), found.id);
-      } else {
-        resultDiv.innerHTML = `<div class="result-empty">❌ 找不到訂單：${input}<br><br>請確認訂單編號是否正確</div>`;
-      }
+    var snap = await db.collection("orders").where("orderId","==",oid).get();
+    if(!snap.empty) {
+      showOrder(snap.docs[0].data(), snap.docs[0].id);
       return;
     }
-
-    const doc = snap.docs[0];
-    renderOrder(doc.data(), doc.id);
-  } catch (e) {
-    resultDiv.innerHTML = `<div class="result-empty">⚠️ 查詢失敗：${e.message}</div>`;
+    // partial match
+    var snap2 = await db.collection("orders").orderBy("createdAt","desc").limit(30).get();
+    var found = null;
+    for(var i=0;i<snap2.docs.length;i++) {
+      var d = snap2.docs[i].data();
+      if(d.orderId && d.orderId.indexOf(oid) >= 0) { found = d; break; }
+    }
+    if(found) {
+      showOrder(found, snap2.docs[i].id);
+    } else {
+      res.innerHTML = '<div class="empty">找不到訂單：' + oid + '<br><br>請確認訂單編號是否正確</div>';
+    }
+  } catch(e) {
+    res.innerHTML = '<div class="empty">查詢失敗：' + e.message + '</div>';
   }
 }
 
-function renderOrder(data, docId) {
-  const resultDiv = document.getElementById("result");
-  const status = data.status || "pending";
-  const pickup = PICKUP_SHOPS[data.pickupShop] || data.pickupShop || "";
+function showOrder(d, did) {
+  var shops = {};
+  shops["[1] 中環街市1樓P04C舖"] = "① 中環街市1樓P04C舖";
+  shops["[2] 旺角始創中心地下KIOSK J舖"] = "② 旺角始創中心地下KIOSK J舖";
 
-  const itemsHtml = (data.items || []).map(item => `
-    <div class="item-row">
-      <span class="item-name">${item.name || item}${item.variant ? ` (${item.variant})` : ""}</span>
-      <span class="item-qty">×${item.qty}</span>
-      <span class="item-price">HK$${item.qty * item.price}</span>
-    </div>
-  `).join("");
+  var statusMap = {
+    pending: {label:"待付款",cls:"pending"},
+    paid: {label:"已付款",cls:"paid"},
+    shipped: {label:"已發貨",cls:"shipped"},
+    completed: {label:"已完成",cls:"completed"},
+    cancelled: {label:"已取消",cls:"cancelled"}
+  };
+  var st = d.status || "pending";
+  var sm = statusMap[st] || statusMap.pending;
+  var pickup = shops[d.pickupShop] || d.pickupShop || "";
+  var isPaid = (st === "paid" || st === "shipped" || st === "completed");
 
-  const isPaid = status === "paid" || status === "shipped" || status === "completed";
-  const shopName = data.deliveryMethod === "自取" ? "（自取）" : "（順豐）";
-
-  resultDiv.innerHTML = `
-    <div class="result-card">
-      <div class="card-header">
-        <span class="order-id">#${data.orderId || docId}</span>
-        ${renderStatus(status)}
-      </div>
-      <div class="card-body">
-        <div class="info-row">
-          <span class="info-label">顧客名稱</span>
-          <span class="info-value">${data.customerName || "-"}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">聯絡電話</span>
-          <span class="info-value">${data.customerPhone || "-"}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">配送方式</span>
-          <span class="info-value">${data.deliveryMethod || "-"} ${pickup}</span>
-        </div>
-        ${data.deliveryMethod === "順豐" ? `
-        <div class="info-row">
-          <span class="info-label">收件地址</span>
-          <span class="info-value" style="font-size:0.8rem">${data.sfAddress || "-"}</span>
-        </div>` : ""}
-        <div class="info-row">
-          <span class="info-label">實付金額</span>
-          <span class="info-value highlight">HK$${data.finalTotal || data.total || 0}</span>
-        </div>
-        ${data.discount > 0 ? `
-        <div class="info-row">
-          <span class="info-label">會員折扣</span>
-          <span class="info-value" style="color:#2E6A4F">-HK$${data.discount}</span>
-        </div>` : ""}
-        <div class="info-row">
-          <span class="info-label">訂單時間</span>
-          <span class="info-value" style="font-size:0.8rem">${data.createdAt ? new Date(data.createdAt.toDate()).toLocaleString("zh-HK") : "-"}</span>
-        </div>
-
-        <div class="items-section">
-          <div class="items-title">📦 訂購商品</div>
-          ${itemsHtml}
-        </div>
-
-        ${isPaid ? `
-        <div class="verified-badge show">
-          ✅ 確認為有效已付款訂單
-          <div class="sub">顧客：${data.customerName || "-"}｜金額：HK$${data.finalTotal || data.total || 0}</div>
-        </div>` : `
-        <div class="scan-section">
-          <p>⚠️ 此訂單尚未付款，請確認顧客已完成轉數快付款</p>
-        </div>`}
-      </div>
-    </div>
-  `;
-
-  // Generate QR code
-  const orderId = data.orderId || docId;
-  const qrDiv = document.getElementById("qrcode");
-  if (qrDiv) {
-    qrDiv.innerHTML = "";
-    const qr = qrcode(0, "M");
-    qr.addData(orderId);
-    qr.make();
-    qrDiv.innerHTML = qr.createSvgTag(6, 4);
+  var rows = "";
+  rows += '<div class="info"><span class="lbl">顧客名稱</span><span class="val">' + (d.customerName||"-") + '</span></div>';
+  rows += '<div class="info"><span class="lbl">聯絡電話</span><span class="val">' + (d.customerPhone||"-") + '</span></div>';
+  rows += '<div class="info"><span class="lbl">配送方式</span><span class="val">' + (d.deliveryMethod||"-") + " " + pickup + '</span></div>';
+  if(d.deliveryMethod === "順豐") {
+    rows += '<div class="info"><span class="lbl">收件地址</span><span class="val" style="font-size:0.8rem">' + (d.sfAddress||"-") + '</span></div>';
   }
-}
-
-// ── QR Scanner ──────────────────────────────────────────
-let html5QrCode = null;
-
-async function startScanner() {
-  const btn = document.getElementById("scanBtn");
-  const readerDiv = document.getElementById("reader");
-
-  if (typeof Html5Qrcode === "undefined") {
-    alert("QR掃描庫未加載，請重新整理網頁。\n如仍失敗，請手動輸入訂單編號。");
-    return;
+  rows += '<div class="info"><span class="lbl">實付金額</span><span class="val red">HK$' + (d.finalTotal||d.total||0) + '</span></div>';
+  if(d.discount > 0) {
+    rows += '<div class="info"><span class="lbl">會員折扣</span><span class="val grn">-HK$' + d.discount + '</span></div>';
+  }
+  if(d.createdAt) {
+    var d2 = d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt);
+    rows += '<div class="info"><span class="lbl">訂單時間</span><span class="val" style="font-size:0.8rem">' + d2.toLocaleString("zh-HK") + '</span></div>';
   }
 
-  if (html5QrCode && html5QrCode.isScanning) {
-    await html5QrCode.stop().catch(function(){});
-    readerDiv.style.display = "none";
-    readerDiv.innerHTML = "";
-    btn.textContent = "\u5FEB\u7167 QR Code";
-    btn.style.background = "#333";
-    return;
+  var items = "";
+  for(var j=0;j<(d.items||[]).length;j++) {
+    var it = d.items[j];
+    var nm = it.name || it;
+    if(it.variant) nm += " (" + it.variant + ")";
+    items += '<div class="item"><span>' + nm + '</span><span>x' + it.qty + '</span><span>HK$' + (it.qty*it.price) + '</span></div>';
   }
 
-  btn.textContent = "\u5553\u52D5\u4E2D...";
-  btn.disabled = true;
-  readerDiv.style.display = "block";
-  readerDiv.innerHTML = '<p style="padding:1rem;text-align:center;color:#888;">\u6B63\u5728\u5553\u52D5\u76F8\u6A5F...</p>';
+  var html = '<div class="card">';
+  html += '<div class="card-head"><span class="oid">#' + (d.orderId||did) + '</span><span class="badge ' + sm.cls + '">' + sm.label + '</span></div>';
+  html += '<div class="body">';
+  html += rows;
+  if(items) html += '<div class="items"><div class="items-title">訂購商品</div>' + items + '</div>';
+  if(isPaid) {
+    html += '<div class="ok show">確認為有效已付款訂單<small>顧客：' + (d.customerName||"-") + "｜金額：HK$" + (d.finalTotal||d.total||0) + '</small></div>';
+  } else {
+    html += '<div class="warn2">此訂單尚未付款，請確認顧客已完成轉數快付款</div>';
+  }
+  html += '</div></div>';
+  document.getElementById("res").innerHTML = html;
 
+  // QR code for order ID
+  var oid2 = d.orderId || did;
   try {
-    html5QrCode = new Html5Qrcode("reader");
-    await html5QrCode.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      onScanSuccess,
-      function() {}
-    );
-    btn.textContent = "\u505C\u6B62\u6383\u63CF";
-    btn.style.background = "#C8462B";
-    btn.disabled = false;
-  } catch (e) {
-    var msg = e.message || String(e);
-    alert("\u7121\u6CD5\u5553\u52D5\u76F8\u6A5F\uFF1A" + msg);
-    readerDiv.style.display = "none";
-    readerDiv.innerHTML = "";
-    btn.textContent = "\u5FEB\u7167 QR Code";
-    btn.style.background = "#333";
-    btn.disabled = false;
-  }
+    var qr = qrcode(0,"M");
+    qr.addData(oid2);
+    qr.make();
+    document.getElementById("res").innerHTML += '<div style="margin-top:1rem;text-align:center;"><div style="display:inline-block;background:white;border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">' + qr.createSvgTag(6,4) + '</div></div>';
+  } catch(e) {}
 }
 
-function onScanSuccess(decodedText) {
-  var orderId = decodedText;
-  if (decodedText.indexOf("YH-PICKUP:") === 0) {
-    orderId = decodedText.split("|")[0].replace("YH-PICKUP:", "");
+// QR Scanner
+var cam = null;
+document.getElementById("sbtn").onclick = function() {
+  if(typeof Html5Qrcode === "undefined") {
+    setStatus("QR掃描庫未加載，請重新整理頁面", "err");
+    return;
   }
-
-  if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop().catch(function(){});
-    document.getElementById("reader").style.display = "none";
-    document.getElementById("reader").innerHTML = "";
-    var btn = document.getElementById("scanBtn");
-    btn.textContent = "\u5FEB\u7167 QR Code";
-    btn.style.background = "#333";
+  if(cam && cam.isScanning) {
+    cam.stop().catch(function(){});
+    document.getElementById("cam").style.display = "none";
+    document.getElementById("cam").innerHTML = "";
+    cam = null;
+    this.textContent = "掃描 QR Code";
+    this.style.background = "#333";
+    return;
   }
+  this.textContent = "啟動相機中...";
+  this.disabled = true;
+  var camDiv = document.getElementById("cam");
+  camDiv.style.display = "block";
+  camDiv.innerHTML = '<p style="padding:1rem;text-align:center;color:#888;">相機啟動中，請稍候...</p>';
+  cam = new Html5Qrcode("cam");
+  cam.start(
+    { facingMode: "environment" },
+    { fps:10, qrbox:{width:250,height:250} },
+    function(text) {
+      // found QR
+      var oid = text;
+      if(text.indexOf("YH-PICKUP:") === 0) {
+        oid = text.split("|")[0].replace("YH-PICKUP:","");
+      }
+      cam.stop().catch(function(){});
+      document.getElementById("cam").style.display = "none";
+      document.getElementById("cam").innerHTML = "";
+      cam = null;
+      document.getElementById("sbtn").textContent = "掃描 QR Code";
+      document.getElementById("sbtn").style.background = "#333";
+      document.getElementById("sbtn").disabled = false;
+      document.getElementById("txt").value = oid;
+      doSearch(oid);
+    },
+    function() {}
+  ).then(function() {
+    document.getElementById("sbtn").textContent = "停止掃描";
+    document.getElementById("sbtn").style.background = "#C8462B";
+    document.getElementById("sbtn").disabled = false;
+    hideStatus();
+  }).catch(function(e) {
+    document.getElementById("cam").style.display = "none";
+    document.getElementById("cam").innerHTML = "";
+    document.getElementById("sbtn").textContent = "掃描 QR Code";
+    document.getElementById("sbtn").style.background = "#333";
+    document.getElementById("sbtn").disabled = false;
+    setStatus("無法啟動相機：" + (e.message||e), "err");
+  });
+};
 
-  document.getElementById("orderInput").value = orderId;
-  searchOrder();
-}
+// Global error
+window.onerror = function(msg) {
+  setStatus("JS Error: " + msg, "err");
+};
 </script>
 </body>
 </html>
