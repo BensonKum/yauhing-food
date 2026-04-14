@@ -769,6 +769,11 @@ paymentConfirm.onclick=function(){
     document.getElementById('pickupQRInfo').innerHTML=
       '<strong>'+cust+'</strong>｜'+phone+'｜<strong>HK$'+amt+'</strong>';
     document.getElementById('pickupQRSection').style.display='block';
+    // 自動滾動到 QR 區塊
+    setTimeout(function(){
+      var el=document.getElementById('pickupQRSection');
+      if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
+    },100);
   }
   // Replace alert with friendly message
   document.getElementById('paymentConfirm').textContent='✅ 已確認';
