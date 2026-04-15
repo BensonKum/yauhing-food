@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -13,7 +13,7 @@
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7}
 
-/* ─── Top Bar ─── */
+/* --- Top Bar --- */
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:1000;
   background:rgba(250,250,248,.95);backdrop-filter:blur(20px);
@@ -49,7 +49,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .topbar-right{display:flex;align-items:center;gap:.6rem}
 .user-info{font-size:.75rem;color:var(--muted)}
 
-/* ─── Main Layout ─── */
+/* --- Main Layout --- */
 .main-wrap{
   margin-top:68px;display:flex;height:calc(100vh - 68px);
 }
@@ -67,7 +67,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-logout{padding:.3rem .7rem;border:1px solid var(--bd);background:transparent;border-radius:6px;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr);margin-right:.4rem}
 .btn-logout:hover{background:var(--red);color:white;border-color:var(--red)}
 
-/* ─── Product Grid ─── */
+/* --- Product Grid --- */
 .pgrid-area{flex:1;overflow-y:auto;padding:1.2rem}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;padding-bottom:180px}
 
@@ -107,7 +107,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   color:var(--txt);min-width:24px;
 }
 
-/* ─── Cart Panel ─── */
+/* --- Cart Panel --- */
 .cart-panel{
   width:340px;flex-shrink:0;background:white;border-left:1px solid var(--bd);
   display:flex;flex-direction:column;
@@ -247,7 +247,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   align-items:center;justify-content:center;
 }
 
-/* ─── Tab Content ─── */
+/* --- Tab Content --- */
 .tab-content{display:none}
 .tab-content.active{display:block}
 
@@ -507,7 +507,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-// ─── Firebase Config ───
+// --- Firebase Config ---
 const fb = firebase.initializeApp({
   apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
   authDomain: "yauhing-food.firebaseapp.com",
@@ -516,7 +516,7 @@ const fb = firebase.initializeApp({
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// ─── State ───
+// --- State ---
 let products = [];
 let cart = {};       // {cartKey: {qty, price, cat, pack}}
 let selectedPack = {}; // {productName: selectedPackLabel}
@@ -525,14 +525,14 @@ let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
 let currentCat = '全部';
 
-// ─── Load Products from products.json ───
+// --- Load Products from products.json ---
 fetch('products.json').then(r=>r.json()).then(data=>{
   products = data;
   renderCatBar();
   renderGrid();
 }).catch(e=>console.error('products.json load failed:',e));
 
-// ─── Auth ───
+// --- Auth ---
 auth.onAuthStateChanged(user=>{
   if(user){ currentUser=user; showApp(); }
   else {
@@ -563,7 +563,7 @@ function showApp(){
   showStoreSelect();
 }
 
-// ─── Store Select ───
+// --- Store Select ---
 function showStoreSelect(){
   // Admin can choose store freely; others auto-select based on email
   const email = currentUser ? currentUser.email.toLowerCase() : '';
@@ -602,7 +602,7 @@ function selectStore(store){
   loadInventory();
 }
 
-// ─── Inventory Loading ───
+// --- Inventory Loading ---
 let inventory = {}; // {productName: {central: n, pioneer: n}}
 
 async function loadInventory(){
@@ -616,7 +616,7 @@ async function loadInventory(){
   renderGrid();
 }
 
-// ─── Mode ───
+// --- Mode ---
 function setMode(mode){
   currentMode=mode;
   const sale=document.getElementById('modeSale');
@@ -641,7 +641,7 @@ function setMode(mode){
   }
 }
 
-// ─── Category Bar ───
+// --- Category Bar ---
 function renderCatBar(){
   console.log('renderCatBar called, products:', products);
   const cats=['\u5168\u90e8',...new Set(products.map(p=>p.cat))];
@@ -658,7 +658,7 @@ function renderCatBar(){
   console.log('renderCatBar done, buttons added:', cats.length);
 }
 
-// ─── Product Grid ───
+// --- Product Grid ---
 function parseMultiPrice(priceStr){
   // priceStr like "HKD 25 (細樽裝) / HKD 40 (大樽裝)"
   const result={};
@@ -800,7 +800,7 @@ function renderGrid(){
   });
 }
 
-// ─── Cart Logic ───
+// --- Cart Logic ---
 function changeQty(cartKey,delta,p,selPack){
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
   if(!cart[cartKey]){
@@ -847,7 +847,7 @@ function getPriceNum(priceStr){
   return m?parseFloat(m[0]):0;
 }
 
-// ─── Confirm & Save ───
+// --- Confirm & Save ---
 function confirmTransaction(){
   if(Object.keys(cart).length===0){toast('請先加入產品');return;}
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
@@ -931,19 +931,19 @@ function closeReceipt(){
   document.getElementById('receiptModal').classList.remove('show');
 }
 
-// ─── Toast ───
+// --- Toast ---
 function toast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-// ─── Mobile Cart ───
+// --- Mobile Cart ---
 function toggleMobileCart(){
   document.getElementById('cartPanel').classList.toggle('open');
 }
 
-// ─── Tab Navigation ───
+// --- Tab Navigation ---
 let currentTab = 'pos';
 
 function switchTab(tab){
@@ -956,7 +956,7 @@ function switchTab(tab){
   if(tab==='log') renderLog();
 }
 
-// ─── Report Tab ───
+// --- Report Tab ---
 async function renderReport(){
   let txns=[];
   try {
@@ -1017,7 +1017,7 @@ async function renderReport(){
     </tr>`).join('');
 }
 
-// ─── Log Tab ───
+// --- Log Tab ---
 async function renderLog(){
   let txns=[];
   try {
