@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祐興倉存管理 | Yau Hing Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF8;--bg2:#F0EAE0;--txt:#2D2D2D;--muted:#6B6B6B;--red:#C8462B;--orange:#E07B3A;--green:#2D6A4F;--gold:#D4A843;--bd:#E0D8C8;--sh1:0 2px 8px rgba(0,0,0,.06);--sh2:0 8px 24px rgba(0,0,0,.10);--r:14px;--tr:all .3s cubic-bezier(.4,0,.2,1);}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7}
+
+/* ─── Top Bar ─── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(250,250,248,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);padding:.5rem 1.2rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.topbar-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:700;color:var(--txt);white-space:nowrap}
+.topbar-title small{display:block;font-family:'Noto Sans TC',sans-serif;font-size:.65rem;font-weight:400;color:var(--muted)}
+
+.mode-toggle{display:flex;background:var(--bg2);border-radius:50px;padding:3px;gap:3px}
+.mode-btn{
+  padding:.35rem 1.1rem;border:none;border-radius:50px;font-size:.8rem;font-weight:500;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:var(--tr);color:var(--muted);background:transparent;
+}
+.mode-btn.active{background:var(--red);color:white}
+.mode-btn.active-purchase{background:var(--green);color:white}
+.mode-btn.active-purchase{background:var(--green);color:white}
+
+.store-badge{
+  padding:.35rem .9rem;border-radius:50px;font-size:.78rem;font-weight:600;
+  font-family:'Noto Sans TC',sans-serif;border:1.5px solid var(--bd);cursor:pointer;transition:var(--tr);white-space:nowrap;
+}
+.store-badge.central{background:#FFF3E0;color:#E65100;border-color:#FFB74D}
+.store-badge.pioneer{background:#F3E5F5;color:#6A1B9A;border-color:#CE93D8}
+
+.topbar-right{display:flex;align-items:center;gap:.6rem}
+.user-info{font-size:.75rem;color:var(--muted)}
+
+/* ─── Main Layout ─── */
+.main-wrap{
+  margin-top:68px;display:flex;height:calc(100vh - 68px);
+}
+.pcat-bar{
+  width:170px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bd);
+  padding:1rem .5rem;overflow-y:auto;
+}
+.pcat-btn{
+  display:block;width:100%;padding:.55rem .8rem;text-align:left;
+  border:none;background:transparent;border-radius:var(--r);font-size:.85rem;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:var(--tr);color:var(--muted);margin-bottom:2px;
+}
+.pcat-btn:hover{background:var(--bd);color:var(--txt)}
+.pcat-btn.active{background:var(--red);color:white;font-weight:600}
+
+/* ─── Product Grid ─── */
+.pgrid-area{flex:1;overflow-y:auto;padding:1.2rem}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;padding-bottom:180px}
+
+.pcard{
+  background:white;border-radius:var(--r);overflow:hidden;
+  border:1px solid var(--bd);transition:var(--tr);
+  box-shadow:var(--sh1);display:flex;flex-direction:column;
+}
+.pcard:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.pcard-img{
+  width:100%;aspect-ratio:1;object-fit:cover;background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;
+}
+.pcard-img.has-img{background:#f5f0ea}
+.pcard-body{padding:.7rem;flex:1;display:flex;flex-direction:column}
+.pcard-name{font-family:'Noto Serif TC',serif;font-size:.88rem;font-weight:600;line-height:1.3;margin-bottom:.3rem;color:var(--txt)}
+.pcard-price{font-size:.82rem;color:var(--red);font-weight:600;margin-bottom:.2rem}
+.pcard-stock{font-size:.72rem;color:var(--muted);margin-bottom:.5rem}
+.pcard-stock.low{color:#E65100;font-weight:600}
+.pcard-stock.zero{color:#B71C1C;font-weight:600}
+
+/* qty controls */
+.qty-ctrl{
+  display:flex;align-items:center;gap:.4rem;margin-top:auto;
+  background:var(--bg2);border-radius:50px;padding:4px;
+}
+.qty-btn{
+  width:30px;height:30px;border:none;border-radius:50%;background:var(--red);color:white;
+  font-size:1.1rem;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0;
+}
+.qty-btn:hover{background:#a83820;transform:scale(1.1)}
+.qty-btn.green{background:var(--green)}
+.qty-btn.green:hover{background:#1b4332}
+.qty-num{
+  flex:1;text-align:center;font-size:.92rem;font-weight:700;
+  color:var(--txt);min-width:24px;
+}
+
+/* ─── Cart Panel ─── */
+.cart-panel{
+  width:340px;flex-shrink:0;background:white;border-left:1px solid var(--bd);
+  display:flex;flex-direction:column;
+}
+.cart-head{
+  padding:.8rem 1rem;border-bottom:1px solid var(--bd);
+  background:var(--bg2);
+}
+.cart-head-title{
+  font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;
+}
+.cart-head-sub{font-size:.72rem;color:var(--muted);margin-top:1px}
+
+.cart-items{flex:1;overflow-y:auto;padding:.6rem}
+.cart-item{
+  display:flex;align-items:center;gap:.6rem;padding:.5rem;
+  border-radius:8px;margin-bottom:.4rem;background:var(--bg);
+  transition:var(--tr);
+}
+.cart-item:hover{background:var(--bg2)}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:.72rem;color:var(--muted)}
+.ci-qty{font-size:.78rem;color:var(--red);font-weight:600;white-space:nowrap}
+.ci-total{font-size:.85rem;font-weight:700;color:var(--txt);white-space:nowrap;text-align:right;min-width:50px}
+.ci-remove{
+  background:none;border:none;font-size:.9rem;cursor:pointer;color:var(--muted);
+  padding:2px 4px;border-radius:4px;transition:var(--tr);flex-shrink:0;
+}
+.ci-remove:hover{color:var(--red);background:#FFEBEE}
+
+.cart-empty{
+  text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.85rem
+}
+.cart-empty-icon{font-size:3rem;margin-bottom:.6rem;opacity:.3}
+
+.cart-foot{padding:1rem;border-top:1px solid var(--bd);background:var(--bg2)}
+.cart-summary{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;
+}
+.cart-summary-label{font-size:.82rem;color:var(--muted)}
+.cart-summary-val{font-family:'Noto Serif TC',serif;font-size:1.4rem;font-weight:700;color:var(--red)}
+.cart-total-items{font-size:.72rem;color:var(--muted);margin-bottom:.8rem}
+.cart-total-items span{font-weight:600;color:var(--txt)}
+
+.cart-actions{display:flex;flex-direction:column;gap:.5rem}
+.btn-confirm{
+  width:100%;padding:.8rem;border:none;border-radius:50px;
+  font-size:.9rem;font-weight:600;font-family:'Noto Sans TC',sans-serif;
+  cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:.4rem;
+}
+.btn-confirm-sale{background:var(--red);color:white}
+.btn-confirm-sale:hover{background:#a83820;transform:scale(1.02)}
+.btn-confirm-purchase{background:var(--green);color:white}
+.btn-confirm-purchase:hover{background:#1b4332;transform:scale(1.02)}
+.btn-clear{background:transparent;border:1.5px solid var(--bd);color:var(--muted);border-radius:50px;padding:.45rem;font-size:.78rem;cursor:pointer;transition:var(--tr)}
+.btn-clear:hover{border-color:var(--red);color:var(--red)}
+
+/* receipt */
+.receipt-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.receipt-modal.show{opacity:1;pointer-events:all}
+.receipt-box{
+  background:white;border-radius:16px;max-width:360px;width:100%;
+  max-height:90vh;overflow-y:auto;padding:1.5rem;box-shadow:var(--sh3);
+}
+.receipt-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:700;text-align:center;margin-bottom:.2rem}
+.receipt-sub{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:1rem}
+.receipt-row{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px dashed var(--bd);font-size:.85rem}
+.receipt-row:last-child{border:none}
+.receipt-total{background:var(--bg2);border-radius:8px;padding:.6rem .8rem;margin-top:.6rem;display:flex;justify-content:space-between;align-items:center}
+.receipt-total-label{font-weight:700}
+.receipt-total-amt{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:700;color:var(--red)}
+.receipt-actions{margin-top:1rem;display:flex;flex-direction:column;gap:.5rem}
+.btn-receipt-ok{
+  width:100%;padding:.7rem;border:none;border-radius:50px;
+  background:var(--green);color:white;font-size:.9rem;font-weight:600;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer;
+}
+.btn-receipt-close{width:100%;padding:.5rem;border:1.5px solid var(--bd);border-radius:50px;background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem}
+
+/* confirm dialog */
+.confirm-dialog{
+  position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:2000;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.confirm-dialog.show{opacity:1;pointer-events:all}
+.confirm-box{background:white;border-radius:16px;padding:1.5rem;max-width:320px;width:100%;text-align:center}
+.confirm-title{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.confirm-msg{font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5}
+.confirm-btns{display:flex;gap:.6rem}
+.confirm-yes{flex:1;padding:.6rem;border:none;border-radius:50px;background:var(--red);color:white;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.confirm-no{flex:1;padding:.6rem;border:1.5px solid var(--bd);border-radius:50px;background:transparent;color:var(--muted);cursor:pointer}
+
+/* toast */
+.toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(60px);
+  background:#2D2D2D;color:white;padding:.6rem 1.2rem;border-radius:50px;
+  font-size:.82rem;z-index:3000;transition:transform .4s cubic-bezier(.4,0,.2,1);white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* auth */
+.auth-overlay{
+  position:fixed;inset:0;background:var(--bg);z-index:5000;
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+}
+.auth-box{background:white;border-radius:16px;padding:2rem;max-width:360px;width:100%;box-shadow:var(--sh2)}
+.auth-title{font-family:'Noto Serif TC',serif;font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:.3rem}
+.auth-sub{font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:1.5rem}
+.auth-field{margin-bottom:.8rem}
+.auth-label{font-size:.78rem;font-weight:600;margin-bottom:.3rem;display:block;color:var(--muted)}
+.auth-input{width:100%;padding:.65rem .9rem;border:1.5px solid var(--bd);border-radius:8px;font-size:.88rem;font-family:'Noto Sans TC',sans-serif;outline:none;transition:var(--tr)}
+.auth-input:focus{border-color:var(--red)}
+.auth-btn{width:100%;padding:.75rem;border:none;border-radius:50px;background:var(--red);color:white;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-top:.6rem}
+.auth-error{font-size:.75rem;color:var(--red);margin-top:.4rem;text-align:center;min-height:1em}
+
+@media(max-width:768px){
+  .pcat-bar{display:none}
+  .cart-panel{position:fixed;right:0;top:68px;bottom:0;width:100%;transform:translateX(100%);transition:transform .3s;z-index:900}
+  .cart-panel.open{transform:translateX(0)}
+  .cart-btn-mobile{display:flex !important}
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+.cart-btn-mobile{
+  display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:800;
+  background:var(--red);color:white;border:none;border-radius:50%;width:56px;height:56px;
+  font-size:1.5rem;box-shadow:var(--sh2);cursor:pointer;
+  align-items:center;justify-content:center;
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Overlay -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-title">祐興倉存系統</div>
+    <div class="auth-sub">輸入電郵登入（員工專用）</div>
+    <div class="auth-field">
+      <label class="auth-label">電郵地址</label>
+      <input class="auth-input" type="email" id="authEmail" placeholder="例：central@yauhing.hk" onkeydown="if(event.key==='Enter')authLogin()">
+    </div>
+    <div class="auth-field">
+      <label class="auth-label">密碼</label>
+      <input class="auth-input" type="password" id="authPass" placeholder="密碼" onkeydown="if(event.key==='Enter')authLogin()">
+    </div>
+    <button class="auth-btn" onclick="authLogin()">登入</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-title">
+    📦 祐興倉存系統
+    <small id="topbarStore">請選擇分店</small>
+  </div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="modeSale" onclick="setMode('sale')">📤 銷售</button>
+    <button class="mode-btn" id="modePurchase" onclick="setMode('purchase')">📥 進貨</button>
+  </div>
+  <div class="topbar-right">
+    <div class="user-info" id="userInfo"></div>
+    <button class="store-badge central" id="storeBtn" onclick="showStoreSelect()">中環店 ▼</button>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main-wrap">
+  <!-- Category Bar -->
+  <div class="pcat-bar" id="pcatBar"></div>
+
+  <!-- Product Grid -->
+  <div class="pgrid-area">
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+
+  <!-- Cart Panel -->
+  <div class="cart-panel" id="cartPanel">
+    <div class="cart-head">
+      <div class="cart-head-title" id="cartTitle">📤 銷售清單</div>
+      <div class="cart-head-sub" id="cartSub">揀選產品後，點擊確認</div>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">🛒</div>
+        尚未加入任何項目<br>從左邊選擇產品
+      </div>
+    </div>
+    <div class="cart-foot">
+      <div class="cart-summary">
+        <span class="cart-summary-label">合計</span>
+        <span class="cart-summary-val" id="cartTotal">HK$0</span>
+      </div>
+      <div class="cart-total-items" id="cartCount">共 <span>0</span> 款產品</div>
+      <div class="cart-actions">
+        <button class="btn-confirm btn-confirm-sale" id="confirmBtn" onclick="confirmTransaction()">✅ 確認交易</button>
+        <button class="btn-clear" onclick="clearCart()">🗑 清空</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Cart Button -->
+<button class="cart-btn-mobile" onclick="toggleMobileCart()">🛒</button>
+
+<!-- Store Select Dialog -->
+<div class="confirm-dialog" id="storeDialog">
+  <div class="confirm-box">
+    <div class="confirm-title">選擇分店</div>
+    <div class="confirm-msg">請選擇你所在的分店</div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" onclick="selectStore('central')" style="background:#E65100">中環店</button>
+      <button class="confirm-yes" onclick="selectStore('pioneer')" style="background:#6A1B9A">始創店</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Transaction -->
+<div class="confirm-dialog" id="confirmDialog">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirmTitle">確認交易？</div>
+    <div class="confirm-msg" id="confirmMsg">即將記錄以下交易：</div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" id="confirmYesBtn" onclick="doConfirm()">✅ 確認</button>
+      <button class="confirm-no" onclick="closeConfirm()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Receipt Modal -->
+<div class="receipt-modal" id="receiptModal">
+  <div class="receipt-box">
+    <div class="receipt-title">祐興食品</div>
+    <div class="receipt-sub" id="receiptSub">銷售單據</div>
+    <div id="receiptItems"></div>
+    <div class="receipt-total">
+      <span class="receipt-total-label">合計</span>
+      <span class="receipt-total-amt" id="receiptTotal">HK$0</span>
+    </div>
+    <div class="receipt-actions">
+      <button class="btn-receipt-ok" onclick="closeReceipt()">✓ 完成交易</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+// ─── Firebase Config ───
+const fb = firebase.initializeApp({
+  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food"
+});
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// ─── State ───
+let products = [];
+let cart = {};       // {name: {qty, price, cat}}
+let currentMode = 'sale';
+let currentStore = null;  // 'central' | 'pioneer'
+let currentUser = null;
+let currentCat = '全部';
+
+// ─── Load Products from products.json ───
+fetch('products.json').then(r=>r.json()).then(data=>{
+  products = data;
+  renderCatBar();
+  renderGrid();
+}).catch(e=>console.error('products.json load failed:',e));
+
+// ─── Auth ───
+auth.onAuthStateChanged(user=>{
+  if(user){ currentUser=user; showApp(); }
+  else {
+    currentUser=null;
+    document.getElementById('authOverlay').style.display='flex';
+    document.getElementById('userInfo').textContent='';
+  }
+});
+
+function authLogin(){
+  const email=document.getElementById('authEmail').value.trim();
+  const pass=document.getElementById('authPass').value;
+  if(!email||!pass){document.getElementById('authError').textContent='請輸入電郵及密碼';return;}
+  document.getElementById('authError').textContent='';
+  auth.signInWithEmailAndPassword(email,pass)
+    .then(()=>{document.getElementById('authOverlay').style.display='none';})
+    .catch(e=>{
+      if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'){
+        document.getElementById('authError').textContent='電郵或密碼錯誤';
+      } else {document.getElementById('authError').textContent=e.message;}
+    });
+}
+
+function showApp(){
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('userInfo').textContent=currentUser.email;
+  // Show store select on first load
+  showStoreSelect();
+}
+
+// ─── Store Select ───
+function showStoreSelect(){
+  document.getElementById('storeDialog').classList.add('show');
+}
+function selectStore(store){
+  currentStore=store;
+  const btn=document.getElementById('storeBtn');
+  if(store==='central'){
+    btn.textContent='🏠 中環店 ✓';btn.className='store-badge central';
+    document.getElementById('topbarStore').textContent='中環街市1樓P04C';
+  } else {
+    btn.textContent='🏬 始創店 ✓';btn.className='store-badge pioneer';
+    document.getElementById('topbarStore').textContent='旺角始創中心地下KIOSK J';
+  }
+  document.getElementById('storeDialog').classList.remove('show');
+  loadInventory();
+}
+
+// ─── Inventory Loading ───
+let inventory = {}; // {productName: {central: n, pioneer: n}}
+
+async function loadInventory(){
+  try {
+    const snap = await db.collection('inventory').get();
+    inventory={};
+    snap.forEach(d=>{inventory[d.id]=d.data();});
+  } catch(e){
+    console.error('inventory load error:',e);
+  }
+  renderGrid();
+}
+
+// ─── Mode ───
+function setMode(mode){
+  currentMode=mode;
+  const sale=document.getElementById('modeSale');
+  const pur=document.getElementById('modePurchase');
+  const cartTitle=document.getElementById('cartTitle');
+  const cartSub=document.getElementById('cartSub');
+  const confirmBtn=document.getElementById('confirmBtn');
+  if(mode==='sale'){
+    sale.className='mode-btn active';
+    pur.className='mode-btn';
+    cartTitle.textContent='📤 銷售清單';
+    cartSub.textContent='選擇銷售產品，確認後自動扣減庫存';
+    confirmBtn.className='btn-confirm btn-confirm-sale';
+    confirmBtn.textContent='✅ 確認交易';
+  } else {
+    sale.className='mode-btn';
+    pur.className='mode-btn active-purchase';
+    cartTitle.textContent='📥 進貨清單';
+    cartSub.textContent='選擇進貨產品，確認後自動增加庫存';
+    confirmBtn.className='btn-confirm btn-confirm-purchase';
+    confirmBtn.textContent='✅ 確認進貨';
+  }
+}
+
+// ─── Category Bar ───
+function renderCatBar(){
+  const cats=['全部',...new Set(products.map(p=>p.cat))];
+  const bar=document.getElementById('pcatBar');
+  bar.innerHTML='';
+  cats.forEach(cat=>{
+    const btn=document.createElement('button');
+    btn.className='pcat-btn'+(cat==='全部'?' active':'');
+    btn.textContent=cat;
+    btn.onclick=()=>{currentCat=cat;renderCatBar();renderGrid();};
+    bar.appendChild(btn);
+  });
+}
+
+// ─── Product Grid ───
+function renderGrid(){
+  const filtered=currentCat==='全部'?products:products.filter(p=>p.cat===currentCat);
+  const grid=document.getElementById('pgrid');
+  grid.innerHTML='';
+  filtered.forEach(p=>{
+    const inv=inventory[p.name]||{};
+    const stock=currentStore?(inv[currentStore]??'—'):'—';
+    const stockClass=typeof stock==='number'?(stock===0?'zero':stock<5?'low':''):'';
+    const inCart=cart[p.name]||{qty:0,price:getPriceNum(p.price),cat:p.cat};
+
+    const card=document.createElement('div');
+    card.className='pcard';
+
+    // Image
+    const imgWrap=document.createElement('div');
+    imgWrap.className='pcard-img';
+    if(p.local_img){
+      const img=document.createElement('img');
+      img.src='images/'+p.local_img;
+      img.style='width:100%;height:100%;object-fit:cover;';
+      img.onerror=()=>{img.style.display='none';imgWrap.textContent='🍜';};
+      imgWrap.appendChild(img);
+      imgWrap.classList.add('has-img');
+    } else {
+      imgWrap.textContent='🍜';
+    }
+
+    // Body
+    const body=document.createElement('div');
+    body.className='pcard-body';
+
+    const name=document.createElement('div');
+    name.className='pcard-name';
+    name.textContent=p.name;
+
+    const price=document.createElement('div');
+    price.className='pcard-price';
+    price.textContent=p.price;
+
+    const stockDiv=document.createElement('div');
+    stockDiv.className='pccard-stock '+stockClass;
+    if(typeof stock==='number'){
+      stockDiv.textContent=`庫存：${stock} 件`;
+    } else {
+      stockDiv.textContent='請先選擇分店';
+    }
+
+    // Qty controls
+    const qtyCtrl=document.createElement('div');
+    qtyCtrl.className='qty-ctrl';
+
+    const minus=document.createElement('button');
+    minus.className='qty-btn'+(currentMode==='purchase'?' green':'');
+    minus.textContent='−';
+    minus.onclick=()=>changeQty(p.name,-1,p);
+
+    const num=document.createElement('span');
+    num.className='qty-num';
+    num.textContent=inCart.qty;
+
+    const plus=document.createElement('button');
+    plus.className='qty-btn';
+    plus.textContent='+';
+    plus.onclick=()=>changeQty(p.name,1,p);
+
+    qtyCtrl.appendChild(minus);
+    qtyCtrl.appendChild(num);
+    qtyCtrl.appendChild(plus);
+    body.appendChild(name);
+    body.appendChild(price);
+    body.appendChild(stockDiv);
+    body.appendChild(qtyCtrl);
+    card.appendChild(imgWrap);
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+}
+
+// ─── Cart Logic ───
+function changeQty(name,delta,p){
+  if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
+  if(!cart[name]){
+    cart[name]={qty:0,price:getPriceNum(p.price),cat:p.cat,name:name};
+  }
+  cart[name].qty+=delta;
+  if(cart[name].qty<=0){delete cart[name];}
+  renderCart();
+  renderGrid(); // refresh qty display
+}
+
+function renderCart(){
+  const container=document.getElementById('cartItems');
+  const keys=Object.keys(cart);
+  if(keys.length===0){
+    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品</div>`;
+    document.getElementById('cartTotal').textContent='HK$0';
+    document.getElementById('cartCount').innerHTML='共 <span>0</span> 款產品';
+    return;
+  }
+  let total=0;let html='';let count=0;
+  keys.forEach(name=>{
+    const item=cart[name];
+    const lineTotal=item.qty*item.price;
+    total+=lineTotal;count+=item.qty;
+    html+=`<div class="cart-item">
+      <div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">HK$${item.price}/件</div></div>
+      <div class="ci-qty">×${item.qty}</div>
+      <div class="ci-total">HK$${lineTotal}</div>
+      <button class="ci-remove" onclick="removeItem('${name}')">✕</button>
+    </div>`;
+  });
+  container.innerHTML=html;
+  document.getElementById('cartTotal').textContent='HK$'+total;
+  document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
+}
+
+function removeItem(name){delete cart[name];renderCart();renderGrid();}
+function clearCart(){cart={};renderCart();renderGrid();}
+
+function getPriceNum(priceStr){
+  const m=String(priceStr).match(/[\d.]+/);
+  return m?parseFloat(m[0]):0;
+}
+
+// ─── Confirm & Save ───
+function confirmTransaction(){
+  if(Object.keys(cart).length===0){toast('請先加入產品');return;}
+  if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
+  const items=Object.entries(cart).map(([name,d])=>
+    `${name} × ${d.qty} = HK$${d.qty*d.price}`
+  ).join('\n');
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty*i.price,0);
+  document.getElementById('confirmTitle').textContent=
+    currentMode==='sale'?'📤 確認銷售交易？':'📥 確認進貨記錄？';
+  document.getElementById('confirmMsg').innerHTML=
+    `<div style="text-align:left;font-size:.8rem;background:#f5f5f5;border-radius:8px;padding:.6rem;margin-bottom:.5rem">${items.replace(/\n/g,'<br>')}</div><strong>合計：HK$${total}</strong><br><span style="font-size:.72rem;color:var(--muted)">分店：${currentStore==='central'?'中環店':'始創店'}</span>`;
+  document.getElementById('confirmDialog').classList.add('show');
+}
+
+function closeConfirm(){
+  document.getElementById('confirmDialog').classList.remove('show');
+}
+
+async function doConfirm(){
+  closeConfirm();
+  const storeField=currentStore; // 'central' or 'pioneer'
+  const delta=currentMode==='sale'?-1:1;
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty*i.price,0);
+  const timestamp=Date.now();
+  const txId='TX'+(''+timestamp).slice(-10);
+
+  // Save transaction to Firestore
+  try {
+    await db.collection('inventory_transactions').add({
+      txId, type:currentMode, store:storeField,
+      items:Object.entries(cart).map(([name,d])=>({name,qty:d.qty,price:d.price,lineTotal:d.qty*d.price})),
+      total, user:currentUser.email,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    // Update inventory
+    const batch=db.batch();
+    for(const [name,item] of Object.entries(cart)){
+      const ref=db.collection('inventory').doc(name);
+      batch.set(ref,{[storeField]:firebase.firestore.FieldValue.increment(item.qty*delta)},{merge:true});
+    }
+    await batch.commit();
+    await loadInventory();
+  } catch(e){
+    console.error('save error:',e);
+    toast('儲存失敗：'+e.message);
+    return;
+  }
+
+  // Show receipt
+  let rh='<div class="receipt-row"><span style="font-weight:600">時間</span><span>'+new Date().toLocaleString('zh-HK')+'</span></div>';
+  rh+='<div class="receipt-row"><span style="font-weight:600">分店</span><span>'+(storeField==='central'?'中環店':'始創店')+'</span></div>';
+  rh+='<div class="receipt-row"><span style="font-weight:600">單據號</span><span>'+txId+'</span></div>';
+  rh+='<div style="border-top:1px dashed var(--bd);margin:.3rem 0"></div>';
+  for(const [name,item] of Object.entries(cart)){
+    rh+=`<div class="receipt-row">
+      <span style="flex:1">${name}<br><span style="font-size:.7rem;color:var(--muted)">HK$${item.price} × ${item.qty}</span></span>
+      <span>HK$${item.qty*item.price}</span>
+    </div>`;
+  }
+  document.getElementById('receiptItems').innerHTML=rh;
+  document.getElementById('receiptSub').textContent=
+    currentMode==='sale'?'📤 銷售單據':'📥 進貨單據';
+  document.getElementById('receiptTotal').textContent='HK$'+total;
+  document.getElementById('receiptModal').classList.add('show');
+  cart={};
+  renderCart();
+  toast(currentMode==='sale'?'✅ 銷售已記錄，庫存已扣減':'✅ 進貨已記錄，庫存已增加');
+}
+
+function closeReceipt(){
+  document.getElementById('receiptModal').classList.remove('show');
+}
+
+// ─── Toast ───
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ─── Mobile Cart ───
+function toggleMobileCart(){
+  document.getElementById('cartPanel').classList.toggle('open');
+}
+
+// window expose
+window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
+window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
+window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
+window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;
+</script>
+</body>
+</html>
