@@ -230,15 +230,16 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .auth-error{font-size:.75rem;color:var(--red);margin-top:.4rem;text-align:center;min-height:1em}
 
 @media(max-width:768px){
-  .main-wrap{flex-direction:column}
-  .pcat-bar{display:flex;flex-direction:row;width:100%;height:auto;overflow-x:auto;overflow-y:hidden;padding:.5rem;border-right:none;border-bottom:1px solid var(--bd);gap:4px;scrollbar-width:none;-ms-overflow-style:none}
+  .main-wrap{flex-direction:column;height:auto;min-height:calc(100vh - 68px)}
+  .pcat-bar{display:flex;flex-direction:row;width:100%;height:auto;overflow-x:auto;overflow-y:hidden;padding:.5rem;border-right:none;border-bottom:1px solid var(--bd);gap:4px;scrollbar-width:none;-ms-overflow-style:none;flex-shrink:0}
   .pcat-bar::-webkit-scrollbar{display:none}
   .pcat-btn{display:inline-block;width:auto;white-space:nowrap;padding:.35rem .6rem;font-size:.75rem;margin-bottom:0;flex-shrink:0;border-radius:16px;background:var(--bg1);border:1px solid var(--bd)}
   .pcat-btn.active{background:var(--red);color:white;border-color:var(--red)}
+  .pgrid-area{flex:1;overflow-y:visible}
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
   .cart-panel{position:fixed;right:0;top:68px;bottom:0;width:100%;transform:translateX(100%);transition:transform .3s;z-index:900}
   .cart-panel.open{transform:translateX(0)}
   .cart-btn-mobile{display:flex !important}
-  .pgrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 }
 .cart-btn-mobile{
   display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:800;
@@ -643,9 +644,7 @@ function setMode(mode){
 
 // --- Category Bar ---
 function renderCatBar(){
-  console.log('renderCatBar called, products:', products);
-  const cats=['\u5168\u90e8',...new Set(products.map(p=>p.cat))];
-  console.log('categories:', cats);
+  const cats=['全部',...new Set(products.map(p=>p.cat))];
   const bar=document.getElementById('pcatBar');
   bar.innerHTML='';
   cats.forEach(cat=>{
@@ -655,7 +654,6 @@ function renderCatBar(){
     btn.onclick=()=>{currentCat=cat;renderCatBar();renderGrid();};
     bar.appendChild(btn);
   });
-  console.log('renderCatBar done, buttons added:', cats.length);
 }
 
 // --- Product Grid ---
