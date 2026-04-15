@@ -20,8 +20,15 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   border-bottom:1px solid var(--bd);padding:.5rem 1.2rem;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
 }
-.topbar-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:700;color:var(--txt);white-space:nowrap}
+.topbar-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:700;color:var(--txt);white-space:nowrap;cursor:pointer}
 .topbar-title small{display:block;font-family:'Noto Sans TC',sans-serif;font-size:.65rem;font-weight:400;color:var(--muted)}
+
+.tab-bar{display:flex;gap:4px;background:var(--bg2);border-radius:50px;padding:3px}
+.tab-btn{
+  padding:.3rem 1rem;border:none;border-radius:50px;font-size:.78rem;font-weight:500;
+  font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:var(--tr);color:var(--muted);background:transparent;
+}
+.tab-btn.active{background:white;color:var(--txt);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 
 .mode-toggle{display:flex;background:var(--bg2);border-radius:50px;padding:3px;gap:3px}
 .mode-btn{
@@ -233,6 +240,75 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   font-size:1.5rem;box-shadow:var(--sh2);cursor:pointer;
   align-items:center;justify-content:center;
 }
+
+/* ─── Tab Content ─── */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Inventory Report Tab */
+.report-wrap{padding:1.2rem;overflow-y:auto;height:calc(100vh - 68px)}
+.report-summary{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.2rem;
+}
+.report-card{
+  background:white;border-radius:12px;padding:1rem;border:1px solid var(--bd);text-align:center;
+}
+.report-card .num{font-family:'Noto Serif TC',serif;font-size:1.8rem;font-weight:700;color:var(--red)}
+.report-card .num.green{color:var(--green)}
+.report-card .num.orange{color:var(--orange)}
+.report-card .label{font-size:.75rem;color:var(--muted);margin-top:.2rem}
+
+.report-section{margin-bottom:1.5rem}
+.report-section-title{
+  font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:700;margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.report-section-title .badge{
+  padding:.15rem .6rem;border-radius:50px;font-size:.7rem;font-weight:600;
+}
+.badge-red{background:#FFEBEE;color:#C62828}
+.badge-orange{background:#FFF3E0;color:#E65100}
+.badge-green{background:#E8F5E9;color:#2E7D32}
+.badge-blue{background:#E3F2FD;color:#1565C0}
+
+.report-table{background:white;border-radius:12px;overflow:hidden;border:1px solid var(--bd)}
+.report-table table{width:100%;border-collapse:collapse;font-size:.82rem}
+.report-table th{
+  background:var(--bg2);padding:.6rem .8rem;text-align:left;font-weight:600;
+  font-family:'Noto Sans TC',sans-serif;border-bottom:1px solid var(--bd);
+}
+.report-table td{padding:.55rem .8rem;border-bottom:1px solid var(--bg);vertical-align:middle}
+.report-table tr:last-child td{border:none}
+.report-table tr:hover td{background:#FAFAF8}
+.stock-ok{color:var(--green);font-weight:600}
+.stock-low{color:var(--orange);font-weight:600}
+.stock-zero{color:var(--red);font-weight:600}
+.report-filter{
+  display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;
+}
+.filter-select{
+  padding:.4rem .8rem;border:1.5px solid var(--bd);border-radius:8px;font-size:.8rem;
+  font-family:'Noto Sans TC',sans-serif;background:white;cursor:pointer;
+}
+.filter-input{
+  padding:.4rem .8rem;border:1.5px solid var(--bd);border-radius:8px;font-size:.8rem;
+  font-family:'Noto Sans TC',sans-serif;outline:none;
+}
+.filter-input:focus{border-color:var(--red)}
+.report-filter .filter-label{font-size:.78rem;color:var(--muted)}
+
+/* Transaction log */
+.log-entry{
+  background:white;border-radius:10px;padding:.8rem 1rem;margin-bottom:.6rem;
+  border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;
+}
+.log-entry:hover{border-color:var(--red)}
+.log-meta{font-size:.75rem;color:var(--muted);margin-bottom:.3rem}
+.log-items{font-size:.82rem;color:var(--txt)}
+.log-total{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;color:var(--red)}
+.log-type{font-size:.7rem;padding:.2rem .6rem;border-radius:50px;font-weight:600}
+.log-type.sale{background:#FFEBEE;color:#C62828}
+.log-type.purchase{background:#E8F5E9;color:#2E7D32}
 </style>
 </head>
 <body>
@@ -257,9 +333,14 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 <!-- Top Bar -->
 <div class="topbar">
-  <div class="topbar-title">
+  <div class="topbar-title" onclick="switchTab('pos')">
     📦 祐興倉存系統
     <small id="topbarStore">請選擇分店</small>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabPos" onclick="switchTab('pos')">📤 POS</button>
+    <button class="tab-btn" id="tabReport" onclick="switchTab('report')">📊 報表</button>
+    <button class="tab-btn" id="tabLog" onclick="switchTab('log')">📋 記錄</button>
   </div>
   <div class="mode-toggle">
     <button class="mode-btn active" id="modeSale" onclick="setMode('sale')">📤 銷售</button>
@@ -272,6 +353,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 </div>
 
 <!-- Main -->
+<div class="tab-content active" id="tabContentPos">
 <div class="main-wrap">
   <!-- Category Bar -->
   <div class="pcat-bar" id="pcatBar"></div>
@@ -304,6 +386,67 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <button class="btn-clear" onclick="clearCart()">🗑 清空</button>
       </div>
     </div>
+  </div>
+</div>
+</div><!-- end tabContentPos -->
+
+<!-- Report Tab -->
+<div class="tab-content" id="tabContentReport">
+  <div class="report-wrap">
+    <div class="report-summary" id="reportSummary"></div>
+    <div class="report-filter">
+      <span class="filter-label">分店：</span>
+      <select class="filter-select" id="repStore" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="central">中環店</option>
+        <option value="pioneer">始創店</option>
+      </select>
+      <span class="filter-label">狀態：</span>
+      <select class="filter-select" id="repStatus" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="alert">⚠️ 低庫存</option>
+        <option value="zero">🔴 缺貨</option>
+      </select>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">
+        📦 庫存概況
+        <span class="badge badge-red" id="alertCount"></span>
+        <span class="badge badge-orange" id="lowCount"></span>
+      </div>
+      <div class="report-table">
+        <table>
+          <thead>
+            <tr>
+              <th>SKU</th><th>產品名稱</th><th>分類</th>
+              <th>中環</th><th>始創</th><th>總庫存</th><th>狀態</th>
+            </tr>
+          </thead>
+          <tbody id="reportBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Log Tab -->
+<div class="tab-content" id="tabContentLog">
+  <div class="report-wrap">
+    <div class="report-filter">
+      <span class="filter-label">分店：</span>
+      <select class="filter-select" id="logStore" onchange="renderLog()">
+        <option value="all">全部</option>
+        <option value="central">中環店</option>
+        <option value="pioneer">始創店</option>
+      </select>
+      <span class="filter-label">類型：</span>
+      <select class="filter-select" id="logType" onchange="renderLog()">
+        <option value="all">全部</option>
+        <option value="sale">銷售</option>
+        <option value="purchase">進貨</option>
+      </select>
+    </div>
+    <div id="logList"></div>
   </div>
 </div>
 
@@ -769,11 +912,126 @@ function toggleMobileCart(){
   document.getElementById('cartPanel').classList.toggle('open');
 }
 
-// window expose
+// ─── Tab Navigation ───
+let currentTab = 'pos';
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  document.getElementById('tabContent'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
+  if(tab==='report') renderReport();
+  if(tab==='log') renderLog();
+}
+
+// ─── Report Tab ───
+async function renderReport(){
+  let txns=[];
+  try {
+    const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
+    snap.forEach(d=>txns.push(d.data()));
+  } catch(e){console.error(e);}
+
+  const today=new Date().toDateString();
+  const todayTx=txns.filter(t=>new Date(t.createdAt?.toDate()).toDateString()===today);
+  const todaySale=todayTx.filter(t=>t.type==='sale').reduce((s,i)=>s+(i.total||0),0);
+  const todaySaleCount=todayTx.filter(t=>t.type==='sale').length;
+  const todayPurchase=todayTx.filter(t=>t.type==='purchase').reduce((s,i)=>s+(i.total||0),0);
+
+  document.getElementById('reportSummary').innerHTML=`
+    <div class="report-card"><div class="num orange">${todaySaleCount}</div><div class="label">今日銷售筆數</div></div>
+    <div class="report-card"><div class="num">HK$${todaySale.toLocaleString()}</div><div class="label">今日銷售額</div></div>
+    <div class="report-card"><div class="num green">${todayPurchase.toLocaleString()}</div><div class="label">今日進貨額</div></div>
+    <div class="report-card"><div class="num">${Object.keys(inventory).length||0}</div><div class="label">產品已追蹤</div></div>
+  `;
+
+  const prodMap={};
+  products.forEach(p=>{
+    const inv=inventory[p.name]||{};
+    const central=inv.central??0;
+    const pioneer=inv.pioneer??0;
+    const total=central+pioneer;
+    let status='stock-ok',statusText='充足',badge='badge-green';
+    if(total===0){status='stock-zero';statusText='缺貨';badge='badge-red';}
+    else if(total<5){status='stock-zero';statusText='庫存緊張';badge='badge-red';}
+    else if(total<15){status='stock-low';statusText='偏低';badge='badge-orange';}
+    prodMap[p.name]={sku:p.sku||p.name,name:p.name,cat:p.cat,central,pioneer,total,status,statusText,badge};
+  });
+
+  const storeFilter=document.getElementById('repStore').value;
+  let rows=Object.values(prodMap);
+  if(storeFilter!=='all'){
+    rows=rows.filter(r=>r[storeFilter]<15);
+  }
+  const statusFilter=document.getElementById('repStatus').value;
+  if(statusFilter==='alert') rows=rows.filter(r=>r.total>0&&r.total<15);
+  if(statusFilter==='zero') rows=rows.filter(r=>r.total===0);
+
+  let alertN=0,lowN=0;
+  Object.values(prodMap).forEach(r=>{if(r.total===0)alertN++;else if(r.total<15)lowN++;});
+  document.getElementById('alertCount').textContent=alertN+' 缺貨';
+  document.getElementById('lowCount').textContent=lowN+' 偏低';
+
+  document.getElementById('reportBody').innerHTML=rows.length===0?
+    '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">暫無數據</td></tr>':
+    rows.map(r=>`<tr>
+      <td>${r.sku}</td>
+      <td style="font-weight:600">${r.name}</td>
+      <td>${r.cat}</td>
+      <td style="text-align:center">${r.central}</td>
+      <td style="text-align:center">${r.pioneer}</td>
+      <td style="text-align:center;font-weight:700">${r.total}</td>
+      <td><span class="badge ${r.badge}">${r.statusText}</span></td>
+    </tr>`).join('');
+}
+
+// ─── Log Tab ───
+async function renderLog(){
+  let txns=[];
+  try {
+    const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(100).get();
+    snap.forEach(d=>txns.push({id:d.id,...d.data()}));
+  } catch(e){console.error(e);}
+
+  const storeFilter=document.getElementById('logStore').value;
+  const typeFilter=document.getElementById('logType').value;
+
+  txns=txns.filter(t=>{
+    if(storeFilter!=='all'&&t.store!==storeFilter) return false;
+    if(typeFilter!=='all'&&t.type!==typeFilter) return false;
+    return true;
+  });
+
+  if(txns.length===0){
+    document.getElementById('logList').innerHTML='<div style="text-align:center;padding:3rem;color:var(--muted)">暫無交易記錄<br><small>在POS頁面完成交易後，記錄會顯示在這裡</small></div>';
+    return;
+  }
+
+  document.getElementById('logList').innerHTML=txns.map(t=>{
+    const dt=t.createdAt?new Date(t.createdAt.toDate()):new Date();
+    const dtStr=dt.toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const itemsStr=t.items&&t.items.length>0?
+      t.items.map(i=>`${i.name}${i.pack?'('+i.pack+')':''} × ${i.qty}`).join(', '):'—';
+    return `<div class="log-entry">
+      <div style="flex:1">
+        <div class="log-meta">${dtStr} · <span class="log-type ${t.type}">${t.type==='sale'?'📤 銷售':'📥 進貨'}</span> · ${t.store==='central'?'中環':'始創'} · ${t.user||''}</div>
+        <div class="log-items">${itemsStr}</div>
+      </div>
+      <div>
+        <div class="log-total">HK$${t.total||0}</div>
+        <div style="font-size:.68rem;color:var(--muted)">${t.txId||''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// window expose (at end, so all functions are defined)
 window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
 window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
 window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
-window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;
+window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switchTab=switchTab;
+window.renderReport=renderReport;window.renderLog=renderLog;
 </script>
 </body>
 </html>
