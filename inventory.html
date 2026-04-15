@@ -641,7 +641,9 @@ function setMode(mode){
 
 // ─── Category Bar ───
 function renderCatBar(){
+  console.log('renderCatBar called, products:', products);
   const cats=['全部',...new Set(products.map(p=>p.cat))];
+  console.log('categories:', cats);
   const bar=document.getElementById('pcatBar');
   bar.innerHTML='';
   cats.forEach(cat=>{
@@ -651,6 +653,7 @@ function renderCatBar(){
     btn.onclick=()=>{currentCat=cat;renderCatBar();renderGrid();};
     bar.appendChild(btn);
   });
+  console.log('renderCatBar done, buttons added:', cats.length);
 }
 
 // ─── Product Grid ───
