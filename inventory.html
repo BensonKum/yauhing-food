@@ -64,6 +64,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 }
 .pcat-btn:hover{background:var(--bd);color:var(--txt)}
 .pcat-btn.active{background:var(--red);color:white;font-weight:600}
+.btn-logout{padding:.3rem .7rem;border:1px solid var(--bd);background:transparent;border-radius:6px;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr);margin-right:.4rem}
+.btn-logout:hover{background:var(--red);color:white;border-color:var(--red)}
 
 /* ─── Product Grid ─── */
 .pgrid-area{flex:1;overflow-y:auto;padding:1.2rem}
@@ -348,6 +350,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   </div>
   <div class="topbar-right">
     <div class="user-info" id="userInfo"></div>
+    <button class="btn-logout" id="logoutBtn" onclick="doLogout()" title="登出">登出</button>
     <button class="store-badge central" id="storeBtn" onclick="showStoreSelect()">中環店 ▼</button>
   </div>
 </div>
@@ -641,7 +644,7 @@ function renderCatBar(){
   bar.innerHTML='';
   cats.forEach(cat=>{
     const btn=document.createElement('button');
-    btn.className='pcat-btn'+(cat==='全部'?' active':'');
+    btn.className='pcat-btn'+(cat===currentCat?' active':'');
     btn.textContent=cat;
     btn.onclick=()=>{currentCat=cat;renderCatBar();renderGrid();};
     bar.appendChild(btn);
@@ -1048,10 +1051,18 @@ async function renderLog(){
 }
 
 // window expose (at end, so all functions are defined)
+function doLogout(){
+  auth.signOut();
+  currentStore='';
+  cart={};
+  document.getElementById('storeBtn').textContent='選擇分店 ▼';
+  document.getElementById('storeBtn').className='store-badge central';
+}
 window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
 window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
 window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
 window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switchTab=switchTab;
+window.doLogout=doLogout;
 window.renderReport=renderReport;window.renderLog=renderLog;
 </script>
 </body>
