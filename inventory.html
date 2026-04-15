@@ -368,7 +368,8 @@ const auth = firebase.auth();
 
 // ─── State ───
 let products = [];
-let cart = {};       // {name: {qty, price, cat}}
+let cart = {};       // {cartKey: {qty, price, cat, pack}}
+let selectedPack = {}; // {productName: selectedPackLabel}
 let currentMode = 'sale';
 let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
@@ -484,6 +485,48 @@ function renderCatBar(){
 }
 
 // ─── Product Grid ───
+function parseMultiPrice(priceStr){
+  // priceStr like "HKD 25 (細樽裝) / HKD 40 (大樽裝)"
+  const result={};
+  if(!priceStr||!priceStr.includes('/')) return result;
+  priceStr.split(' / ').forEach(seg=>{
+    const m=seg.match(/HKD\s*([\d.]+)\s*\(([^)]+)\)/);
+    if(m) result[m[2]]=parseFloat(m[1]);
+  });
+  return result;
+}
+
+function getPackOptions(p){
+  if(!p.label1) return null;
+  const multiPrices=parseMultiPrice(p.price);
+  const opts=[];
+  if(p.label1) opts.push({label:p.label1,img:p.img1,price:multiPrices[p.label1]||0});
+  if(p.label2) opts.push({label:p.label2,img:p.img2,price:multiPrices[p.label2]||0});
+  return opts.length>0?opts:null;
+}
+
+function getSelectedPack(p){
+  const saved=selectedPack[p.name];
+  const opts=getPackOptions(p);
+  if(!opts) return null;
+  return saved&&opts.find(o=>o.label===saved)?saved:opts[0].label;
+}
+
+function getPackPrice(p,packLabel){
+  const opts=getPackOptions(p);
+  if(!opts) return getPriceNum(p.price);
+  const opt=opts.find(o=>o.label===packLabel);
+  if(opt) return opt.price;
+  return getPriceNum(p.price);
+}
+
+function getPackImg(p,packLabel){
+  const opts=getPackOptions(p);
+  if(!opts) return p.img1||p.img2||null;
+  const opt=opts.find(o=>o.label===packLabel)||opts[0];
+  return opt.img||p.img1||null;
+}
+
 function renderGrid(){
   const filtered=currentCat==='全部'?products:products.filter(p=>p.cat===currentCat);
   const grid=document.getElementById('pgrid');
@@ -492,7 +535,11 @@ function renderGrid(){
     const inv=inventory[p.name]||{};
     const stock=currentStore?(inv[currentStore]??'—'):'—';
     const stockClass=typeof stock==='number'?(stock===0?'zero':stock<5?'low':''):'';
-    const inCart=cart[p.name]||{qty:0,price:getPriceNum(p.price),cat:p.cat};
+    const packOpts=getPackOptions(p);
+    const selPack=getSelectedPack(p);
+    const cartKey=selPack?p.name+'|'+selPack:p.name;
+    const inCart=cart[cartKey]||{qty:0,price:getPackPrice(p,selPack),cat:p.cat,pack:selPack};
+    const packImg=getPackImg(p,selPack);
 
     const card=document.createElement('div');
     card.className='pcard';
@@ -500,9 +547,10 @@ function renderGrid(){
     // Image
     const imgWrap=document.createElement('div');
     imgWrap.className='pcard-img';
-    if(p.local_img){
+    if(packImg){
       const img=document.createElement('img');
-      img.src='images/'+p.local_img;
+      const fn=packImg.replace(/^.*[\\\/]/,'');
+      img.src='images/'+fn;
       img.style='width:100%;height:100%;object-fit:cover;';
       img.onerror=()=>{img.style.display='none';imgWrap.textContent='🍜';};
       imgWrap.appendChild(img);
@@ -519,16 +567,35 @@ function renderGrid(){
     name.className='pcard-name';
     name.textContent=p.name;
 
+    // Price
     const price=document.createElement('div');
     price.className='pcard-price';
     price.textContent=p.price;
 
+    // Stock
     const stockDiv=document.createElement('div');
     stockDiv.className='pccard-stock '+stockClass;
-    if(typeof stock==='number'){
-      stockDiv.textContent=`庫存：${stock} 件`;
+    stockDiv.textContent=typeof stock==='number'?`庫存：${stock} 件`:stock;
+
+    // Pack selector (if multi-pack)
+    if(packOpts&&packOpts.length>0){
+      const packRow=document.createElement('div');
+      packRow.style.cssText='display:flex;gap:.3rem;margin-bottom:.4rem;flex-wrap:wrap';
+      packOpts.forEach(opt=>{
+        const btn=document.createElement('button');
+        btn.style.cssText=`padding:.2rem .55rem;border-radius:50px;font-size:.68rem;border:1.5px solid ${selPack===opt.label?'var(--red)':'var(--bd)'};background:${selPack===opt.label?'var(--red)':'white'};color:${selPack===opt.label?'white':'var(--muted)'};cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr);`;
+        btn.textContent=opt.label;
+        btn.onclick=(e)=>{e.stopPropagation();selectedPack[p.name]=opt.label;renderGrid();};
+        packRow.appendChild(btn);
+      });
+      body.appendChild(name);
+      body.appendChild(packRow);
+      body.appendChild(price);
+      body.appendChild(stockDiv);
     } else {
-      stockDiv.textContent='請先選擇分店';
+      body.appendChild(name);
+      body.appendChild(price);
+      body.appendChild(stockDiv);
     }
 
     // Qty controls
@@ -538,7 +605,7 @@ function renderGrid(){
     const minus=document.createElement('button');
     minus.className='qty-btn'+(currentMode==='purchase'?' green':'');
     minus.textContent='−';
-    minus.onclick=()=>changeQty(p.name,-1,p);
+    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,p,selPack);};
 
     const num=document.createElement('span');
     num.className='qty-num';
@@ -547,14 +614,11 @@ function renderGrid(){
     const plus=document.createElement('button');
     plus.className='qty-btn';
     plus.textContent='+';
-    plus.onclick=()=>changeQty(p.name,1,p);
+    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,p,selPack);};
 
     qtyCtrl.appendChild(minus);
     qtyCtrl.appendChild(num);
     qtyCtrl.appendChild(plus);
-    body.appendChild(name);
-    body.appendChild(price);
-    body.appendChild(stockDiv);
     body.appendChild(qtyCtrl);
     card.appendChild(imgWrap);
     card.appendChild(body);
@@ -563,15 +627,15 @@ function renderGrid(){
 }
 
 // ─── Cart Logic ───
-function changeQty(name,delta,p){
+function changeQty(cartKey,delta,p,selPack){
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
-  if(!cart[name]){
-    cart[name]={qty:0,price:getPriceNum(p.price),cat:p.cat,name:name};
+  if(!cart[cartKey]){
+    cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack};
   }
-  cart[name].qty+=delta;
-  if(cart[name].qty<=0){delete cart[name];}
+  cart[cartKey].qty+=delta;
+  if(cart[cartKey].qty<=0){delete cart[cartKey];}
   renderCart();
-  renderGrid(); // refresh qty display
+  renderGrid();
 }
 
 function renderCart(){
@@ -584,15 +648,16 @@ function renderCart(){
     return;
   }
   let total=0;let html='';let count=0;
-  keys.forEach(name=>{
-    const item=cart[name];
+  keys.forEach(cartKey=>{
+    const item=cart[cartKey];
     const lineTotal=item.qty*item.price;
     total+=lineTotal;count+=item.qty;
+    const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
     html+=`<div class="cart-item">
-      <div class="ci-info"><div class="ci-name">${item.name}</div><div class="ci-price">HK$${item.price}/件</div></div>
+      <div class="ci-info"><div class="ci-name">${displayName}</div><div class="ci-price">HK$${item.price}/件</div></div>
       <div class="ci-qty">×${item.qty}</div>
       <div class="ci-total">HK$${lineTotal}</div>
-      <button class="ci-remove" onclick="removeItem('${name}')">✕</button>
+      <button class="ci-remove" onclick="removeItem('${cartKey.replace(/'/g,"\\'")}')">✕</button>
     </div>`;
   });
   container.innerHTML=html;
@@ -600,7 +665,7 @@ function renderCart(){
   document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
 }
 
-function removeItem(name){delete cart[name];renderCart();renderGrid();}
+function removeItem(cartKey){delete cart[cartKey];renderCart();renderGrid();}
 function clearCart(){cart={};renderCart();renderGrid();}
 
 function getPriceNum(priceStr){
@@ -629,26 +694,34 @@ function closeConfirm(){
 
 async function doConfirm(){
   closeConfirm();
-  const storeField=currentStore; // 'central' or 'pioneer'
+  const storeField=currentStore;
   const delta=currentMode==='sale'?-1:1;
   const total=Object.values(cart).reduce((s,i)=>s+i.qty*i.price,0);
   const timestamp=Date.now();
   const txId='TX'+(''+timestamp).slice(-10);
 
-  // Save transaction to Firestore
   try {
+    // Save transaction with full product info (incl. pack)
     await db.collection('inventory_transactions').add({
       txId, type:currentMode, store:storeField,
-      items:Object.entries(cart).map(([name,d])=>({name,qty:d.qty,price:d.price,lineTotal:d.qty*d.price})),
+      items:Object.entries(cart).map(([cartKey,d])=>({
+        name:d.name, pack:d.pack||null, qty:d.qty, price:d.price, lineTotal:d.qty*d.price
+      })),
       total, user:currentUser.email,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // Update inventory
+    // Update inventory — group by product name (ignore pack variant)
     const batch=db.batch();
-    for(const [name,item] of Object.entries(cart)){
-      const ref=db.collection('inventory').doc(name);
-      batch.set(ref,{[storeField]:firebase.firestore.FieldValue.increment(item.qty*delta)},{merge:true});
+    const byProduct={};
+    for(const [cartKey,item] of Object.entries(cart)){
+      const pName=item.name;
+      if(!byProduct[pName]) byProduct[pName]=0;
+      byProduct[pName]+=item.qty;
+    }
+    for(const [pName,qty] of Object.entries(byProduct)){
+      const ref=db.collection('inventory').doc(pName);
+      batch.set(ref,{[storeField]:firebase.firestore.FieldValue.increment(qty*delta)},{merge:true});
     }
     await batch.commit();
     await loadInventory();
@@ -663,9 +736,10 @@ async function doConfirm(){
   rh+='<div class="receipt-row"><span style="font-weight:600">分店</span><span>'+(storeField==='central'?'中環店':'始創店')+'</span></div>';
   rh+='<div class="receipt-row"><span style="font-weight:600">單據號</span><span>'+txId+'</span></div>';
   rh+='<div style="border-top:1px dashed var(--bd);margin:.3rem 0"></div>';
-  for(const [name,item] of Object.entries(cart)){
+  for(const [cartKey,item] of Object.entries(cart)){
+    const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
     rh+=`<div class="receipt-row">
-      <span style="flex:1">${name}<br><span style="font-size:.7rem;color:var(--muted)">HK$${item.price} × ${item.qty}</span></span>
+      <span style="flex:1">${displayName}<br><span style="font-size:.7rem;color:var(--muted)">HK$${item.price} × ${item.qty}</span></span>
       <span>HK$${item.qty*item.price}</span>
     </div>`;
   }
