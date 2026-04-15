@@ -522,9 +522,10 @@ function getPackPrice(p,packLabel){
 
 function getPackImg(p,packLabel){
   const opts=getPackOptions(p);
-  if(!opts) return p.img1||p.img2||null;
+  if(!opts) return p.local_img||null; // single-pack: local_img already has correct filename
+  // Multi-pack: use img1 or img2 filename from opts
   const opt=opts.find(o=>o.label===packLabel)||opts[0];
-  return opt.img||p.img1||null;
+  return opt.img||p.local_img||null;
 }
 
 function renderGrid(){
@@ -549,8 +550,7 @@ function renderGrid(){
     imgWrap.className='pcard-img';
     if(packImg){
       const img=document.createElement('img');
-      const fn=packImg.replace(/^.*[\\\/]/,'');
-      img.src='images/'+fn;
+      img.src='images/'+packImg;
       img.style='width:100%;height:100%;object-fit:cover;';
       img.onerror=()=>{img.style.display='none';imgWrap.textContent='🍜';};
       imgWrap.appendChild(img);
