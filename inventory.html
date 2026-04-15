@@ -231,8 +231,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 @media(max-width:768px){
   .main-wrap{flex-direction:column}
-  .pcat-bar{display:flex;flex-direction:row;width:100%;height:auto;overflow-x:auto;overflow-y:hidden;padding:.5rem;border-right:none;border-bottom:1px solid var(--bd);gap:4px}
-  .pcat-btn{display:inline-block;width:auto;white-space:nowrap;padding:.4rem .75rem;font-size:.78rem;margin-bottom:0;flex-shrink:0}
+  .pcat-bar{display:flex;flex-direction:row;width:100%;height:auto;overflow-x:auto;overflow-y:hidden;padding:.5rem;border-right:none;border-bottom:1px solid var(--bd);gap:4px;scrollbar-width:none;-ms-overflow-style:none}
+  .pcat-bar::-webkit-scrollbar{display:none}
+  .pcat-btn{display:inline-block;width:auto;white-space:nowrap;padding:.35rem .6rem;font-size:.75rem;margin-bottom:0;flex-shrink:0;border-radius:16px;background:var(--bg1);border:1px solid var(--bd)}
+  .pcat-btn.active{background:var(--red);color:white;border-color:var(--red)}
   .cart-panel{position:fixed;right:0;top:68px;bottom:0;width:100%;transform:translateX(100%);transition:transform .3s;z-index:900}
   .cart-panel.open{transform:translateX(0)}
   .cart-btn-mobile{display:flex !important}
