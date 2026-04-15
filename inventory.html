@@ -230,7 +230,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .auth-error{font-size:.75rem;color:var(--red);margin-top:.4rem;text-align:center;min-height:1em}
 
 @media(max-width:768px){
-  .pcat-bar{display:none}
+  .main-wrap{flex-direction:column}
+  .pcat-bar{display:flex;flex-direction:row;width:100%;height:auto;overflow-x:auto;overflow-y:hidden;padding:.5rem;border-right:none;border-bottom:1px solid var(--bd);gap:4px}
+  .pcat-btn{display:inline-block;width:auto;white-space:nowrap;padding:.4rem .75rem;font-size:.78rem;margin-bottom:0;flex-shrink:0}
   .cart-panel{position:fixed;right:0;top:68px;bottom:0;width:100%;transform:translateX(100%);transition:transform .3s;z-index:900}
   .cart-panel.open{transform:translateX(0)}
   .cart-btn-mobile{display:flex !important}
