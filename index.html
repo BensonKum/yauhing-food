@@ -1181,8 +1181,8 @@ function renderOrders(){
       html+='<div class="order-detail-row"><span>收件人</span><span>'+(o.sfName||'')+'</span></div>';
       html+='<div class="order-detail-row"><span>收貨地址</span><span>'+(o.sfAddress||'')+'</span></div>';
     }
-    // 已付款訂單顯示「查看取貨 QR」
-    if(o.status==='paid'||o.status==='shipped'||o.status==='completed'){
+    // 所有未取消的訂單都可查看取貨 QR（方便顧客 WhatsApp 遺失後仍能找到憑證）
+    if(o.status && o.status !== 'cancelled'){
       html+='<div style="margin-top:0.8rem"><button class="order-qr-btn" onclick="event.stopPropagation();showOrderQR(\''+o.orderId+'\',\''+(o.customerName||'')+'\',\''+(o.customerPhone||'')+'\','+(o.finalTotal||o.total)+')">顯示取貨 QR Code</button></div>';
     }
     // 待付款/已付款顯示「去付款」按鈕
@@ -1233,12 +1233,13 @@ function showOrderQR(orderId,customerName,customerPhone,total){
   if(qrBox&&qrSection){
     // 隱藏未付款的確認按鈕
     if(confirmBtn){confirmBtn.style.display='none';}
-    // 生成 QR
+    // 生成 QR（包含完整取貨資訊，方便掃描失敗時員工可人工核對）
+    var qrData='YH-PICKUP:'+orderId+'|'+customerName+'|'+customerPhone+'|HK$'+total;
     var qr=qrcode(0,'M');
-    qr.addData(orderId);
+    qr.addData(qrData);
     qr.make();
     qrBox.innerHTML=qr.createSvgTag(6,4);
-    if(qrInfo)qrInfo.innerHTML='<strong>'+customerName+'</strong>｜'+customerPhone+'｜<strong>HK$'+total+'</strong>';
+    if(qrInfo)qrInfo.innerHTML='<strong>'+customerName+'</strong>｜'+customerPhone+'｜<strong>HK$'+total+'</strong><br><small style="color:#888;font-size:.75rem;">截圖保存此 QR Code，到店取貨時出示</small>';
     qrSection.style.display='block';
     // 滾動到 QR
     setTimeout(function(){
