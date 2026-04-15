@@ -132,11 +132,11 @@
 <div class="wrap">
   <div class="top">
     <h1>祐興食品 訂單核實</h1>
-    <p>輸入訂單編號或掃描 QR Code</p>
+    <p>輸入電話末4位 或 掃描 QR Code</p>
   </div>
 
   <div class="row">
-    <input type="text" id="txt" placeholder="例如：YH20260413001">
+    <input type="text" id="txt" placeholder="例：9123" maxlength="4" inputmode="numeric" pattern="[0-9]*">
     <button class="btn" id="qbtn">查詢</button>
   </div>
 
@@ -211,23 +211,61 @@ async function doSearch(oid) {
     return;
   }
   try {
+    // Step 1: try exact orderId match
     var snap = await window.db.collection("orders").where("orderId","==",oid).get();
     if(!snap.empty) {
       showOrder(snap.docs[0].data(), snap.docs[0].id);
       return;
     }
-    // partial match
-    var snap2 = await window.db.collection("orders").orderBy("createdAt","desc").limit(30).get();
-    var found = null;
+
+    // Step 2: search by phone last 4 digits across all orders
+    // Fetch last 200 orders and filter by phone ending
+    var snap2 = await window.db.collection("orders")
+      .orderBy("createdAt","desc").limit(200).get();
+
+    var matches = [];
     for(var i=0;i<snap2.docs.length;i++) {
       var d = snap2.docs[i].data();
-      if(d.orderId && d.orderId.indexOf(oid) >= 0) { found = d; break; }
+      var phone = d.customerPhone || "";
+      if(phone.slice(-4) === oid) {
+        matches.push({data:d, id:snap2.docs[i].id});
+      }
     }
-    if(found) {
-      showOrder(found, snap2.docs[i].id);
-    } else {
-      res.innerHTML = '<div class="empty">找不到訂單：' + oid + '<br><br>請確認訂單編號是否正確</div>';
+
+    if(matches.length === 0) {
+      res.innerHTML = '<div class="empty">找不到相符的訂單<br><br>請確認電話末4位是否正確<br><br><button class="btn" onclick="location.reload()">重新查詢</button></div>';
+      return;
     }
+
+    if(matches.length === 1) {
+      showOrder(matches[0].data, matches[0].id);
+      return;
+    }
+
+    // Multiple matches — show selection list
+    var html = '<div style="padding:0 0 1rem;">';
+    html += '<div style="font-weight:700;color:#C8462B;margin-bottom:.8rem;">找到 ' + matches.length + ' 個訂單，請選擇：</div>';
+    for(var j=0;j<matches.length;j++) {
+      var m = matches[j].data;
+      var dt = m.createdAt ? (m.createdAt.toDate ? m.createdAt.toDate() : new Date(m.createdAt)) : null;
+      var dtStr = dt ? dt.toLocaleDateString("zh-HK") : "";
+      var stMap = {pending:"待付款",paid:"已付款",shipped:"已發貨",completed:"已完成",cancelled:"已取消"};
+      var stLabel = stMap[m.status] || m.status || "pending";
+      var stCls = m.status === "paid" || m.status === "shipped" || m.status === "completed" ? "paid" : "pending";
+      html += '<div style="border:2px solid #eee;border-radius:10px;padding:1rem;margin-bottom:.6rem;cursor:pointer" onclick="showOrder_fromList(' + j + ')">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;">';
+      html += '<span style="font-weight:700;">#' + m.orderId + '</span>';
+      html += '<span style="background:#' + (stCls==="paid"?"2E6A4F":"E07B3A") + ';color:white;padding:.2rem .6rem;border-radius:50px;font-size:.75rem;font-weight:600;">' + stLabel + '</span>';
+      html += '</div>';
+      html += '<div style="font-size:.82rem;color:#888;margin-top:.4rem;">' + (m.customerName||"-") + '｜' + dtStr + '｜<b style="color:#333;">HK$' + (m.finalTotal||m.total||0) + '</b></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+    res.innerHTML = html;
+
+    // Store matches for selection
+    window._phoneMatches = matches;
+
   } catch(e) {
     console.error("Firestore error:", e);
     var msg = "查詢失敗";
@@ -236,6 +274,14 @@ async function doSearch(oid) {
     else if(e.code === "not-found") msg = "找不到訂單";
     else msg = "查詢失敗：" + (e.message || e.code || "未知錯誤");
     res.innerHTML = '<div class="empty">' + msg + '<br><br><button class="btn" onclick="location.reload()">重新整理</button></div>';
+  }
+}
+
+// Called when user taps a match from the list
+function showOrder_fromList(idx) {
+  if(window._phoneMatches && window._phoneMatches[idx]) {
+    var m = window._phoneMatches[idx];
+    showOrder(m.data, m.id);
   }
 }
 
