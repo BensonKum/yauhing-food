@@ -558,17 +558,38 @@ function showApp(){
 
 // ─── Store Select ───
 function showStoreSelect(){
+  // Admin can choose store freely; others auto-select based on email
+  const email = currentUser ? currentUser.email.toLowerCase() : '';
+  const isAdmin = email === 'admin@yauhing.hk';
+  if (!isAdmin) {
+    const userStore = email.includes('central@') ? 'central' : 'pioneer';
+    selectStore(userStore);
+    return;
+  }
   document.getElementById('storeDialog').classList.add('show');
 }
 function selectStore(store){
-  currentStore=store;
-  const btn=document.getElementById('storeBtn');
-  if(store==='central'){
-    btn.textContent='🏠 中環店 ✓';btn.className='store-badge central';
-    document.getElementById('topbarStore').textContent='中環街市1樓P04C';
+  // Store permission check: central/yauhing.hk → central only, pioneer/yauhing.hk → pioneer only, admin → both
+  const email = currentUser ? currentUser.email.toLowerCase() : '';
+  const isAdmin = email === 'admin@yauhing.hk';
+  const userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
+
+  // Non-admin users can only use their assigned store
+  if (!isAdmin && userStore && store !== userStore) {
+    toast('你沒有權限使用此分店');
+    return;
+  }
+
+  currentStore = store;
+  const btn = document.getElementById('storeBtn');
+  if (store === 'central') {
+    btn.textContent = '🏠 中環店 ✓';
+    btn.className = 'store-badge central';
+    document.getElementById('topbarStore').textContent = '中環街市1樓P04C';
   } else {
-    btn.textContent='🏬 始創店 ✓';btn.className='store-badge pioneer';
-    document.getElementById('topbarStore').textContent='旺角始創中心地下KIOSK J';
+    btn.textContent = '🏬 始創店 ✓';
+    btn.className = 'store-badge pioneer';
+    document.getElementById('topbarStore').textContent = '旺角始創中心地下KIOSK J';
   }
   document.getElementById('storeDialog').classList.remove('show');
   loadInventory();
