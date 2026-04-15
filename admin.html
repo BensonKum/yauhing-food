@@ -281,6 +281,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
+// Debug: Check Firebase loaded
+window.onerror = function(msg,url,line){ alert('JS Error: '+msg+' at line '+line); };
+if(typeof firebase === 'undefined'){ alert('Firebase SDK failed to load!'); }
 // ── Firebase Config ────────────────────────────
 var firebaseConfig = {
   apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
