@@ -1245,6 +1245,16 @@ async function saveEmployee(){
   }
 }
 
+// Expose employee functions to global scope for onclick
+window.showEmployeeTab = showEmployeeTab;
+window.hideEmployeeTab = hideEmployeeTab;
+window.renderEmployeeList = renderEmployeeList;
+window.showAddEmployee = showAddEmployee;
+window.closeAddEmployee = closeAddEmployee;
+window.editEmployee = editEmployee;
+window.deleteEmployee = deleteEmployee;
+window.saveEmployee = saveEmployee;
+
 function switchTab(tab){
   currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
