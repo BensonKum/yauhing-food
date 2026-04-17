@@ -1143,6 +1143,8 @@ function showAddEmployee(){
   document.getElementById('empName').value = '';
   document.getElementById('empEmail').value = '';
   document.getElementById('empRole').value = 'central';
+  document.getElementById('empPwd').value = '';
+  document.getElementById('empPwdRow').style.display = '';
   document.getElementById('addEmpModal').style.display = 'flex';
 }
 
@@ -1161,7 +1163,8 @@ async function editEmployee(id){
     document.getElementById('empName').value = e.name || '';
     document.getElementById('empEmail').value = e.email || '';
     document.getElementById('empRole').value = e.role || 'central';
-    document.getElementById('addEmpModal').style.display = 'flex';
+    document.getElementById('empPwdRow').style.display = 'none';
+  document.getElementById('addEmpModal').style.display = 'flex';
   } catch(err){
     console.error(err);
     toast('讀取失敗');
@@ -1184,36 +1187,33 @@ async function saveEmployee(){
   const name = document.getElementById('empName').value.trim();
   const email = document.getElementById('empEmail').value.trim().toLowerCase();
   const role = document.getElementById('empRole').value;
+  const pwd = document.getElementById('empPwd').value;
   
-  if(!name || !email){
-    toast('請填寫姓名和電郵');
-    return;
-  }
+  if(!name || !email){ toast('請填寫姓名和電郵'); return; }
   
-  if(!email.includes('@') || !email.includes('.')){
-    toast('電郵格式不正確');
-    return;
-  }
-  
-  try {
+  try{
     if(editingEmpId){
-      await db.collection('employees').doc(editingEmpId).update({
-        name, email, role,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      await db.collection('employees').doc(editingEmpId).update({name, email, role});
       toast('已更新');
     } else {
-      await db.collection('employees').add({
-        name, email, role,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      if(!pwd || pwd.length < 6){ toast('請設定密碼（至少6位）'); return; }
+      // Create Firebase Auth via REST API (won't kick admin out)
+      const apiKey = firebase.app().options.apiKey;
+      const resp = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + apiKey, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email: email, password: pwd, returnSecureToken: false})
       });
-      toast('已新增');
+      const rd = await resp.json();
+      if(!resp.ok){ toast(rd.error && rd.error.message ? rd.error.message : '帳號建立失敗'); return; }
+      await db.collection('employees').doc(email).set({name, email, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+      toast('員工帳號已建立');
     }
     closeAddEmployee();
     renderEmployeeList();
   } catch(err){
     console.error(err);
-    toast('儲存失敗：請確認Firestore規則已更新');
+    toast(err.message || '儲存失敗');
   }
 }
 
@@ -1382,6 +1382,10 @@ window.renderReport=renderReport;window.renderLog=renderLog;
           <option value="pioneer">始創店員工</option>
           <option value="admin">管理員</option>
         </select>
+      </div>
+      <div id="empPwdRow">
+        <label>登入密碼</label>
+        <input type="password" id="empPwd" placeholder="設定員工登入密碼（6位以上）" minlength="6">
       </div>
       <div class="add-emp-btns">
         <button class="btn-emp-cancel" onclick="closeAddEmployee()">取消</button>
