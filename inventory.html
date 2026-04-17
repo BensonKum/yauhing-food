@@ -721,7 +721,7 @@ async function showStoreSelect(){
     showEmployeeTab();
   }
   if (!isAdmin) {
-    const userStore = email.includes('central@') ? 'central' : 'pioneer';
+    userStore = email.includes('central@') ? 'central' : 'pioneer';
     selectStore(userStore);
     return;
   }
@@ -761,7 +761,7 @@ async function selectStore(store){
   if(isAdminUser){
     showEmployeeTab();
   }
-  const userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
+  userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
 
   // Non-admin users can only use their assigned store
   if (!isAdmin && userStore && store !== userStore) {
