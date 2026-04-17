@@ -1116,6 +1116,7 @@ function toast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
+window.showToast = toast; // Alias for compatibility
 
 // --- Mobile Cart ---
 function toggleMobileCart(){
@@ -1182,7 +1183,7 @@ function closeAddEmployee(){
 async function editEmployee(id){
   try {
     const doc = await db.collection('employees').doc(id).get();
-    if(!doc.exists){ showToast('找不到員工'); return; }
+    if(!doc.exists){ toast('找不到員工'); return; }
     const e = doc.data();
     editingEmpId = id;
     document.getElementById('empModalTitle').textContent = '✏️ 編輯員工';
@@ -1192,7 +1193,7 @@ async function editEmployee(id){
     document.getElementById('addEmpModal').style.display = 'flex';
   } catch(err){
     console.error(err);
-    showToast('讀取失敗');
+    toast('讀取失敗');
   }
 }
 
@@ -1200,11 +1201,11 @@ async function deleteEmployee(id){
   if(!confirm('確定要刪除此員工？')) return;
   try {
     await db.collection('employees').doc(id).delete();
-    showToast('已刪除');
+    toast('已刪除');
     renderEmployeeList();
   } catch(err){
     console.error(err);
-    showToast('刪除失敗');
+    toast('刪除失敗');
   }
 }
 
@@ -1214,12 +1215,12 @@ async function saveEmployee(){
   const role = document.getElementById('empRole').value;
   
   if(!name || !email){
-    showToast('請填寫姓名和電郵');
+    toast('請填寫姓名和電郵');
     return;
   }
   
   if(!email.includes('@') || !email.includes('.')){
-    showToast('電郵格式不正確');
+    toast('電郵格式不正確');
     return;
   }
   
@@ -1229,19 +1230,19 @@ async function saveEmployee(){
         name, email, role,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      showToast('已更新');
+      toast('已更新');
     } else {
       await db.collection('employees').add({
         name, email, role,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      showToast('已新增');
+      toast('已新增');
     }
     closeAddEmployee();
     renderEmployeeList();
   } catch(err){
     console.error(err);
-    showToast('儲存失敗：請確認Firestore規則已更新');
+    toast('儲存失敗：請確認Firestore規則已更新');
   }
 }
 
