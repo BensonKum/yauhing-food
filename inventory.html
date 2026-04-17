@@ -322,6 +322,39 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .log-type{font-size:.7rem;padding:.2rem .6rem;border-radius:50px;font-weight:600}
 .log-type.sale{background:#FFEBEE;color:#C62828}
 .log-type.purchase{background:#E8F5E9;color:#2E7D32}
+
+.log-edit-btn,.log-del-btn{
+  border:none;width:28px;height:28px;border-radius:6px;cursor:pointer;
+  font-size:1rem;transition:var(--tr);
+}
+.log-edit-btn{background:#FFF3E0;color:#E65100}
+.log-edit-btn:hover{background:#FFE0B2}
+.log-del-btn{background:#FFEBEE;color:#C62828}
+.log-del-btn:hover{background:#FFCDD2}
+
+/* Edit Modal */
+.edit-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem}
+.edit-modal-content{background:white;border-radius:16px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:var(--sh2)}
+.edit-modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--bd)}
+.edit-modal-header h3{font-size:1.1rem;margin:0}
+.edit-modal-close{border:none;background:transparent;font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.edit-modal-close:hover{color:var(--txt)}
+.edit-modal-body{padding:1.2rem}
+.edit-info{display:flex;gap:.8rem;margin-bottom:1rem;font-size:.85rem;color:var(--muted)}
+.edit-type{padding:.2rem .6rem;border-radius:4px;font-weight:600}
+.edit-type.sale{background:#FFEBEE;color:#C62828}
+.edit-type.purchase{background:#E8F5E9;color:#2E7D32}
+.edit-item-row{display:flex;align-items:center;gap:.5rem;padding:.5rem 0;border-bottom:1px solid var(--bd)}
+.edit-item-name{flex:1;font-size:.9rem}
+.edit-item-qty{width:60px;padding:.3rem .5rem;border:1px solid var(--bd);border-radius:6px;text-align:center;font-size:.9rem}
+.edit-item-unit{font-size:.8rem;color:var(--muted)}
+.edit-total{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--bd);font-size:1.1rem;font-weight:600;text-align:right}
+.edit-modal-footer{display:flex;gap:.5rem;padding:1rem 1.2rem;border-top:1px solid var(--bd)}
+.btn-cancel,.btn-save{flex:1;padding:.6rem;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-cancel{background:var(--bg2);color:var(--txt)}
+.btn-cancel:hover{background:var(--bd)}
+.btn-save{background:var(--green);color:white}
+.btn-save:hover{background:#236B3F}
 </style>
 </head>
 <body>
@@ -530,6 +563,7 @@ let selectedPack = {}; // {productName: selectedPackLabel}
 let currentMode = 'sale';
 let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
+let isAdminUser = false;  // Global admin flag
 let currentCat = '全部';
 
 // --- Load Products from products.json ---
@@ -575,6 +609,7 @@ function showStoreSelect(){
   // Admin can choose store freely; others auto-select based on email
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   const isAdmin = email === 'admin@yauhing.hk';
+  isAdminUser = isAdmin;
   if (!isAdmin) {
     const userStore = email.includes('central@') ? 'central' : 'pioneer';
     selectStore(userStore);
@@ -586,6 +621,7 @@ function selectStore(store){
   // Store permission check: central/yauhing.hk → central only, pioneer/yauhing.hk → pioneer only, admin → both
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   const isAdmin = email === 'admin@yauhing.hk';
+  isAdminUser = isAdmin;
   const userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
 
   // Non-admin users can only use their assigned store
@@ -1048,14 +1084,15 @@ async function renderLog(){
     const dtStr=dt.toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
     const itemsStr=t.items&&t.items.length>0?
       t.items.map(i=>`${i.name}${i.pack?'('+i.pack+')':''} × ${i.qty}`).join(', '):'—';
+        const adminBtns = isAdminUser ? `<button class="log-edit-btn" onclick="editTransaction('${t.id}')">✏️</button><button class="log-del-btn" onclick="deleteTransaction('${t.id}')">🗑️</button>` : '';
     return `<div class="log-entry">
       <div style="flex:1">
         <div class="log-meta">${dtStr} · <span class="log-type ${t.type}">${t.type==='sale'?'📤 銷售':'📥 進貨'}</span> · ${t.store==='central'?'中環':'始創'} · ${t.user||''}</div>
         <div class="log-items">${itemsStr}</div>
       </div>
-      <div>
+      <div style="display:flex;align-items:center;gap:.5rem;">
         <div class="log-total">HK$${t.total||0}</div>
-        <div style="font-size:.68rem;color:var(--muted)">${t.txId||''}</div>
+        ${adminBtns}
       </div>
     </div>`;
   }).join('');
@@ -1076,5 +1113,11 @@ window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switc
 window.doLogout=doLogout;
 window.renderReport=renderReport;window.renderLog=renderLog;
 </script>
+
+<!-- Edit Modal -->
+<div id="editModal" class="edit-modal">
+  <div class="edit-modal-content" id="editModalContent"></div>
+</div>
+
 </body>
 </html>

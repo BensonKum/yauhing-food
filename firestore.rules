@@ -6,7 +6,7 @@ service cloud.firestore {
       allow read: if request.auth != null && request.auth.uid == userId;
       allow write: if request.auth != null && request.auth.uid == userId;
     }
-    // 訂單：顧客需登入讀取自己的訂單；員工核實頁(verify.html)不需登入
+    // 訂訂單：顧客需登入讀取自己的訂單；員工核實頁(verify.html)不需登入
     match /orders/{orderId} {
       allow read: if true;  // verify.html 匿名查詢，無需登入
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
@@ -22,11 +22,11 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow write: if request.auth != null;
     }
-    // 倉存交易記錄：員工可新增，普通用戶只能讀
+    // 倉存交易記錄：員工可新增，Admin可修改/刪除
     match /inventory_transactions/{txId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null;
-      allow update, delete: if false;
+      allow update, delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
     }
   }
 }
