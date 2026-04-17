@@ -390,6 +390,40 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-emp-cancel{background:var(--bg2);color:var(--txt)}
 .btn-emp-save{background:var(--green);color:white}
 .btn-emp-save:hover{background:#236B3F}
+
+/* Employee Management */
+.emp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0 .5rem}
+.emp-header h3{margin:0;font-size:1.1rem}
+.emp-list{display:flex;flex-direction:column;gap:.5rem}
+.emp-card{background:white;border-radius:12px;padding:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid var(--bd)}
+.emp-info{flex:1}
+.emp-name{font-weight:600;font-size:.95rem;margin-bottom:.2rem}
+.emp-email{font-size:.8rem;color:var(--muted)}
+.emp-role{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;font-weight:600;margin-left:.5rem}
+.emp-role.admin{background:#FFEBEE;color:#C62828}
+.emp-role.central{background:#FFF3E0;color:#E65100}
+.emp-role.pioneer{background:#F3E5F5;color:#6A1B9A}
+.emp-actions{display:flex;gap:.3rem}
+.btn-add-emp{padding:.5rem 1rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-add-emp:hover{background:#236B3F}
+.btn-emp-edit,.btn-emp-del{border:none;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1rem;transition:var(--tr)}
+.btn-emp-edit{background:#E3F2FD;color:#1565C0}
+.btn-emp-edit:hover{background:#BBDEFB}
+.btn-emp-del{background:#FFEBEE;color:#C62828}
+.btn-emp-del:hover{background:#FFCDD2}
+.add-emp-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem}
+.add-emp-content{background:white;border-radius:16px;max-width:400px;width:100%;padding:1.5rem;box-shadow:0 8px 24px rgba(0,0,0,.10)}
+.add-emp-content h3{margin:0 0 1rem;font-size:1.1rem}
+.add-emp-form{display:flex;flex-direction:column;gap:.8rem}
+.add-emp-form label{font-size:.85rem;font-weight:500;margin-bottom:.2rem;display:block}
+.add-emp-form input,.add-emp-form select{width:100%;padding:.6rem;border:1px solid var(--bd);border-radius:8px;font-size:.9rem;font-family:'Noto Sans TC',sans-serif}
+.add-emp-form input:focus,.add-emp-form select:focus{outline:none;border-color:var(--green)}
+.add-emp-btns{display:flex;gap:.5rem;margin-top:.5rem}
+.btn-emp-cancel,.btn-emp-save{flex:1;padding:.6rem;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-emp-cancel{background:var(--bg2);color:var(--txt)}
+.btn-emp-save{background:var(--green);color:white}
+.btn-emp-save:hover{background:#236B3F}
+
 </style>
 </head>
 <body>
@@ -422,6 +456,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     <button class="tab-btn active" id="tabPos" onclick="switchTab('pos')">📤 POS</button>
     <button class="tab-btn" id="tabReport" onclick="switchTab('report')">📊 報表</button>
     <button class="tab-btn" id="tabLog" onclick="switchTab('log')">📋 記錄</button>
+    <button class="tab-btn" id="tabEmployee" onclick="switchTab('employee')" style="display:none">👥 員工</button>
   </div>
   <div class="mode-toggle">
     <button class="mode-btn active" id="modeSale" onclick="setMode('sale')">📤 銷售</button>
@@ -529,6 +564,17 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
       </select>
     </div>
     <div id="logList"></div>
+  </div>
+</div>
+
+<!-- Employee Tab (Admin Only) -->
+<div class="tab-content" id="tabContentEmployee">
+  <div class="report-wrap">
+    <div class="emp-header">
+      <h3>👥 員工管理</h3>
+      <button class="btn-add-emp" onclick="showAddEmployee()">＋ 新增員工</button>
+    </div>
+    <div id="empList" class="emp-list"></div>
   </div>
 </div>
 
@@ -1079,6 +1125,126 @@ function toggleMobileCart(){
 // --- Tab Navigation ---
 let currentTab = 'pos';
 
+
+// --- Employee Management (Admin Only) ---
+let editingEmpId = null;
+
+function showEmployeeTab(){ document.getElementById('tabEmployee').style.display = 'block'; }
+function hideEmployeeTab(){ document.getElementById('tabEmployee').style.display = 'none'; }
+
+async function renderEmployeeList(){
+  if(!isAdminUser) return;
+  const empList = document.getElementById('empList');
+  empList.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">載入中...</div>';
+  
+  try {
+    const snap = await db.collection('employees').orderBy('createdAt','desc').get();
+    const emps = [];
+    snap.forEach(d => emps.push({id: d.id, ...d.data()}));
+    
+    if(emps.length === 0){
+      empList.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">暫無員工記錄<br><small>點擊「新增員工」加入</small></div>';
+      return;
+    }
+    
+    empList.innerHTML = emps.map(e => `
+      <div class="emp-card">
+        <div class="emp-info">
+          <div class="emp-name">\${e.name || '—'}<span class="emp-role \${e.role}">\${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
+          <div class="emp-email">\${e.email}</div>
+        </div>
+        <div class="emp-actions">
+          <button class="btn-emp-edit" onclick="editEmployee('\${e.id}')">✏️</button>
+          <button class="btn-emp-del" onclick="deleteEmployee('\${e.id}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(err){
+    console.error(err);
+    empList.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red)">載入失敗：請確認Firestore規則已更新</div>';
+  }
+}
+
+function showAddEmployee(){
+  editingEmpId = null;
+  document.getElementById('empModalTitle').textContent = '＋ 新增員工';
+  document.getElementById('empName').value = '';
+  document.getElementById('empEmail').value = '';
+  document.getElementById('empRole').value = 'central';
+  document.getElementById('addEmpModal').style.display = 'flex';
+}
+
+function closeAddEmployee(){
+  document.getElementById('addEmpModal').style.display = 'none';
+  editingEmpId = null;
+}
+
+async function editEmployee(id){
+  try {
+    const doc = await db.collection('employees').doc(id).get();
+    if(!doc.exists){ showToast('找不到員工'); return; }
+    const e = doc.data();
+    editingEmpId = id;
+    document.getElementById('empModalTitle').textContent = '✏️ 編輯員工';
+    document.getElementById('empName').value = e.name || '';
+    document.getElementById('empEmail').value = e.email || '';
+    document.getElementById('empRole').value = e.role || 'central';
+    document.getElementById('addEmpModal').style.display = 'flex';
+  } catch(err){
+    console.error(err);
+    showToast('讀取失敗');
+  }
+}
+
+async function deleteEmployee(id){
+  if(!confirm('確定要刪除此員工？')) return;
+  try {
+    await db.collection('employees').doc(id).delete();
+    showToast('已刪除');
+    renderEmployeeList();
+  } catch(err){
+    console.error(err);
+    showToast('刪除失敗');
+  }
+}
+
+async function saveEmployee(){
+  const name = document.getElementById('empName').value.trim();
+  const email = document.getElementById('empEmail').value.trim().toLowerCase();
+  const role = document.getElementById('empRole').value;
+  
+  if(!name || !email){
+    showToast('請填寫姓名和電郵');
+    return;
+  }
+  
+  if(!email.includes('@') || !email.includes('.')){
+    showToast('電郵格式不正確');
+    return;
+  }
+  
+  try {
+    if(editingEmpId){
+      await db.collection('employees').doc(editingEmpId).update({
+        name, email, role,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast('已更新');
+    } else {
+      await db.collection('employees').add({
+        name, email, role,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast('已新增');
+    }
+    closeAddEmployee();
+    renderEmployeeList();
+  } catch(err){
+    console.error(err);
+    showToast('儲存失敗：請確認Firestore規則已更新');
+  }
+}
+
 function switchTab(tab){
   currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -1087,6 +1253,7 @@ function switchTab(tab){
   document.getElementById('tabContent'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   if(tab==='report') renderReport();
   if(tab==='log') renderLog();
+  if(tab==='employee') renderEmployeeList();
 }
 
 // --- Report Tab ---
@@ -1215,6 +1382,36 @@ window.renderReport=renderReport;window.renderLog=renderLog;
 
 <!-- Add Employee Modal -->
 <div id="addEmpModal" class="add-emp-modal">
+  <div class="add-emp-content">
+    <h3 id="empModalTitle">＋ 新增員工</h3>
+    <div class="add-emp-form">
+      <div>
+        <label>姓名</label>
+        <input type="text" id="empName" placeholder="例：陳大明">
+      </div>
+      <div>
+        <label>電郵</label>
+        <input type="email" id="empEmail" placeholder="例：david@yauhing.hk">
+      </div>
+      <div>
+        <label>權限</label>
+        <select id="empRole">
+          <option value="central">中環店員工</option>
+          <option value="pioneer">始創店員工</option>
+          <option value="admin">管理員</option>
+        </select>
+      </div>
+      <div class="add-emp-btns">
+        <button class="btn-emp-cancel" onclick="closeAddEmployee()">取消</button>
+        <button class="btn-emp-save" onclick="saveEmployee()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Employee Modal -->
+<div class="add-emp-modal" id="addEmpModal">
   <div class="add-emp-content">
     <h3 id="empModalTitle">＋ 新增員工</h3>
     <div class="add-emp-form">
