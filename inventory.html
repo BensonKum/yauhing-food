@@ -355,6 +355,41 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-cancel:hover{background:var(--bd)}
 .btn-save{background:var(--green);color:white}
 .btn-save:hover{background:#236B3F}
+
+/* Employee Management */
+.emp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0 .5rem}
+.emp-header h3{margin:0;font-size:1.1rem}
+.btn-add-emp{padding:.5rem 1rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-add-emp:hover{background:#236B3F}
+.emp-list{display:flex;flex-direction:column;gap:.5rem}
+.emp-card{background:white;border-radius:12px;padding:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh1);border:1px solid var(--bd)}
+.emp-info{flex:1}
+.emp-name{font-weight:600;font-size:.95rem;margin-bottom:.2rem}
+.emp-email{font-size:.8rem;color:var(--muted)}
+.emp-role{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;font-weight:600;margin-left:.5rem}
+.emp-role.admin{background:#FFEBEE;color:#C62828}
+.emp-role.central{background:#FFF3E0;color:#E65100}
+.emp-role.pioneer{background:#F3E5F5;color:#6A1B9A}
+.emp-actions{display:flex;gap:.3rem}
+.btn-emp-edit,.btn-emp-del{border:none;width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:1rem;transition:var(--tr)}
+.btn-emp-edit{background:#E3F2FD;color:#1565C0}
+.btn-emp-edit:hover{background:#BBDEFB}
+.btn-emp-del{background:#FFEBEE;color:#C62828}
+.btn-emp-del:hover{background:#FFCDD2}
+
+/* Add Employee Modal */
+.add-emp-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:1rem}
+.add-emp-content{background:white;border-radius:16px;max-width:400px;width:100%;padding:1.5rem;box-shadow:var(--sh2)}
+.add-emp-content h3{margin:0 0 1rem;font-size:1.1rem}
+.add-emp-form{display:flex;flex-direction:column;gap:.8rem}
+.add-emp-form label{font-size:.85rem;font-weight:500;margin-bottom:.2rem}
+.add-emp-form input,.add-emp-form select{padding:.6rem;border:1px solid var(--bd);border-radius:8px;font-size:.9rem;font-family:'Noto Sans TC',sans-serif}
+.add-emp-form input:focus,.add-emp-form select:focus{outline:none;border-color:var(--green)}
+.add-emp-btns{display:flex;gap:.5rem;margin-top:.5rem}
+.btn-emp-cancel,.btn-emp-save{flex:1;padding:.6rem;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-emp-cancel{background:var(--bg2);color:var(--txt)}
+.btn-emp-save{background:var(--green);color:white}
+.btn-emp-save:hover{background:#236B3F}
 </style>
 </head>
 <body>
@@ -597,7 +632,7 @@ function authLogin(){
     });
 }
 
-function showApp(){
+async function showApp(){
   document.getElementById('authOverlay').style.display='none';
   document.getElementById('userInfo').textContent=currentUser.email;
   // Show store select on first load
@@ -608,8 +643,37 @@ function showApp(){
 function showStoreSelect(){
   // Admin can choose store freely; others auto-select based on email
   const email = currentUser ? currentUser.email.toLowerCase() : '';
-  const isAdmin = email === 'admin@yauhing.hk';
+  
+  // Check employees collection for role
+  let isAdmin = false;
+  let userStore = null;
+  
+  try {
+    const empSnap = await db.collection('employees').where('email','==',email).get();
+    if(!empSnap.empty){
+      const empData = empSnap.docs[0].data();
+      if(empData.role === 'admin'){
+        isAdmin = true;
+      } else {
+        userStore = empData.role; // 'central' or 'pioneer'
+      }
+    } else {
+      // Fallback to hardcoded logic for backward compatibility
+      isAdmin = email === 'admin@yauhing.hk';
+      if(!isAdmin){
+        userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
+      }
+    }
+  } catch(e){
+    console.error('Error checking employee role:', e);
+    // Fallback
+    isAdmin = email === 'admin@yauhing.hk';
+  }
+  
   isAdminUser = isAdmin;
+  if(isAdminUser){
+    showEmployeeTab();
+  }
   if (!isAdmin) {
     const userStore = email.includes('central@') ? 'central' : 'pioneer';
     selectStore(userStore);
@@ -620,8 +684,37 @@ function showStoreSelect(){
 function selectStore(store){
   // Store permission check: central/yauhing.hk → central only, pioneer/yauhing.hk → pioneer only, admin → both
   const email = currentUser ? currentUser.email.toLowerCase() : '';
-  const isAdmin = email === 'admin@yauhing.hk';
+  
+  // Check employees collection for role
+  let isAdmin = false;
+  let userStore = null;
+  
+  try {
+    const empSnap = await db.collection('employees').where('email','==',email).get();
+    if(!empSnap.empty){
+      const empData = empSnap.docs[0].data();
+      if(empData.role === 'admin'){
+        isAdmin = true;
+      } else {
+        userStore = empData.role; // 'central' or 'pioneer'
+      }
+    } else {
+      // Fallback to hardcoded logic for backward compatibility
+      isAdmin = email === 'admin@yauhing.hk';
+      if(!isAdmin){
+        userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
+      }
+    }
+  } catch(e){
+    console.error('Error checking employee role:', e);
+    // Fallback
+    isAdmin = email === 'admin@yauhing.hk';
+  }
+  
   isAdminUser = isAdmin;
+  if(isAdminUser){
+    showEmployeeTab();
+  }
   const userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
 
   // Non-admin users can only use their assigned store
@@ -1117,6 +1210,36 @@ window.renderReport=renderReport;window.renderLog=renderLog;
 <!-- Edit Modal -->
 <div id="editModal" class="edit-modal">
   <div class="edit-modal-content" id="editModalContent"></div>
+</div>
+
+
+<!-- Add Employee Modal -->
+<div id="addEmpModal" class="add-emp-modal">
+  <div class="add-emp-content">
+    <h3 id="empModalTitle">＋ 新增員工</h3>
+    <div class="add-emp-form">
+      <div>
+        <label>姓名</label>
+        <input type="text" id="empName" placeholder="例：陳大明">
+      </div>
+      <div>
+        <label>電郵</label>
+        <input type="email" id="empEmail" placeholder="例：david@yauhing.hk">
+      </div>
+      <div>
+        <label>權限</label>
+        <select id="empRole">
+          <option value="central">中環店員工</option>
+          <option value="pioneer">始創店員工</option>
+          <option value="admin">管理員</option>
+        </select>
+      </div>
+      <div class="add-emp-btns">
+        <button class="btn-emp-cancel" onclick="closeAddEmployee()">取消</button>
+        <button class="btn-emp-save" onclick="saveEmployee()">儲存</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
