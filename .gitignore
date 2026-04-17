@@ -1,0 +1,20 @@
+# Temp/debug files
+_*.py
+check_*.py
+debug_*.py
+dump_*.py
+fix_*.py
+find_*.py
+extract_*.py
+list_*.py
+analyze_*.py
+add_sku.py
+upgrade_inventory.py
+onauth.txt
+select_func.txt
+showapp.txt
+store_func.txt
+excel_analysis.txt
+excel_detail.json
+excel_structure.json
+__pycache__/
