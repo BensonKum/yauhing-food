@@ -1,0 +1,3 @@
+function showStoreSelect(){
+  document.getElementById('storeDialog').classList.add('show');
+}

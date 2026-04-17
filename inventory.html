@@ -357,9 +357,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-save:hover{background:#236B3F}
 
 /* Employee Management */
-.emp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0 .5rem}
-.emp-header h3{margin:0;font-size:1.1rem}
-.btn-add-emp{padding:.5rem 1rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
+.btn-add-emp{display:block;width:100%;padding:.7rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-bottom:1rem;text-align:center}
 .btn-add-emp:hover{background:#236B3F}
 .emp-list{display:flex;flex-direction:column;gap:.5rem}
 .emp-card{background:white;border-radius:12px;padding:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh1);border:1px solid var(--bd)}
@@ -404,8 +402,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .emp-role.central{background:#FFF3E0;color:#E65100}
 .emp-role.pioneer{background:#F3E5F5;color:#6A1B9A}
 .emp-actions{display:flex;gap:.3rem}
-.btn-add-emp{padding:.5rem 1rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
-.btn-add-emp:hover{background:#236B3F}
 .btn-emp-edit,.btn-emp-del{border:none;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1rem;transition:var(--tr)}
 .btn-emp-edit{background:#E3F2FD;color:#1565C0}
 .btn-emp-edit:hover{background:#BBDEFB}
@@ -570,10 +566,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <!-- Employee Tab (Admin Only) -->
 <div class="tab-content" id="tabContentEmployee">
   <div class="report-wrap">
-    <div class="emp-header">
-      <h3>👥 員工管理</h3>
-      <button class="btn-add-emp" onclick="showAddEmployee()">＋ 新增員工</button>
-    </div>
+    <h3>👥 員工管理</h3>
+    <button class="btn-add-emp" onclick="showAddEmployee()">＋ 新增員工</button>
     <div id="empList" class="emp-list"></div>
   </div>
 </div>
