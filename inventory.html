@@ -683,81 +683,55 @@ async function showApp(){
 
 // --- Store Select ---
 async function showStoreSelect(){
-  // Admin can choose store freely; others auto-select based on email
   const email = currentUser ? currentUser.email.toLowerCase() : '';
-  
-  // Check employees collection for role
-  let isAdmin = false;
-  let userStore = null;
-  
-  try {
-    const empSnap = await db.collection('employees').where('email','==',email).get();
-    if(!empSnap.empty){
-      const empData = empSnap.docs[0].data();
-      if(empData.role === 'admin'){
-        isAdmin = true;
-      } else {
-        userStore = empData.role; // 'central' or 'pioneer'
-      }
-    } else {
-      // Fallback to hardcoded logic for backward compatibility
-      isAdmin = email === 'admin@yauhing.hk';
-      if(!isAdmin){
-        userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
-      }
-    }
-  } catch(e){
-    console.error('Error checking employee role:', e);
-    // Fallback
-    isAdmin = email === 'admin@yauhing.hk';
-  }
-  
-  isAdminUser = isAdmin;
-  if(isAdminUser){
+
+  // Step 1: Email check FIRST (no Firestore dependency)
+  if(email === 'admin@yauhing.hk'){
+    isAdminUser = true;
     showEmployeeTab();
-  }
-  if (!isAdmin) {
-    userStore = email.includes('central@') ? 'central' : 'pioneer';
-    selectStore(userStore);
+    document.getElementById('storeDialog').classList.add('show');
     return;
   }
-  document.getElementById('storeDialog').classList.add('show');
-}
-async function selectStore(store){
-  // Store permission check: central/yauhing.hk → central only, pioneer/yauhing.hk → pioneer only, admin → both
-  const email = currentUser ? currentUser.email.toLowerCase() : '';
-  
-  // Check employees collection for role
-  let isAdmin = false;
+
+  // Step 2: For other accounts, try Firestore
   let userStore = null;
-  
   try {
     const empSnap = await db.collection('employees').where('email','==',email).get();
     if(!empSnap.empty){
       const empData = empSnap.docs[0].data();
       if(empData.role === 'admin'){
-        isAdmin = true;
-      } else {
-        userStore = empData.role; // 'central' or 'pioneer'
+        isAdminUser = true;
+        showEmployeeTab();
+        document.getElementById('storeDialog').classList.add('show');
+        return;
       }
-    } else {
-      // Fallback to hardcoded logic for backward compatibility
-      isAdmin = email === 'admin@yauhing.hk';
-      if(!isAdmin){
-        userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
-      }
+      userStore = empData.role;
     }
-  } catch(e){
-    console.error('Error checking employee role:', e);
-    // Fallback
-    isAdmin = email === 'admin@yauhing.hk';
+  } catch(e){ console.error('employees query failed:', e); }
+
+  // Step 3: Email pattern fallback
+  if(!userStore){
+    if(email.includes('central')) userStore = 'central';
+    else if(email.includes('pioneer')) userStore = 'pioneer';
   }
+
+  isAdminUser = false;
+  if(userStore) selectStore(userStore);
+}
+async function selectStore(store){
+  const email = currentUser ? currentUser.email.toLowerCase() : '';
+  const isAdmin = (email === 'admin@yauhing.hk');
   
-  isAdminUser = isAdmin;
-  if(isAdminUser){
-    showEmployeeTab();
+  // Non-admin: enforce store permission
+  if(!isAdmin){
+    let allowed = null;
+    if(email.includes('central')) allowed = 'central';
+    else if(email.includes('pioneer')) allowed = 'pioneer';
+    if(allowed && store !== allowed){
+      toast('你沒有權限使用此分店');
+      return;
+    }
   }
-  userStore = email.includes('central@') ? 'central' : email.includes('pioneer@') ? 'pioneer' : null;
 
   // Non-admin users can only use their assigned store
   if (!isAdmin && userStore && store !== userStore) {
