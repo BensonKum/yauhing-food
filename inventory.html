@@ -357,7 +357,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-save:hover{background:#236B3F}
 
 /* Employee Management */
-.btn-add-emp{display:block;width:100%;padding:.7rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-bottom:1rem;text-align:center}
+.btn-add-emp{padding:.5rem 1.2rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif}
 .btn-add-emp:hover{background:#236B3F}
 .emp-list{display:flex;flex-direction:column;gap:.5rem}
 .emp-card{background:white;border-radius:12px;padding:1rem;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh1);border:1px solid var(--bd)}
@@ -566,8 +566,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <!-- Employee Tab (Admin Only) -->
 <div class="tab-content" id="tabContentEmployee">
   <div class="report-wrap">
-    <h3>👥 員工管理</h3>
-    <button class="btn-add-emp" onclick="showAddEmployee()">＋ 新增員工</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <h3 style="margin:0">👥 員工管理</h3>
+      <button class="btn-add-emp" onclick="showAddEmployee()">＋ 新增員工</button>
+    </div>
     <div id="empList" class="emp-list"></div>
   </div>
 </div>
