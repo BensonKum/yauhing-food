@@ -686,7 +686,7 @@ async function showApp(){
 }
 
 // --- Store Select ---
-function showStoreSelect(){
+async function showStoreSelect(){
   // Admin can choose store freely; others auto-select based on email
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   
@@ -727,7 +727,7 @@ function showStoreSelect(){
   }
   document.getElementById('storeDialog').classList.add('show');
 }
-function selectStore(store){
+async function selectStore(store){
   // Store permission check: central/yauhing.hk → central only, pioneer/yauhing.hk → pioneer only, admin → both
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   
