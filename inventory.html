@@ -1122,12 +1122,12 @@ async function renderEmployeeList(){
     empList.innerHTML = btnHtml + emps.map(e => `
       <div class="emp-card">
         <div class="emp-info">
-          <div class="emp-name">\${e.name || '—'}<span class="emp-role \${e.role}">\${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
-          <div class="emp-email">\${e.email}</div>
+          <div class="emp-name">${e.name || '—'}<span class="emp-role ${e.role}">${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
+          <div class="emp-email">${e.email}</div>
         </div>
         <div class="emp-actions">
-          <button class="btn-emp-edit" onclick="editEmployee('\${e.id}')">✏️</button>
-          <button class="btn-emp-del" onclick="deleteEmployee('\${e.id}')">🗑️</button>
+          <button class="btn-emp-edit" onclick="editEmployee('${e.id}')">✏️</button>
+          <button class="btn-emp-del" onclick="deleteEmployee('${e.id}')">🗑️</button>
         </div>
       </div>
     `).join('');
