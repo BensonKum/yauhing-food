@@ -1113,12 +1113,13 @@ async function renderEmployeeList(){
     const emps = [];
     snap.forEach(d => emps.push({id: d.id, ...d.data()}));
     
+    const btnHtml = '<button onclick="showAddEmployee()" style="display:block;width:100%;padding:.8rem;background:var(--green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:Noto Sans TC,sans-serif;margin-bottom:1rem">＋ 新增員工</button>';
     if(emps.length === 0){
-      empList.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">暫無員工記錄<br><small>點擊「新增員工」加入</small></div>';
+      empList.innerHTML = btnHtml + '<div style="text-align:center;padding:1.5rem;color:var(--muted)">暫無員工記錄</div>';
       return;
     }
     
-    empList.innerHTML = emps.map(e => `
+    empList.innerHTML = btnHtml + emps.map(e => `
       <div class="emp-card">
         <div class="emp-info">
           <div class="emp-name">\${e.name || '—'}<span class="emp-role \${e.role}">\${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
