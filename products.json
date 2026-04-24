@@ -154,9 +154,9 @@
     "name": "豆乳幼麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_soy_milk_noodle.jpg",
     "sku": "YH016"
   },
   {
