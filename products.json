@@ -114,9 +114,9 @@
     "name": "紫薯粗麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_purple_sweet_potato_noodle.jpg",
     "sku": "YH012"
   },
   {
@@ -568,9 +568,9 @@
     "name": "南瓜麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_pumpkin_noodle.jpg",
     "sku": "YH051"
   },
   {
