@@ -34,9 +34,9 @@
     "name": "墨魚汁粗麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_squid_ink_noodle.jpg",
     "sku": "YH004"
   },
   {
@@ -124,9 +124,9 @@
     "name": "菠菜幼麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_spinach_noodle.jpg",
     "sku": "YH013"
   },
   {
@@ -134,9 +134,9 @@
     "name": "蕃茄幼麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_tomato_noodle.jpg",
     "sku": "YH014"
   },
   {
