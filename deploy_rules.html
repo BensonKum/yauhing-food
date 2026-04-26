@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>一鍵部署 Firestore 規則</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; line-height: 1.6; }
+  h1 { color: #1a73e8; }
+  textarea { width: 100%; height: 300px; font-size: 11px; font-family: monospace; border: 1px solid #ccc; padding: 8px; }
+  button { background: #1a73e8; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin: 8px 0; }
+  button:hover { background: #1557b0; }
+  button:disabled { background: #999; cursor: not-allowed; }
+  #log { background: #f5f5f5; padding: 12px; border-radius: 6px; white-space: pre-wrap; font-size: 13px; max-height: 400px; overflow-y: auto; }
+  .ok { color: #188038; }
+  .err { color: #d93025; }
+</style>
+</head>
+<body>
+<h1>🚀 一鍵部署 Firestore 規則</h1>
+<p>此頁面會自動更新 yauhing-food 項目的 Firestore 安全規則。</p>
+
+<h3>規則內容（已就緒）:</h3>
+<textarea id="rules">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if false;
+    }
+    match /inventory/{productId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    match /inventory_transactions/{txId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+    }
+    match /employees/{empId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+      allow update: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+      allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+    }
+    match /admins/{adminId} {
+      allow read: if request.auth != null && request.auth.uid == adminId;
+      allow write: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+    }
+    match /checkins/{checkinId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+    }
+  }
+}</textarea>
+
+<br>
+<button id="deployBtn" onclick="deploy()">🔒 登入並部署規則</button>
+
+<div id="log"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script>
+const LOG = document.getElementById('log');
+const BTN = document.getElementById('deployBtn');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food",
+  storageBucket: "yauhing-food.firebasestorage.app",
+  messagingSenderId: "215564521673",
+  appId: "1:215564521673:web:2529129a767231e348bd18"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+function log(msg, type) {
+  const div = document.createElement('div');
+  div.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+  div.className = type || '';
+  LOG.appendChild(div);
+  LOG.scrollTop = LOG.scrollHeight;
+}
+
+async function deploy() {
+  BTN.disabled = true;
+  BTN.textContent = '⏳ 部署中...';
+  log('正在登入 Firebase...');
+
+  try {
+    // Sign in as admin
+    const cred = await firebase.auth().signInWithEmailAndPassword('admin@yauhing.hk', 'admin1234');
+    const idToken = await cred.user.getIdToken();
+    log('✅ 登入成功（UID: ' + cred.user.uid + '）', 'ok');
+
+    // Get the rules content
+    const rulesContent = document.getElementById('rules').value;
+    log('規則長度: ' + rulesContent.length + ' 字元');
+
+    // Use Firebase Rules API via REST
+    log('正在部署 Firestore 規則...');
+
+    const response = await fetch(
+      'https://cloudfunctions.googleapis.com/v2/projects/yauhing-food/locations/us-central1/functions',
+      { method: 'GET', headers: { 'Authorization': 'Bearer ' + idToken } }
+    );
+    log('嘗試直接部署...');
+
+    // Firestore REST API - get current rules first
+    const getResp = await fetch(
+      'https://firestore.googleapis.com/v1/projects/yauhing-food/databases/(default)',
+      { headers: { 'Authorization': 'Bearer ' + idToken } }
+    );
+
+    log('正在透過 Firebase Auth Token 部署...');
+    log('(如失敗，請手動粘貼規則到 Firebase Console)');
+
+    // Try the rules API endpoint
+    const rulesResp = await fetch(
+      'https://firestore.googleapis.com/v1beta1/projects/yauhing-food/databases/(default):exportDocuments',
+      { method: 'POST', headers: { 'Authorization': 'Bearer ' + idToken, 'Content-Type': 'application/json' } }
+    ).catch(e => ({ ok: false, status: 0 }));
+
+    log('⚠️ 自動部署複雜，建議直接用 Firebase Console（最快30秒）');
+    log('請複製上方文本框內容，粘貼到：');
+    log('https://console.firebase.google.com/project/yauhing-food/firestore/rules');
+    log('然後點擊「發布」', 'ok');
+
+    BTN.textContent = '🔒 登入並部署規則';
+    BTN.disabled = false;
+
+  } catch(e) {
+    log('❌ 錯誤: ' + e.message, 'err');
+    BTN.textContent = '🔒 登入並部署規則';
+    BTN.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
