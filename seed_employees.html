@@ -2,15 +2,58 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>員工初始化 - 祐興食品</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;padding:1.5rem;background:#f5f0eb;min-height:100vh}
+.card{background:#fff;border-radius:12px;padding:1.5rem;max-width:420px;margin:2rem auto;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+h2{color:#C8462B;margin-bottom:.5rem;font-size:1.3rem}
+.subtitle{color:#888;font-size:.85rem;margin-bottom:1.2rem}
+label{display:block;font-size:.85rem;font-weight:600;color:#555;margin-bottom:.3rem}
+input{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;margin-bottom:.8rem;outline:none;transition:border .2s}
+input:focus{border-color:#C8462B}
+.btn{width:100%;padding:.7rem;font-size:1rem;font-weight:600;border:none;border-radius:8px;cursor:pointer;transition:opacity .2s}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-login{background:#C8462B;color:#fff}
+.btn-login:hover{opacity:.9}
+.btn-seed{background:#2d8c3c;color:#fff;margin-top:.5rem}
+.btn-seed:hover{opacity:.9}
+.btn-logout{background:none;color:#888;font-size:.8rem;text-decoration:underline;margin-top:.8rem}
+#user-info{color:#2d8c3c;font-size:.9rem;font-weight:600;margin-bottom:.5rem}
+#output{background:#f8f6f3;padding:1rem;border-radius:8px;font-size:.8rem;max-height:300px;overflow:auto;margin-top:1rem;white-space:pre-wrap;font-family:monospace}
+.hidden{display:none}
+</style>
 </head>
-<body style="font-family:sans-serif;padding:2rem;background:#f5f0eb">
-<h2>新增員工到 Firestore</h2>
-<p>登入後自動新增 BoBo、Daisy、Mok（PIN: 1234）</p>
-<button onclick="initEmployees()" style="padding:1rem 2rem;font-size:1.2rem;background:#C8462B;color:white;border:none;border-radius:10px;cursor:pointer">新增員工</button>
-<pre id="output" style="background:#fff;padding:1rem;border-radius:8px;margin-top:1rem;max-height:400px;overflow:auto"></pre>
+<body>
+<div class="card">
+  <h2>🔄 員工初始化</h2>
+  <p class="subtitle">新增 BoBo、Daisy、Mok 到員工名單</p>
+
+  <!-- 未登入狀態 -->
+  <div id="login-area">
+    <label>Email</label>
+    <input type="email" id="email" placeholder="admin@yauhing.hk">
+    <label>密碼</label>
+    <input type="password" id="password" placeholder="輸入密碼">
+    <button class="btn btn-login" onclick="doLogin()">🔐 登入</button>
+    <p id="login-err" style="color:#e53e3e;font-size:.8rem;margin-top:.5rem"></p>
+  </div>
+
+  <!-- 已登入狀態 -->
+  <div id="seed-area" class="hidden">
+    <p id="user-info"></p>
+    <button class="btn btn-seed" onclick="initEmployees()">✅ 新增員工（BoBo / Daisy / Mok）</button>
+    <br>
+    <button class="btn btn-logout" onclick="doLogout()">登出</button>
+  </div>
+
+  <pre id="output" class="hidden"></pre>
+</div>
+
 <script>
 var firebaseConfig = {
   apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
@@ -22,33 +65,72 @@ var firebaseConfig = {
 };
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
+var auth = firebase.auth();
+
+// 監聽登入狀態
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    document.getElementById('login-area').classList.add('hidden');
+    document.getElementById('seed-area').classList.remove('hidden');
+    document.getElementById('user-info').textContent = '✅ 已登入：' + user.email;
+  } else {
+    document.getElementById('login-area').classList.remove('hidden');
+    document.getElementById('seed-area').classList.add('hidden');
+  }
+});
+
+function doLogin() {
+  var email = document.getElementById('email').value.trim();
+  var pw = document.getElementById('password').value;
+  var errEl = document.getElementById('login-err');
+  errEl.textContent = '';
+  if (!email || !pw) { errEl.textContent = '請輸入 Email 和密碼'; return; }
+  auth.signInWithEmailAndPassword(email, pw).catch(function(e) {
+    errEl.textContent = '登入失敗：' + e.message;
+  });
+}
+
+function doLogout() {
+  auth.signOut();
+  document.getElementById('output').textContent = '';
+  document.getElementById('output').classList.add('hidden');
+}
 
 function log(msg) {
-    document.getElementById('output').textContent += msg + '\n';
+  var el = document.getElementById('output');
+  el.classList.remove('hidden');
+  el.textContent += msg + '\n';
 }
 
 async function initEmployees() {
-    var employees = [
-        {name: 'BoBo', pin: '1234', active: true},
-        {name: 'Daisy', pin: '1234', active: true},
-        {name: 'Mok', pin: '1234', active: true}
-    ];
-    log('開始新增員工...');
-    for (var emp of employees) {
-        try {
-            var docRef = await db.collection('employees').add({
-                name: emp.name,
-                pin: emp.pin,
-                active: emp.active,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                createdBy: 'seed-script'
-            });
-            log('OK: ' + emp.name + ' (ID: ' + docRef.id + ')');
-        } catch(e) {
-            log('ERR: ' + emp.name + ' - ' + e.message);
-        }
+  var outputEl = document.getElementById('output');
+  outputEl.textContent = '';
+  outputEl.classList.remove('hidden');
+
+  var employees = [
+    {name: 'BoBo', pin: '1234', active: true},
+    {name: 'Daisy', pin: '1234', active: true},
+    {name: 'Mok', pin: '1234', active: true}
+  ];
+  log('開始新增員工...');
+  var ok = 0;
+  for (var emp of employees) {
+    try {
+      var docRef = await db.collection('employees').add({
+        name: emp.name,
+        pin: emp.pin,
+        active: emp.active,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy: 'seed-script'
+      });
+      log('✅ ' + emp.name + ' (ID: ' + docRef.id + ')');
+      ok++;
+    } catch(e) {
+      log('❌ ' + emp.name + ' - ' + e.message);
     }
-    log('完成！');
+  }
+  log('---');
+  log('完成！成功 ' + ok + ' / ' + employees.length);
 }
 </script>
 </body>
