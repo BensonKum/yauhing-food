@@ -160,52 +160,52 @@
     "sku": "YH016"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "冬陰功麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\冬陰功麵6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\冬陰功麵6個裝.jpg",
     "local_img": "product_16.jpg",
     "sku": "YH017"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "墨汁龍蝦撈麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\墨汁龍蝦撈麵6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\墨汁龍蝦撈麵6個裝.jpg",
     "local_img": "product_17.jpg",
     "sku": "YH018"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "海鮮麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\海鮮麵 6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\海鮮麵 6個裝.jpg",
     "local_img": "product_18.jpg",
     "sku": "YH019"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "超級菠菜雞湯麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\超級菠菜雞湯麵6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\超級菠菜雞湯麵6個裝.jpg",
     "local_img": "product_19.jpg",
     "sku": "YH020"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "魚蓉濃湯麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\魚蓉濃湯麵6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\魚蓉濃湯麵6個裝.jpg",
     "local_img": "product_20.jpg",
     "sku": "YH021"
   },
@@ -530,22 +530,22 @@
     "sku": "YH047"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "全蛋麵 (幼麵) 6個裝",
     "price": "HKD 60",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\全蛋麵(幼麵)6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\全蛋麵(幼麵)6個裝.jpg",
     "local_img": "product_47.jpg",
     "sku": "YH048"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "全蛋麵 (粗麵) 6個裝",
     "price": "HKD 60",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\全蛋麵(粗麵)6個裝.jpg",
+    "image": "E:\\Lum\\特色麵\\全蛋麵(粗麵)6個裝.jpg",
     "local_img": "product_48.jpg",
     "sku": "YH049"
   },
@@ -574,12 +574,12 @@
     "sku": "YH051"
   },
   {
-    "cat": "特式麵",
+    "cat": "特色麵",
     "name": "意大利墨魚汁麵",
     "price": "HKD 12 (單包) / HKD 60 (6個裝)",
     "note": "單包 HKD 12 / 6個裝 HKD 60",
     "stock": true,
-    "image": "E:\\Lum\\特式麵\\意大利墨魚汁麵.jpg",
+    "image": "E:\\Lum\\特色麵\\意大利墨魚汁麵.jpg",
     "img1": "意大利墨魚汁麵.jpg",
     "img2": "意大利墨魚汁麵6個裝.jpg",
     "label1": "單包",
