@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<title>員工初始化 - 祐興食品</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body style="font-family:sans-serif;padding:2rem;background:#f5f0eb">
+<h2>新增員工到 Firestore</h2>
+<p>登入後自動新增 BoBo、Daisy、Mok（PIN: 1234）</p>
+<button onclick="initEmployees()" style="padding:1rem 2rem;font-size:1.2rem;background:#C8462B;color:white;border:none;border-radius:10px;cursor:pointer">新增員工</button>
+<pre id="output" style="background:#fff;padding:1rem;border-radius:8px;margin-top:1rem;max-height:400px;overflow:auto"></pre>
+<script>
+var firebaseConfig = {
+  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food",
+  storageBucket: "yauhing-food.firebasestorage.app",
+  messagingSenderId: "215564521673",
+  appId: "1:215564521673:web:2529129a767231e348bd18"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();
+
+function log(msg) {
+    document.getElementById('output').textContent += msg + '\n';
+}
+
+async function initEmployees() {
+    var employees = [
+        {name: 'BoBo', pin: '1234', active: true},
+        {name: 'Daisy', pin: '1234', active: true},
+        {name: 'Mok', pin: '1234', active: true}
+    ];
+    log('開始新增員工...');
+    for (var emp of employees) {
+        try {
+            var docRef = await db.collection('employees').add({
+                name: emp.name,
+                pin: emp.pin,
+                active: emp.active,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdBy: 'seed-script'
+            });
+            log('OK: ' + emp.name + ' (ID: ' + docRef.id + ')');
+        } catch(e) {
+            log('ERR: ' + emp.name + ' - ' + e.message);
+        }
+    }
+    log('完成！');
+}
+</script>
+</body>
+</html>
