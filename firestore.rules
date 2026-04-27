@@ -28,10 +28,10 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
     }
 
-    // 員工資料：已登入用戶可讀（SM 都可以睇員工名單）
+    // 員工資料：公開讀取（打卡頁面需要載入員工列表，無需登入）
     // 寫入（新增/編輯/刪除）：僅 admin@yauhing.hk
     match /employees/{empId} {
-      allow read: if request.auth != null;
+      allow read: if true;
       allow create: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
       allow update: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
       allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
@@ -44,12 +44,12 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
     }
 
-    // 打卡記錄：所有已登入用戶可讀寫
-    // 包括：admin、SM、員工都可以打卡
+    // 打卡記錄：公開讀寫（打卡頁面無需登入）
+    // 刪除：僅 admin
     match /checkins/{checkinId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null;
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
       allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
     }
   }

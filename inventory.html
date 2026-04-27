@@ -642,6 +642,7 @@ let currentMode = 'sale';
 let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
 let isAdminUser = false;  // Global admin flag
+let isSMUser = false;    // Global SM (Store Manager) flag
 let currentCat = '全部';
 
 // --- Load Products from products.json ---
@@ -697,15 +698,16 @@ async function showApp(){
 async function showStoreSelect(){
   const email = currentUser ? currentUser.email.toLowerCase() : '';
 
-  // Step 1: Email check FIRST (no Firestore dependency)
+  // Step 1: Admin & SM -> show dialog so they can pick any store
   if(email === 'admin@yauhing.hk'){
     isAdminUser = true;
+    isSMUser = false;
     showEmployeeTab();
     document.getElementById('storeDialog').classList.add('show');
     return;
   }
 
-  // Step 2: For other accounts, try Firestore
+  // Step 2: For other accounts, try Firestore employees collection
   let userStore = null;
   try {
     const empSnap = await db.collection('employees').where('email','==',email).get();
@@ -713,11 +715,23 @@ async function showStoreSelect(){
       const empData = empSnap.docs[0].data();
       if(empData.role === 'admin'){
         isAdminUser = true;
+        isSMUser = false;
+        showEmployeeTab();
+        document.getElementById('storeDialog').classList.add('show');
+        return;
+      }
+      if(empData.role === 'sm'){
+        isAdminUser = true;   // SM has admin-level store access
+        isSMUser = true;
         showEmployeeTab();
         document.getElementById('storeDialog').classList.add('show');
         return;
       }
       userStore = empData.role;
+      if(userStore && (userStore === 'sm' || userStore === 'central' || userStore === 'pioneer')){
+        isSMUser = true;
+        showEmployeeTab();
+      }
     }
   } catch(e){ console.error('employees query failed:', e); }
 
@@ -728,6 +742,7 @@ async function showStoreSelect(){
   }
 
   isAdminUser = false;
+  isSMUser = false;
   if(userStore) selectStore(userStore);
 }
 function selectStoreDisplay(store){
@@ -749,8 +764,9 @@ async function selectStore(store){
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   const isAdmin = (email === 'admin@yauhing.hk');
   
-  // Non-admin: enforce store permission
-  if(!isAdmin){
+  // Admin & SM: allow any store selection
+  // Non-admin/non-SM: enforce store permission
+  if(!isAdminUser && !isSMUser){
     let allowed = null;
     if(email.includes('central')) allowed = 'central';
     else if(email.includes('pioneer')) allowed = 'pioneer';
