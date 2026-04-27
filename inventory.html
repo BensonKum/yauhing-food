@@ -678,8 +678,19 @@ function authLogin(){
 async function showApp(){
   document.getElementById('authOverlay').style.display='none';
   document.getElementById('userInfo').textContent=currentUser.email;
-  // Show store select on first load
-  showStoreSelect();
+  // Auto-detect store from email IMMEDIATELY (no Firestore dependency)
+  const email = currentUser ? currentUser.email.toLowerCase() : '';
+  if(email === 'admin@yauhing.hk'){
+    // Admin: show store selection dialog
+    showStoreSelect();
+  } else if(email.includes('central')){
+    selectStore('central');
+  } else if(email.includes('pioneer')){
+    selectStore('pioneer');
+  } else {
+    // Unknown email pattern: fall back to store select
+    showStoreSelect();
+  }
 }
 
 // --- Store Select ---
