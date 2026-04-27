@@ -254,6 +254,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   align-items:center;justify-content:center;
 }
 
+/* Locked store filter for non-admin/SM */
+.locked-filter{opacity:.6;cursor:not-allowed;pointer-events:none;background:var(--bg2) !important;border-color:var(--bd) !important}
+
 /* --- Tab Content --- */
 .tab-content{display:none}
 .tab-content.active{display:block}
@@ -643,6 +646,7 @@ let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
 let isAdminUser = false;  // Global admin flag
 let isSMUser = false;    // Global SM (Store Manager) flag
+let userStore = null;    // Employee's assigned home store (central/pioneer)
 let currentCat = '全部';
 
 // --- Load Products from products.json ---
@@ -708,7 +712,6 @@ async function showStoreSelect(){
   }
 
   // Step 2: For other accounts, try Firestore employees collection
-  let userStore = null;
   try {
     const empSnap = await db.collection('employees').where('email','==',email).get();
     if(!empSnap.empty){
@@ -788,7 +791,34 @@ async function selectStore(store){
     document.getElementById('topbarStore').textContent = '旺角始創中心地下KIOSK J';
   }
   document.getElementById('storeDialog').classList.remove('show');
+  lockStoreFilters();
   loadInventory();
+}
+
+// Lock report/log store filter for non-admin/SM based on their assigned store
+function lockStoreFilters(){
+  const repStore = document.getElementById('repStore');
+  const logStore = document.getElementById('logStore');
+  if(!repStore || !logStore) return;
+
+  if(isAdminUser || isSMUser){
+    // Admin/SM: can see all stores
+    repStore.disabled = false;
+    repStore.classList.remove('locked-filter');
+    logStore.disabled = false;
+    logStore.classList.remove('locked-filter');
+  } else {
+    // Regular employee: lock to their assigned store only
+    const storeToLock = currentStore || userStore;
+    if(storeToLock){
+      repStore.value = storeToLock;
+      repStore.disabled = true;
+      repStore.classList.add('locked-filter');
+      logStore.value = storeToLock;
+      logStore.disabled = true;
+      logStore.classList.add('locked-filter');
+    }
+  }
 }
 
 // --- Inventory Loading ---
@@ -1281,8 +1311,8 @@ function switchTab(tab){
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   document.getElementById('tabContent'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
-  if(tab==='report') renderReport();
-  if(tab==='log') renderLog();
+  if(tab==='report'){ lockStoreFilters(); renderReport(); }
+  if(tab==='log'){ lockStoreFilters(); renderLog(); }
   if(tab==='employee') renderEmployeeList();
 }
 
