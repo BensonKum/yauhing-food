@@ -760,12 +760,6 @@ async function selectStore(store){
     }
   }
 
-  // Non-admin users can only use their assigned store
-  if (!isAdmin && userStore && store !== userStore) {
-    toast('你沒有權限使用此分店');
-    return;
-  }
-
   currentStore = store;
   const btn = document.getElementById('storeBtn');
   if (store === 'central') {
