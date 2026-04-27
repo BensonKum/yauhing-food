@@ -181,7 +181,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-const db = firebase.firebase.firestore();
+const db = firebase.firestore();
 
 let currentUser = null;
 
@@ -260,7 +260,7 @@ async function doCreate() {
     await db.collection('admins').add({
       email: email,
       role: role,
-      addedAt: firebase.firebase.firestore.FieldValue.serverTimestamp(),
+      addedAt: firebase.firestore.FieldValue.serverTimestamp(),
       addedBy: currentUser.email
     });
     showSuccess(`✅ 帳戶 ${role === 'admin' ? '👑 總管理員' : '🏬 店鋪經理'} 已創建！\nEmail: ${email}`);
