@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新增管理帳戶 - 祐興食品</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.container {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+h1 {
+  text-align: center;
+  color: #c0392b;
+  margin-bottom: 8px;
+  font-size: 1.8rem;
+}
+.subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+input, select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+input:focus, select:focus {
+  border-color: #c0392b;
+}
+.btn {
+  width: 100%;
+  padding: 14px;
+  background: #c0392b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.btn:hover { background: #a93226; }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+.error {
+  background: #fee;
+  color: #c0392b;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  display: none;
+}
+.success {
+  background: #efe;
+  color: #27ae60;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  display: none;
+}
+.info {
+  background: #eef;
+  color: #2980b9;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  display: none;
+}
+.role-hint {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 4px;
+}
+#loading {
+  text-align: center;
+  color: #888;
+  padding: 40px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🏢 新增管理帳戶</h1>
+  <p class="subtitle">祐興食品後台管理</p>
+
+  <div id="loading">載入中...</div>
+
+  <!-- Login Form -->
+  <div id="loginSection" style="display:none;">
+    <div class="error" id="loginError"></div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="admin@yauhing.hk">
+    </div>
+    <div class="form-group">
+      <label>密碼</label>
+      <input type="password" id="loginPassword" placeholder="輸入密碼">
+    </div>
+    <button class="btn" onclick="doLogin()">登入</button>
+  </div>
+
+  <!-- Main Form -->
+  <div id="mainSection" style="display:none;">
+    <div class="info" id="userInfo"></div>
+    <div class="error" id="mainError"></div>
+    <div class="success" id="mainSuccess"></div>
+
+    <div class="form-group">
+      <label>新帳戶 Email</label>
+      <input type="email" id="newEmail" placeholder="sm@example.com">
+    </div>
+    <div class="form-group">
+      <label>登入密碼</label>
+      <input type="password" id="newPassword" placeholder="最少6個字符">
+    </div>
+    <div class="form-group">
+      <label>角色</label>
+      <select id="newRole">
+        <option value="sm">🏬 店鋪經理 (SM)</option>
+        <option value="admin">👑 總管理員 (Admin)</option>
+      </select>
+      <div class="role-hint">店鋪經理可查看全部分店資料；總管理員可新增/輯所有用戶</div>
+    </div>
+    <button class="btn" id="submitBtn" onclick="doCreate()">創建帳戶</button>
+    <button class="btn" style="background:#666;margin-top:8px;" onclick="doLogout()">登出</button>
+  </div>
+
+  <!-- No Permission -->
+  <div id="noPermission" style="display:none; text-align:center;">
+    <div style="font-size:3rem;margin-bottom:16px;">🚫</div>
+    <h2 style="color:#c0392b;margin-bottom:12px;">無權限</h2>
+    <p style="color:#888;">只有總管理員可以新增帳戶</p>
+    <button class="btn" style="margin-top:20px;background:#666;" onclick="doLogout()">登出</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDTI2C9T9lLk1kX6K7eLG2_3rU8zX5i2vK",
+  authDomain: "yauhing-food.firebaseapp.com",
+  projectId: "yauhing-food",
+  storageBucket: "yauhing-food.appspot.com",
+  messagingSenderId: "782175876448",
+  appId: "1:782175876448:web:2f6a3c4d5e8f9a0b1c2d3e4"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firebase.firestore();
+
+let currentUser = null;
+
+function show(id) {
+  ['loading','loginSection','mainSection','noPermission'].forEach(i => {
+    document.getElementById(i).style.display = 'none';
+  });
+  document.getElementById(id).style.display = '';
+}
+
+function showError(el, msg) {
+  const e = document.getElementById(el);
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+function hideError(el) { document.getElementById(el).style.display = 'none'; }
+function showSuccess(msg) {
+  const e = document.getElementById('mainSuccess');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+function hideSuccess() { document.getElementById('mainSuccess').style.display = 'none'; }
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  hideError('loginError');
+  if (!email || !pass) { showError('loginError','請輸入 email 和密碼'); return; }
+  auth.signInWithEmailAndPassword(email, pass).catch(e => {
+    showError('loginError', e.message);
+  });
+}
+
+async function checkAdmin(user) {
+  try {
+    const snap = await db.collection('admins').where('email','==',user.email).limit(1).get();
+    if (snap.empty) return null;
+    return snap.docs[0].data().role;
+  } catch(e) { return null; }
+}
+
+auth.onAuthStateChanged(async user => {
+  if (!user) { show('loginSection'); return; }
+  currentUser = user;
+  const role = await checkAdmin(user);
+  if (!role || role !== 'admin') { show('noPermission'); return; }
+  document.getElementById('userInfo').textContent = `已以 ${user.email} 登入`;
+  document.getElementById('userInfo').style.display = 'block';
+  show('mainSection');
+});
+
+async function doCreate() {
+  hideError('mainError');
+  hideSuccess();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '創建中...';
+
+  const email = document.getElementById('newEmail').value.trim();
+  const pass = document.getElementById('newPassword').value;
+  const role = document.getElementById('newRole').value;
+
+  if (!email || !pass) {
+    showError('mainError','請填寫所有欄位');
+    btn.disabled = false; btn.textContent = '創建帳戶'; return;
+  }
+  if (pass.length < 6) {
+    showError('mainError','密碼最少需要 6 個字符');
+    btn.disabled = false; btn.textContent = '創建帳戶'; return;
+  }
+
+  try {
+    // Create auth user
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    // Add to admins collection
+    await db.collection('admins').add({
+      email: email,
+      role: role,
+      addedAt: firebase.firebase.firestore.FieldValue.serverTimestamp(),
+      addedBy: currentUser.email
+    });
+    showSuccess(`✅ 帳戶 ${role === 'admin' ? '👑 總管理員' : '🏬 店鋪經理'} 已創建！\nEmail: ${email}`);
+    document.getElementById('newEmail').value = '';
+    document.getElementById('newPassword').value = '';
+  } catch(e) {
+    console.error(e);
+    showError('mainError', e.message);
+  }
+  btn.disabled = false;
+  btn.textContent = '創建帳戶';
+}
+
+function doLogout() {
+  auth.signOut();
+}
+</script>
+</body>
+</html>
