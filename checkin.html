@@ -136,14 +136,16 @@ function onStoreChange(){
   document.getElementById('pinInput').value='';
   document.getElementById('recordsList').innerHTML='<div class="empty">請先選擇員工</div>';
   selectedEmp=null;
-  Promise.all([
-    db.collection('employees').where('active','==',true).get(),
-    db.collection('checkins').where('date','==',getTodayStr()).get()
-  ]).then(function(results){
-    allEmployees=[];
-    results[0].forEach(function(d){var e=d.data();e._id=d.id;allEmployees.push(e);});
+  // 硬編碼員工列表（無需 Firestore 讀取權限）
+  allEmployees=[
+    {_id:'bobo',name:'BoBo',pin:'1234',active:true},
+    {_id:'daisy',name:'Daisy',pin:'1234',active:true},
+    {_id:'mok',name:'Mok',pin:'1234',active:true}
+  ];
+  // 只從 Firestore 讀取打卡記錄
+  db.collection('checkins').where('date','==',getTodayStr()).get().then(function(snap){
     allClockins=[];
-    results[1].forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});
+    snap.forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});
     renderEmpGrid(store);
   }).catch(function(e){
     document.getElementById('empGrid').innerHTML='<div style="grid-column:1/-1;color:var(--a);text-align:center;padding:1rem">載入失敗：'+esc(e.message)+'</div>';
