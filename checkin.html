@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>祐興食品 - 員工打卡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F0EB;--white:#FFF;--txt:#2D2A26;--muted:#7A756D;--bd:#E0DBD4;--a:#C8462B;--a2:#E07B3A;--a3:#2E6A4F;--tr:all .2s ease}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
+.header{background:var(--white);border-bottom:1px solid var(--bd);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.header-logo{font-size:1.2rem;font-weight:700;color:var(--a)}
+.header-date{font-size:.82rem;color:var(--muted)}
+.main{padding:1.5rem;max-width:520px;margin:0 auto}
+.store-card{background:var(--white);border-radius:14px;padding:1.3rem;border:1px solid var(--bd);margin-bottom:1rem}
+.store-card-title{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.7rem}
+.store-sel{width:100%;padding:.75rem 1rem;border:2px solid var(--bd);border-radius:10px;font-size:1rem;font-family:inherit;background:white;outline:none;transition:var(--tr)}
+.store-sel:focus{border-color:var(--a)}
+.store-sel option{padding:.5rem}
+.clock-section{display:none}
+.clock-section.show{display:block}
+.emp-section{margin-top:1.2rem}
+.emp-label{font-size:.8rem;color:var(--muted);margin-bottom:.7rem;font-weight:500}
+.emp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.emp-btn{padding:.7rem .5rem;border:2px solid var(--bd);border-radius:10px;font-size:.88rem;cursor:pointer;font-family:inherit;background:white;color:var(--txt);transition:var(--tr);font-weight:500;text-align:center}
+.emp-btn:hover{border-color:var(--a);color:var(--a)}
+.emp-btn.active{border-color:var(--a);background:var(--a);color:white}
+.emp-btn.clocked{border-color:var(--a3);background:#D4EDDA;color:var(--a3)}
+.emp-btn.clocked.active{border-color:var(--a3);background:var(--a3);color:white}
+.pin-row{margin:1rem 0}
+.pin-input{width:100%;padding:.8rem;border:2px solid var(--bd);border-radius:10px;font-size:1.1rem;font-family:inherit;outline:none;text-align:center;letter-spacing:.2em;transition:var(--tr)}
+.pin-input:focus{border-color:var(--a)}
+.clock-btn{width:100%;padding:1rem;border:none;border-radius:12px;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit;transition:var(--tr);color:white}
+.clock-btn.clock-in{background:var(--a3)}
+.clock-btn.clock-in:hover{background:#1B5E3A}
+.clock-btn.clock-out{background:var(--a2)}
+.clock-btn.clock-out:hover{background:#C4622A}
+.clock-btn:disabled{background:#ccc;cursor:not-allowed}
+.status-msg{text-align:center;padding:.8rem;border-radius:10px;margin-top:.8rem;font-size:.85rem}
+.status-msg.on{background:#D4EDDA;color:var(--a3)}
+.status-msg.off{background:#FFF3CD;color:#856404}
+.records-section{margin-top:1.5rem}
+.records-title{font-size:.9rem;font-weight:700;margin-bottom:.8rem}
+.record-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:10px;overflow:hidden;border:1px solid var(--bd);font-size:.82rem}
+.record-table th{background:#F5F0EB;padding:.6rem .8rem;text-align:left;font-weight:600;color:var(--muted);font-size:.7rem;text-transform:uppercase}
+.record-table td{padding:.65rem .8rem;border-top:1px solid #F0EBE0}
+.record-emp{font-weight:600}
+.record-time{color:var(--a3);font-weight:600}
+.record-dur{color:var(--muted)}
+.record-on{color:var(--a);font-weight:600}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--a3);color:white;padding:.8rem 1.5rem;border-radius:10px;font-size:.9rem;font-weight:600;display:none;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.toast.show{display:block}
+.toast.err{background:var(--a)}
+.empty{text-align:center;padding:2rem;color:var(--muted);font-size:.85rem}
+@media(max-width:480px){.emp-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <span class="header-logo">祐興食品</span>
+  <span class="header-date" id="headerDate"></span>
+</div>
+
+<div class="main">
+  <div class="store-card">
+    <div class="store-card-title">選擇分店</div>
+    <select class="store-sel" id="storeSelect" onchange="onStoreChange()">
+      <option value="">請選擇分店...</option>
+      <option value="pioneer">旺角始創中心</option>
+      <option value="central">中環街市</option>
+    </select>
+  </div>
+
+  <div class="clock-section" id="clockSection">
+    <div class="store-card">
+      <div class="store-card-title">選擇員工</div>
+      <div class="emp-section">
+        <div class="emp-grid" id="empGrid"></div>
+      </div>
+      <div class="pin-row">
+        <input class="pin-input" type="password" id="pinInput" placeholder="輸入 PIN" maxlength="6" autocomplete="off">
+      </div>
+      <button class="clock-btn clock-in" id="clockBtn" onclick="doClock()" disabled>打卡</button>
+      <div class="status-msg" id="statusMsg" style="display:none"></div>
+    </div>
+
+    <div class="records-section" id="recordsSection">
+      <div class="records-title">今日打卡記錄</div>
+      <div id="recordsList"><div class="empty">請先選擇員工</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+var allEmployees=[],allClockins=[],selectedEmp=null,currentStore='';
+
+(function init(){
+  var d=new Date();
+  var days=['日','一','二','三','四','五','六'];
+  document.getElementById('headerDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+days[d.getDay()];
+})();
+
+function toast(msg,isErr){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show'+(isErr?' err':'');
+  setTimeout(function(){t.className='toast';},3000);
+}
+
+function getTodayStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function onStoreChange(){
+  var store=document.getElementById('storeSelect').value;
+  currentStore=store;
+  var section=document.getElementById('clockSection');
+  if(!store){section.classList.remove('show');return;}
+  section.classList.add('show');
+  document.getElementById('empGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted)">載入中...</div>';
+  document.getElementById('clockBtn').disabled=true;
+  document.getElementById('clockBtn').className='clock-btn clock-in';
+  document.getElementById('clockBtn').textContent='打卡';
+  document.getElementById('statusMsg').style.display='none';
+  document.getElementById('pinInput').value='';
+  document.getElementById('recordsList').innerHTML='<div class="empty">請先選擇員工</div>';
+  selectedEmp=null;
+  Promise.all([
+    db.collection('employees').where('active','==',true).get(),
+    db.collection('checkins').where('date','==',getTodayStr()).get()
+  ]).then(function(results){
+    allEmployees=[];
+    results[0].forEach(function(d){var e=d.data();e._id=d.id;allEmployees.push(e);});
+    allClockins=[];
+    results[1].forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});
+    renderEmpGrid(store);
+  }).catch(function(e){
+    document.getElementById('empGrid').innerHTML='<div style="grid-column:1/-1;color:var(--a);text-align:center;padding:1rem">載入失敗：'+esc(e.message)+'</div>';
+  });
+}
+
+function renderEmpGrid(store){
+  var div=document.getElementById('empGrid');
+  if(allEmployees.length===0){
+    div.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted)">暫無員工，請聯絡管理員</div>';
+    return;
+  }
+  var html='';
+  allEmployees.forEach(function(emp){
+    var todayCI=allClockins.filter(function(c){return c.employeeId===emp._id&&c.store===store;});
+    var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});
+    var cls='emp-btn'+(hasCI&&!hasCO?' clocked':'');
+    html+='<button class="'+cls+'" onclick="selectEmp(\''+escHtml(emp._id)+'\',\''+escHtml(emp.name)+'\',\''+escHtml(emp.pin)+'\')">'+escHtml(emp.name)+'</button>';
+  });
+  div.innerHTML=html;
+}
+
+function selectEmp(empId,empName,empPin){
+  selectedEmp={id:empId,name:empName,pin:empPin};
+  var store=currentStore;
+  document.querySelectorAll('.emp-btn').forEach(function(b){b.classList.remove('active');});
+  var btns=document.querySelectorAll('.emp-btn');
+  btns.forEach(function(b){
+    if(b.textContent===empName||b.getAttribute('onclick').indexOf(empId)>=0)b.classList.add('active');
+  });
+  document.getElementById('pinInput').value='';
+  document.getElementById('pinInput').focus();
+  var todayCI=allClockins.filter(function(c){return c.employeeId===empId&&c.store===store;});
+  var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});
+  var btn=document.getElementById('clockBtn'),status=document.getElementById('statusMsg');
+  if(hasCO){
+    btn.disabled=true;btn.className='clock-btn clock-in';btn.textContent='今日已完成';
+    status.style.display='block';status.className='status-msg on';
+    status.textContent='今日已完成打卡，明日再來';
+  }else if(hasCI){
+    btn.disabled=false;btn.className='clock-btn clock-out';btn.textContent='收工';
+    status.style.display='block';status.className='status-msg off';
+    status.textContent='已返工，等待收工';
+  }else{
+    btn.disabled=false;btn.className='clock-btn clock-in';btn.textContent='返工';
+    status.style.display='none';
+  }
+  renderRecords(empId,store);
+}
+
+function renderRecords(empId,store){
+  var div=document.getElementById('recordsList');
+  var recs=allClockins.filter(function(c){return c.employeeId===empId&&c.store===store;});
+  if(recs.length===0){div.innerHTML='<div class="empty">今日尚無記錄</div>';return;}
+  var html='<table class="record-table"><thead><tr><th>員工</th><th>返工</th><th>收工</th><th>時數</th><th>狀態</th></tr></thead><tbody>';
+  recs.forEach(function(c){
+    var ci=c.clockIn?new Date(c.clockIn).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'-';
+    var co=c.clockOut?new Date(c.clockOut).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'<span class="record-on">工作中</span>';
+    var dur=calcDur(c);
+    html+='<tr><td class="record-emp">'+escHtml(c.employeeName)+'</td><td class="record-time">'+ci+'</td><td>'+co+'</td><td class="record-dur">'+(dur?dur+'h':'<span class="record-dur">-</span>')+'</td><td>'+(c.clockOut?'完成':'<span class="record-on">工作中</span>')+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  div.innerHTML=html;
+}
+
+function doClock(){
+  if(!selectedEmp){toast('請先選擇員工',true);return;}
+  var pin=document.getElementById('pinInput').value.trim();
+  if(pin!==selectedEmp.pin){toast('PIN 錯誤',true);document.getElementById('pinInput').value='';return;}
+  var store=currentStore,btn=document.getElementById('clockBtn');
+  btn.disabled=true;btn.textContent='處理中...';
+  var todayCI=allClockins.filter(function(c){return c.employeeId===selectedEmp.id&&c.store===store;});
+  var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});
+  if(!hasCI){
+    db.collection('checkins').add({
+      employeeId:selectedEmp.id,
+      employeeName:selectedEmp.name,
+      store:store,
+      date:getTodayStr(),
+      clockIn:new Date().toISOString(),
+      clockOut:null,
+      duration:null
+    }).then(function(){
+      toast('打卡成功！返工時間：'+new Date().toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}));
+      onStoreChange();
+      setTimeout(function(){selectEmp(selectedEmp.id,selectedEmp.name,selectedEmp.pin);},500);
+    }).catch(function(e){toast('打卡失敗：'+e.message,true);btn.disabled=false;});
+  }else{
+    var ciDoc=todayCI.find(function(c){return c.clockOut==null;});
+    if(!ciDoc){toast('找不到打卡記錄',true);return;}
+    var ciT=new Date(ciDoc.clockIn),coT=new Date(),dur=Math.round((coT-ciT)/60000);
+    db.collection('checkins').doc(ciDoc._id).update({
+      clockOut:coT.toISOString(),
+      duration:dur
+    }).then(function(){
+      toast('收工成功！工作時數：'+(dur/60).toFixed(1)+'h');
+      onStoreChange();
+      setTimeout(function(){selectEmp(selectedEmp.id,selectedEmp.name,selectedEmp.pin);},500);
+    }).catch(function(e){toast('收工失敗：'+e.message,true);btn.disabled=false;});
+  }
+}
+
+function calcDur(c){
+  if(!c.clockIn||!c.clockOut)return null;
+  return ((new Date(c.clockOut)-new Date(c.clockIn))/3600000).toFixed(1);
+}
+
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return escHtml(s);}
+</script>
+</body>
+</html>
