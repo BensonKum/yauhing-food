@@ -3,70 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>�v�dʳƷ - ������̨</title>
+<title>祐興食品 - 管理後台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F5F0EB;--white:#fff;--a:#C8462B;--a2:#E07B3A;--a3:#2E6A4F;--txt:#2D2D2D;--muted:#6B6B6B;--bd:#E0D8C8;--warn:#FFC107;--r:14px;--sh:0 2px 8px rgba(0,0,0,.08);--tr:all .25s ease}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh}
 
-/* ���� LOGIN �������������������������������������������������������������� */
-.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
-.login-box{background:var(--white);border-radius:20px;padding:2.5rem;width:100%;max-width:380px;box-shadow:var(--sh)}
-.login-logo{font-size:1.5rem;font-weight:700;color:var(--a);text-align:center;margin-bottom:.3rem}
-.login-sub{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:2rem}
+:root{--bg:#F5F0EB;--white:#FFF;--txt:#2D2A26;--muted:#7A756D;--bd:#E0DBD4;--a:#C8462B;--a2:#E07B3A;--a3:#2E6A4F;--tr:all .2s ease}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt);line-height:1.5}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:var(--white);border-radius:20px;padding:2.5rem;width:100%;max-width:400px;box-shadow:0 10px 40px rgba(0,0,0,.1)}
+.login-logo{font-size:1.8rem;font-weight:700;color:var(--a);text-align:center;margin-bottom:.3rem}
+.login-sub{font-size:.88rem;color:var(--muted);text-align:center;margin-bottom:2rem}
 .login-field{margin-bottom:1rem}
 .login-label{font-size:.8rem;color:var(--muted);display:block;margin-bottom:.4rem;font-weight:500}
-.login-input{width:100%;padding:.75rem .9rem;border:2px solid var(--bd);border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:var(--tr)}
+.login-input{width:100%;padding:.8rem 1rem;border:2px solid var(--bd);border-radius:12px;font-size:.95rem;font-family:inherit;outline:none;transition:var(--tr)}
 .login-input:focus{border-color:var(--a)}
-.login-btn{width:100%;padding:.8rem;background:var(--a);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.login-btn{width:100%;padding:.9rem;background:var(--a);color:white;border:none;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr);margin-top:.5rem}
 .login-btn:hover{background:#A33A22}
-.login-error{color:var(--a);font-size:.82rem;margin-top:.6rem;text-align:center;display:none}
 .login-btn:disabled{opacity:.6;cursor:not-allowed}
-
-/* ���� LAYOUT ������������������������������������������������������������ */
+.login-error{background:#FCE4EC;color:#880E4F;padding:.7rem 1rem;border-radius:10px;font-size:.85rem;margin-top:1rem;display:none}
 .admin-wrap{display:none;min-height:100vh}
 .admin-wrap.show{display:block}
-
-/* ���� TOPBAR ���������������������������������������������������������� */
-.topbar{background:var(--white);border-bottom:1px solid var(--bd);padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.topbar{position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--bd);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.05)}
 .topbar-left{display:flex;align-items:center;gap:1rem}
-.topbar-logo{font-weight:700;font-size:1.1rem;color:var(--a)}
-.topbar-badge{display:inline-block;padding:.2rem .6rem;background:var(--bg);border-radius:50px;font-size:.7rem;font-weight:600;color:var(--muted)}
-.topbar-right{display:flex;align-items:center;gap:.8rem}
+.topbar-logo{font-size:1.3rem;font-weight:700;color:var(--a)}
+.topbar-badge{background:var(--bg);padding:.3rem .7rem;border-radius:50px;font-size:.75rem;font-weight:600;color:var(--muted)}
+.topbar-right{display:flex;align-items:center;gap:1rem}
 .topbar-user{font-size:.85rem;color:var(--muted)}
-.topbar-logout{background:none;border:1.5px solid var(--bd);padding:.45rem .9rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.topbar-logout{background:none;border:1.5px solid var(--bd);padding:.5rem .9rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
 .topbar-logout:hover{background:var(--a);color:white;border-color:var(--a)}
-
-/* ���� STATS ������������������������������������������������������������ */
-.stats{padding:1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
-.stat-card{background:var(--white);border-radius:14px;padding:1.1rem;border:1px solid var(--bd)}
-.stat-label{font-size:.75rem;color:var(--muted);margin-bottom:.4rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
-.stat-value{font-size:1.8rem;font-weight:700;color:var(--txt)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;padding:1.5rem}
+.stat-card{background:var(--white);border-radius:14px;padding:1.3rem;border:1px solid var(--bd)}
+.stat-label{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.stat-value{font-size:1.8rem;font-weight:700;margin-top:.3rem;color:var(--txt)}
 .stat-value.red{color:var(--a)}
 .stat-value.green{color:var(--a3)}
-
-/* ���� TABS ������������������������������������������������������������ */
 .tabs{padding:0 1.5rem;background:var(--white);border-bottom:1px solid var(--bd);display:flex;gap:0}
 .tab{padding:.9rem 1.2rem;font-size:.88rem;font-weight:500;color:var(--muted);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:var(--tr);font-family:inherit;white-space:nowrap}
 .tab:hover{color:var(--txt)}
 .tab.active{color:var(--a);border-bottom-color:var(--a)}
-
-/* ���� PANELS �������������������������������������������������������� */
 .panel{display:none;padding:1.5rem}
 .panel.active{display:block}
-
-/* ���� FILTER BAR ���������������������������������������������� */
 .filter-bar{display:flex;flex-wrap:wrap;gap:.7rem;margin-bottom:1.2rem;align-items:center}
 .filter-bar select,.filter-bar input{padding:.55rem .9rem;border:1.5px solid var(--bd);border-radius:8px;font-size:.85rem;font-family:inherit;background:white;outline:none;transition:var(--tr)}
 .filter-bar select:focus,.filter-bar input:focus{border-color:var(--a)}
 .filter-bar input{width:180px}
 .filter-reset{background:none;border:1.5px solid var(--bd);padding:.55rem .9rem;border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:var(--tr)}
 .filter-reset:hover{background:var(--a);color:white;border-color:var(--a)}
-
-/* ���� ORDER TABLE �������������������������������������������� */
 .order-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd);background:var(--white)}
 .order-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:700px}
 .order-table th{background:#F5F0EB;padding:.7rem .9rem;text-align:left;font-weight:600;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
@@ -83,9 +68,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .confirm-btn{padding:.45rem .9rem;background:var(--a3);color:white;border:none;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
 .confirm-btn:hover{background:#1B5E3A}
 .confirm-btn:disabled{background:#ccc;cursor:not-allowed}
-.order-table tr.processing td{background:#FFF9E6}
-
-/* ���� ACCOUNTS ������������������������������������������������ */
 .acct-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
 .acct-add-btn{padding:.7rem 1.2rem;background:var(--a);color:white;border:none;border-radius:10px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
 .acct-add-btn:hover{background:#A33A22}
@@ -103,8 +85,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .acct-btn{padding:.35rem .7rem;border-radius:7px;font-size:.78rem;cursor:pointer;font-family:inherit;transition:var(--tr);border:1.5px solid var(--bd);background:white}
 .acct-btn:hover{background:var(--a);color:white;border-color:var(--a)}
 .acct-btn.danger:hover{background:var(--a2);border-color:var(--a2)}
-
-/* ���� MODAL ������������������������������������������������������ */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:5000;display:none;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:var(--white);border-radius:16px;padding:2rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -123,15 +103,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .modal-msg{font-size:.8rem;margin-top:.7rem;display:none}
 .modal-msg.err{color:var(--a)}
 .modal-msg.ok{color:var(--a3)}
-
-/* ���� LOADING ���������������������������������������������������� */
 .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid #F0EBE0;border-top-color:var(--a);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-row td{color:var(--muted);font-style:italic}
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.9rem}
-.empty-state svg{width:48px;height:48px;margin-bottom:.8rem;opacity:.3}
-
-/* 打卡系統 */
 .clock-section{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
 .clock-card{background:var(--white);border-radius:14px;padding:1.3rem;border:1px solid var(--bd)}
 .clock-card-title{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem}
@@ -155,8 +130,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .clock-status{text-align:center;padding:.8rem;background:#F5F0EB;border-radius:10px;margin-top:.8rem;font-size:.85rem}
 .clock-status.on{background:#D4EDDA;color:var(--a3)}
 .clock-status.off{background:#FFF3CD;color:#856404}
-
-/* 打卡記錄 */
 .clock-record-card{background:var(--white);border-radius:14px;padding:1.1rem;border:1px solid var(--bd)}
 .clock-record-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
 .clock-record-title{font-size:.9rem;font-weight:700}
@@ -167,9 +140,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .clock-store{font-size:.75rem;color:var(--muted)}
 .clock-time{font-size:.8rem;color:var(--a3);font-weight:600}
 .clock-dur{color:var(--muted);font-size:.78rem}
-.clock-dur.overtime{color:var(--a);font-weight:600}
-
-/* 員工管理 */
 .emp-manage-card{background:var(--white);border-radius:14px;padding:1.1rem;border:1px solid var(--bd);margin-bottom:1rem}
 .emp-manage-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
 .emp-manage-name{font-weight:700;font-size:1rem}
@@ -178,34 +148,73 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .emp-stat-badge{display:inline-block;padding:.15rem .5rem;border-radius:50px;font-size:.7rem;font-weight:600}
 .emp-stat-badge.active{background:#D4EDDA;color:var(--a3)}
 .emp-stat-badge.inactive{background:#F8F8F8;color:#888}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)};.clock-section{grid-template-columns:1fr}}
 
-/* Admin 全域視圖篩選 */
-.admin-overview-filter{display:flex;gap:.5rem;margin-bottom:1rem}
-.overview-filter-btn{padding:.45rem .9rem;border:1.5px solid var(--bd);border-radius:50px;font-size:.82rem;cursor:pointer;background:white;font-family:inherit;transition:var(--tr)}
-.overview-filter-btn:hover{border-color:var(--a);color:var(--a)}
-.overview-filter-btn.active{background:var(--a);color:white;border-color:var(--a)}
-
+</style>
 </head>
 <body>
-
-<!-- �T�T LOGIN �T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T -->
 <div class="login-wrap" id="loginPage">
   <div class="login-box">
-    <div class="login-logo">�v�dʳƷ</div>
-    <div class="login-sub">������̨</div>
+    <div class="login-logo">祐興食品</div>
+    <div class="login-sub">管理後台</div>
     <div class="login-field">
-      <label class="login-label">��]</label>
+      <label class="login-label">電郵</label>
       <input class="login-input" type="email" id="loginEmail" placeholder="admin@yauhing.hk" autocomplete="username">
     </div>
     <div class="login-field">
-      <label class="login-label">�ܴa</label>
-      <input class="login-input" type="password" id="loginPassword" placeholder="????????" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <label class="login-label">密碼</label>
+      <input class="login-input" type="password" id="loginPassword" placeholder="請輸入密碼" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">����</button>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">登入</button>
     <div class="login-error" id="loginError"></div>
   </div>
+</div>
 
-  <!-- Clock panel -->
+<div class="admin-wrap" id="adminPanel">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">祐興食品</span>
+      <span class="topbar-badge" id="roleBadge"></span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="userEmail"></span>
+      <button class="topbar-logout" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+  <div class="stats" id="statsCards"></div>
+  <div class="tabs">
+    <button class="tab active" data-tab="orders" id="ordersTab" onclick="switchTab('orders')">訂單</button>
+    <button class="tab" data-tab="clock" id="clockTab" onclick="switchTab('clock')">📌 打卡</button>
+    <button class="tab" data-tab="accounts" id="acctTab" style="display:none" onclick="switchTab('accounts')">帳戶管理</button>
+    <button class="tab" data-tab="employees" id="empTab" style="display:none" onclick="switchTab('employees')">👥 員工</button>
+  </div>
+
+  <div class="panel active" id="ordersPanel">
+    <div class="filter-bar">
+      <select id="filterShop" onchange="renderOrders()">
+        <option value="">全部店鋪</option>
+        <option value="旺角">旺角始創中心</option>
+        <option value="中環">中環街市</option>
+      </select>
+      <select id="filterStatus" onchange="renderOrders()">
+        <option value="">全部狀態</option>
+        <option value="pending">待付款</option>
+        <option value="paid">已付款</option>
+        <option value="shipped">已發貨</option>
+        <option value="completed">已完成</option>
+        <option value="cancelled">已取消</option>
+      </select>
+      <input type="date" id="filterDate" onchange="renderOrders()">
+      <button class="filter-reset" onclick="document.getElementById('filterShop').value='';document.getElementById('filterStatus').value='';document.getElementById('filterDate').value='';renderOrders()">重設</button>
+    </div>
+    <div class="order-table-wrap">
+      <table class="order-table">
+        <thead><tr><th>訂單編號</th><th>時間</th><th>客戶</th><th>電話</th><th>店鋪</th><th>金額</th><th>狀態</th><th>商品</th><th>操作</th></tr></thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="panel" id="clockPanel">
     <div style="margin-bottom:1.5rem">
       <div style="font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.8rem">選擇分店</div>
@@ -215,7 +224,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <option value="central">中環街市</option>
       </select>
     </div>
-
     <div class="clock-section" id="clockSection" style="display:none">
       <div class="clock-card">
         <div class="clock-card-title">打卡</div>
@@ -232,7 +240,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <div id="clockTodayRecords" style="font-size:.85rem;color:var(--muted);text-align:center;padding:2rem">請先選擇分店</div>
       </div>
     </div>
-
     <div id="clockRecordsAdmin" style="margin-top:1.5rem;display:none">
       <div class="clock-record-card">
         <div class="clock-record-header">
@@ -248,11 +255,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         </div>
         <div style="overflow-x:auto">
           <table class="clock-table">
-            <thead>
-              <tr>
-                <th>員工</th><th>分店</th><th>返工</th><th>收工</th><th>時數</th><th>狀態</th>
-              </tr>
-            </thead>
+            <thead><tr><th>員工</th><th>分店</th><th>返工</th><th>收工</th><th>時數</th><th>狀態</th></tr></thead>
             <tbody id="clockRecordsBody"></tbody>
           </table>
         </div>
@@ -260,7 +263,19 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     </div>
   </div>
 
-  <!-- Employees panel (admin only) -->
+  <div class="panel" id="accountsPanel">
+    <div class="acct-header">
+      <div style="font-size:1rem;font-weight:700">帳戶列表</div>
+      <button class="acct-add-btn" onclick="openAddAcct()">+ 新增帳戶</button>
+    </div>
+    <div class="acct-table">
+      <table>
+        <thead><tr><th>電郵</th><th>角色</th><th>店鋪名稱</th><th>狀態</th><th>建立時間</th><th>操作</th></tr></thead>
+        <tbody id="acctsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="panel" id="employeesPanel">
     <div class="emp-manage-header">
       <div style="font-size:1rem;font-weight:700">員工管理</div>
@@ -268,717 +283,110 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     </div>
     <div id="empListManage"></div>
   </div>
-
 </div>
 
-<!-- �T�T ADMIN PANEL �T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T -->
-<div class="admin-wrap" id="adminPanel">
-
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <span class="topbar-logo">�v�dʳƷ</span>
-      <span class="topbar-badge" id="roleBadge"></span>
-    </div>
-    <div class="topbar-right">
-      <span class="topbar-user" id="userEmail"></span>
-      <button class="topbar-logout" onclick="doLogout()">�ǳ�</button>
-    </div>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats" id="statsCards"></div>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab" data-tab="clock" id="clockTab" onclick="switchTab('clock')">📌 打卡</button>
-    <button class="tab" data-tab="accounts" id="acctTab" style="display:none" onclick="switchTab('accounts')">帳戶管理</button>
-    <button class="tab" data-tab="employees" id="empTab" style="display:none" onclick="switchTab('employees')">👥 員工</button>
-  </div>
-
-  <!-- Orders panel -->
-  <div class="panel active" id="ordersPanel">
-    <div class="filter-bar">
-      <select id="filterShop" onchange="renderOrders()">
-        <option value="">ȫ�����m</option>
-        <option value="�� �Эh����">�Эh����</option>
-        <option value="�� ʼ������">ʼ������</option>
-      </select>
-      <select id="filterStatus" onchange="renderOrders()">
-        <option value="">ȫ����B</option>
-        <option value="pending">������</option>
-        <option value="paid">�Ѹ���</option>
-        <option value="shipped">�Ѱl؛</option>
-        <option value="completed">�����</option>
-        <option value="cancelled">��ȡ��</option>
-      </select>
-      <input type="date" id="filterDate" onchange="renderOrders()">
-      <button class="filter-reset" onclick="document.getElementById('filterShop').value='';document.getElementById('filterStatus').value='';document.getElementById('filterDate').value='';renderOrders()">����</button>
-    </div>
-    <div class="order-table-wrap">
-      <table class="order-table">
-        <thead>
-          <tr>
-            <th>ӆ�ξ�̖</th>
-            <th>�r�g</th>
-            <th>�</th>
-            <th>�Ԓ</th>
-            <th>���m</th>
-            <th>���~</th>
-            <th>��B</th>
-            <th>��Ʒ</th>
-            <th>����</th>
-          </tr>
-        </thead>
-        <tbody id="ordersBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Accounts panel (admin only) -->
-  <div class="panel" id="accountsPanel">
-    <div class="acct-header">
-      <div style="font-size:1rem;font-weight:700">��̖�б�</div>
-      <button class="acct-add-btn" onclick="openAddAcct()">+ ������̖</button>
-    </div>
-    <div class="acct-table">
-      <table>
-        <thead>
-          <tr>
-            <th>��]</th>
-            <th>��ɫ</th>
-            <th>���m����</th>
-            <th>��B</th>
-            <th>�����r�g</th>
-            <th>����</th>
-          </tr>
-        </thead>
-        <tbody id="acctsBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
-<!-- �T�T ADD / EDIT ACCOUNT MODAL �T�T�T�T�T�T�T�T�T�T�T�T -->
 <div class="modal-overlay" id="acctModal">
   <div class="modal">
-    <div class="modal-title" id="acctModalTitle">������̖</div>
+    <div class="modal-title" id="acctModalTitle">新增帳戶</div>
     <input type="hidden" id="acctEditId">
     <div class="modal-field" id="newEmailField">
-      <label class="modal-label">��] *</label>
+      <label class="modal-label">電郵 *</label>
       <input class="modal-input" type="email" id="acctEmail" placeholder="shop@domain.hk">
     </div>
     <div class="modal-field" id="newPwField">
-      <label class="modal-label" id="acctPwLabel">�ܴa *</label>
+      <label class="modal-label" id="acctPwLabel">密碼 *</label>
       <input class="modal-input" type="password" id="acctPw">
     </div>
     <div class="modal-field">
-      <label class="modal-label">��ɫ *</label>
-      <select class="modal-select" id="acctRole" onchange="onRoleChange()">
-        <option value="admin">admin��ȫ�����ޣ�</option>
-        <option value="central">�Эh��</option>
-        <option value="pioneer">ʼ������</option>
+      <label class="modal-label">角色 *</label>
+      <select class="modal-select" id="acctRole">
+        <option value="admin">admin（全權限）</option>
+        <option value="central">中環店</option>
+        <option value="pioneer">始創中心</option>
       </select>
     </div>
     <div class="modal-field">
-      <label class="modal-label">��B</label>
+      <label class="modal-label">狀態</label>
       <select class="modal-select" id="acctActive">
-        <option value="true">����</option>
-        <option value="false">ͣ��</option>
+        <option value="true">啟用</option>
+        <option value="false">停用</option>
       </select>
     </div>
     <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeAcctModal()">ȡ��</button>
-      <button class="modal-save" id="acctSaveBtn" onclick="saveAcct()">����</button>
+      <button class="modal-cancel" onclick="closeAcctModal()">取消</button>
+      <button class="modal-save" id="acctSaveBtn" onclick="saveAcct()">儲存</button>
     </div>
     <div class="modal-msg" id="acctMsg"></div>
   </div>
 </div>
 
-<!-- �T�T FIREBASE �T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T�T -->
+<div class="modal-overlay" id="empModal">
+  <div class="modal">
+    <div class="modal-title" id="empModalTitle">新增員工</div>
+    <input type="hidden" id="empEditId">
+    <div class="modal-field">
+      <label class="modal-label">姓名 *</label>
+      <input class="modal-input" type="text" id="empName" placeholder="員工姓名">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">PIN（4-6位數字）*</label>
+      <input class="modal-input" type="text" id="empPin" placeholder="1234" maxlength="6">
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">狀態</label>
+      <select class="modal-select" id="empActive">
+        <option value="true">在職</option>
+        <option value="false">離職</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeEmpModal()">取消</button>
+      <button class="modal-save" id="empSaveBtn" onclick="saveEmp()">儲存</button>
+    </div>
+    <div class="modal-msg" id="empMsg"></div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-// Debug: Check Firebase loaded
-window.onerror = function(msg,url,line){ alert('JS Error: '+msg+' at line '+line); };
-if(typeof firebase === 'undefined'){ alert('Firebase SDK failed to load!'); }
-// ���� Firebase Config ��������������������������������������������������������
-var firebaseConfig = {
-  apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
-  authDomain: "yauhing-food.firebaseapp.com",
-  projectId: "yauhing-food",
-  storageBucket: "yauhing-food.firebasestorage.app",
-  messagingSenderId: "215564521673",
-  appId: "1:215564521673:web:2529129a767231e348bd18"
-};
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-var auth = firebase.auth();
+var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore(),auth=firebase.auth();
+var currentUser=null,allOrders=[],allEmployees=[],allClockins=[],selectedClockEmp=null;
 
-// ���� State ����������������������������������������������������������������������
-var currentUser = null; // {uid, email, role, shop, active}
-var allOrders = [];
-
-// ���� Auth ������������������������������������������������������������������������
-function doLogin() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var pw = document.getElementById('loginPassword').value;
-  var btn = document.getElementById('loginBtn');
-  var err = document.getElementById('loginError');
-  if (!email || !pw) { err.textContent = 'Ոݔ����]���ܴa'; err.style.display = 'block'; return; }
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> ������...';
-  err.style.display = 'none';
-  auth.signInWithEmailAndPassword(email, pw).then(function(cred) {
-    return checkUserPerms(cred.user);
-  }).catch(function(e) {
-    err.textContent = '����ʧ����' + e.message;
-    err.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = '����';
-  });
-}
-
-function checkUserPerms(user) {
-  db.collection('admins').doc(user.uid).get().then(function(doc) {
-    if (!doc.exists) {
-      auth.signOut();
-      document.getElementById('loginError').textContent = '�ˎ�̖δ���ڙ�ʹ�ù�����̨';
-      document.getElementById('loginError').style.display = 'block';
-      document.getElementById('loginBtn').disabled = false;
-      document.getElementById('loginBtn').textContent = '����';
-      return;
-    }
-    var d = doc.data();
-    if (d.active === false) {
-      auth.signOut();
-      document.getElementById('loginError').textContent = '�ˎ�̖�ѱ�ͣ�ã�Ո�j����T';
-      document.getElementById('loginError').style.display = 'block';
-      document.getElementById('loginBtn').disabled = false;
-      document.getElementById('loginBtn').textContent = '����';
-      return;
-    }
-    currentUser = { uid: user.uid, email: user.email, role: d.role, shop: d.shop };
-    showAdminPanel();
-  }).catch(function(e) {
-    auth.signOut();
-    document.getElementById('loginError').textContent = '�o���xȡ���ޣ�' + e.message;
-    document.getElementById('loginError').style.display = 'block';
-    document.getElementById('loginBtn').disabled = false;
-    document.getElementById('loginBtn').textContent = '����';
-  });
-}
-
-function doLogout() {
-  auth.signOut();
-}
-
-auth.onAuthStateChanged(function(user) {
-  if (user) {
-    checkUserPerms(user);
-  } else {
-    showLoginPage();
-  }
-});
-
-// ���� UI ����������������������������������������������������������������������������
-function showLoginPage() {
-  document.getElementById('loginPage').style.display = 'flex';
-  document.getElementById('adminPanel').classList.remove('show');
-  document.getElementById('loginBtn').disabled = false;
-  document.getElementById('loginBtn').textContent = '����';
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPassword').value = '';
-  document.getElementById('loginError').style.display = 'none';
-}
-
-function showAdminPanel() {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('adminPanel').classList.add('show');
-  document.getElementById('userEmail').textContent = currentUser.email;
-  var badge = document.getElementById('roleBadge');
-  var roleMap = {admin:'admin',central:'�Эh��',pioneer:'ʼ������'};
-  badge.textContent = roleMap[currentUser.role] || currentUser.role;
-  // Admin sees accounts tab
-  var acctTab = document.getElementById('acctTab');
-  acctTab.style.display = currentUser.role === 'admin' ? '' : 'none';
-  document.getElementById('clockTab').style.display = '';
-  document.getElementById('empTab').style.display = currentUser.role === 'admin' ? '' : 'none';
-  switchTab('orders');
-  loadOrders();
-  if (currentUser.role === 'admin') loadAccounts();
-}
-
-// ���� Tabs ������������������������������������������������������������������������
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
-  var tab=document.querySelector('.tab[data-tab="'+name+'"]');
-  if(tab)tab.classList.add('active');
-  var panel=document.getElementById(name+'Panel');
-  if(panel)panel.classList.add('active');
-  if(name==='clock')onClockStoreChange();
-  if(name==='employees')loadEmployees();
-}
-
-// ���� Orders ������������������������������������������������������������������
-function loadOrders() {
-  var body = document.getElementById('ordersBody');
-  body.innerHTML = '<tr class="loading-row"><td colspan="9" style="text-align:center;padding:2rem">�d����...</td></tr>';
-  db.collection('orders').orderBy('createdAt','desc').limit(200).get().then(function(snap) {
-    allOrders = [];
-    snap.forEach(function(d){ var o = d.data(); o._id = d.id; allOrders.push(o); });
-    renderOrders();
-  }).catch(function(e) {
-    body.innerHTML = '<tr><td colspan="9" style="color:var(--a);text-align:center;padding:2rem">�d��ʧ����'+e.message+'</td></tr>';
-  });
-}
-
-function renderOrders() {
-  var body = document.getElementById('ordersBody');
-  var shopF = document.getElementById('filterShop').value;
-  var statusF = document.getElementById('filterStatus').value;
-  var dateF = document.getElementById('filterDate').value; // YYYY-MM-DD
-
-  var filtered = allOrders.filter(function(o) {
-    // Shop permission filter
-    if (currentUser.role === 'central' && o.pickupShop && o.pickupShop.indexOf('��') === -1) return false;
-    if (currentUser.role === 'pioneer' && o.pickupShop && o.pickupShop.indexOf('��') === -1) return false;
-    // UI filters
-    if (shopF && (!o.pickupShop || o.pickupShop.indexOf(shopF) === -1)) return false;
-    if (statusF && o.status !== statusF) return false;
-    if (dateF) {
-      var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
-      var ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-      if (ds !== dateF) return false;
-    }
-    return true;
-  });
-
-  // Stats
-  var today = new Date().toISOString().slice(0,10);
-  var todayOrders = allOrders.filter(function(o){
-    var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
-    var ds = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    return ds === today;
-  });
-  var totalAmt = todayOrders.reduce(function(s,o){ return s + (o.finalTotal||o.total||0); }, 0);
-  var pendingCnt = todayOrders.filter(function(o){ return o.status==='pending'; }).length;
-  var paidCnt = todayOrders.filter(function(o){ return o.status==='paid'||o.status==='shipped'||o.status==='completed'; }).length;
-
-  document.getElementById('statsCards').innerHTML =
-    '<div class="stat-card"><div class="stat-label">����ӆ��</div><div class="stat-value">'+todayOrders.length+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">���_�J</div><div class="stat-value red">'+pendingCnt+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">�Ѵ_�J</div><div class="stat-value green">'+paidCnt+'</div></div>'+
-    '<div class="stat-card"><div class="stat-label">���ս��~</div><div class="stat-value">HK$'+totalAmt+'</div></div>';
-
-  if (filtered.length === 0) {
-    body.innerHTML = '<tr><td colspan="9"><div class="empty-state"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-4-4 1.4-1.4 2.6 2.6 6.6-6.6L17 11z"/></svg>���oӆ��</div></td></tr>';
-    return;
-  }
-
-  var html = '';
-  var statusLabel = {pending:'������',paid:'�Ѹ���',shipped:'�Ѱl؛',completed:'�����',cancelled:'��ȡ��'};
-  filtered.forEach(function(o) {
-    var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
-    var timeStr = (d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-    var items = (o.items||[]).map(function(i){ return (i.name||'')+(i.variant?' ('+i.variant+')':''); }).join(', ');
-    var isPending = o.status === 'pending';
-    var canConfirm = (currentUser.role==='admin') ||
-      (currentUser.role==='central' && o.pickupShop && o.pickupShop.indexOf('��')>=0) ||
-      (currentUser.role==='pioneer' && o.pickupShop && o.pickupShop.indexOf('��')>=0);
-    html += '<tr>'+
-      '<td class="order-id">#'+(o.orderId||o._id)+'</td>'+
-      '<td style="font-size:.78rem;color:var(--muted)">'+timeStr+'</td>'+
-      '<td>'+(o.customerName||'-')+'</td>'+
-      '<td style="font-size:.78rem">'+(o.customerPhone||'-')+'</td>'+
-      '<td style="font-size:.78rem">'+(o.pickupShop||'-')+'</td>'+
-      '<td style="font-weight:700;color:var(--a)">HK$'+(o.finalTotal||o.total||0)+'</td>'+
-      '<td><span class="order-status '+(o.status||'pending')+'">'+statusLabel[o.status]||'δ֪'+'</span></td>'+
-      '<td style="max-width:180px"><div class="order-items" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+items+'">'+items+'</div></td>'+
-      '<td>'+
-        (isPending && canConfirm ?
-          '<button class="confirm-btn" onclick="confirmPayment(\''+o._id+'\')">�_�J�տ�</button>' :
-          '<span style="font-size:.75rem;color:var(--muted)">-</span>')+
-      '</td>'+
-    '</tr>';
-  });
-  body.innerHTML = html;
-}
-
-function confirmPayment(orderId) {
-  if (!confirm('�_�J���տ')) return;
-  var btn = event.target;
-  btn.disabled = true;
-  btn.textContent = '̎����...';
-  db.collection('orders').doc(orderId).update({status:'paid'}).then(function() {
-    // Update local cache
-    for (var i=0;i<allOrders.length;i++) {
-      if (allOrders[i]._id === orderId) { allOrders[i].status = 'paid'; break; }
-    }
-    renderOrders();
-  }).catch(function(e) {
-    btn.disabled = false;
-    btn.textContent = '�_�J�տ�';
-    alert('����ʧ����'+e.message);
-  });
-}
-
-// ���� Accounts (admin only) ������������������������������������������
-function loadAccounts() {
-  if (currentUser.role !== 'admin') return;
-  var body = document.getElementById('acctsBody');
-  body.innerHTML = '<tr class="loading-row"><td colspan="6" style="text-align:center;padding:2rem">�d����...</td></tr>';
-  db.collection('admins').get().then(function(snap) {
-    var html = '';
-    var roleMap = {admin:'admin',central:'�Эh��',pioneer:'ʼ������'};
-    snap.forEach(function(d) {
-      var o = d.data();
-      html += '<tr>'+
-        '<td>'+d.id+'</td>'+
-        '<td><span class="acct-role '+o.role+'">'+roleMap[o.role]+'</span></td>'+
-        '<td>'+(o.shop||'-')+'</td>'+
-        '<td class="'+(o.active===false?'acct-inactive':'acct-active')+'">'+(o.active===false?'ͣ��':'����')+'</td>'+
-        '<td style="font-size:.78rem;color:var(--muted)">'+(o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().toLocaleDateString('zh-HK'):'-')+'</td>'+
-        '<td class="acct-actions">'+
-          '<button class="acct-btn" onclick="openEditAcct(\''+d.id+'\')">��݋</button>'+
-          (o.role!=='admin'?' <button class="acct-btn danger" onclick="toggleAcct(\''+d.id+'\','+!o.active+')">'+(o.active===false?'����':'ͣ��')+'</button>':'')+
-        '</td>'+
-      '</tr>';
-    });
-    body.innerHTML = html || '<tr><td colspan="6"><div class="empty-state">���o������̖</div></td></tr>';
-  }).catch(function(e) {
-    body.innerHTML = '<tr><td colspan="6" style="color:var(--a)">�d��ʧ����'+e.message+'</td></tr>';
-  });
-}
-
-function openAddAcct() {
-  document.getElementById('acctModalTitle').textContent = '������̖';
-  document.getElementById('acctEditId').value = '';
-  document.getElementById('acctEmail').value = '';
-  document.getElementById('acctPw').value = '';
-  document.getElementById('acctPw').placeholder = '';
-  document.getElementById('acctEmail').parentElement.style.display = '';
-  document.getElementById('acctPwLabel').textContent = '�ܴa *';
-  document.getElementById('acctRole').value = 'central';
-  document.getElementById('acctActive').value = 'true';
-  document.getElementById('acctMsg').style.display = 'none';
-  document.getElementById('acctModal').classList.add('open');
-}
-
-function openEditAcct(uid) {
-  document.getElementById('acctModalTitle').textContent = '��݋��̖';
-  document.getElementById('acctEditId').value = uid;
-  document.getElementById('acctEmail').value = uid;
-  document.getElementById('acctEmail').parentElement.style.display = 'none';
-  document.getElementById('acctPw').value = '';
-  document.getElementById('acctPwLabel').textContent = '���ܴa���������գ�';
-  db.collection('admins').doc(uid).get().then(function(doc) {
-    if (doc.exists) {
-      var o = doc.data();
-      document.getElementById('acctRole').value = o.role||'central';
-      document.getElementById('acctActive').value = String(o.active!==false);
-    }
-    document.getElementById('acctMsg').style.display = 'none';
-    document.getElementById('acctModal').classList.add('open');
-  });
-}
-
-function onRoleChange() {
-  // No special action needed yet
-}
-
-function closeAcctModal() {
-  document.getElementById('acctModal').classList.remove('open');
-}
-
-function saveAcct() {
-  var uid = document.getElementById('acctEditId').value;
-  var email = document.getElementById('acctEmail').value.trim();
-  var pw = document.getElementById('acctPw').value;
-  var role = document.getElementById('acctRole').value;
-  var active = document.getElementById('acctActive').value === 'true';
-  var msg = document.getElementById('acctMsg');
-  var btn = document.getElementById('acctSaveBtn');
-  msg.style.display = 'none';
-
-  if (!uid && !email) { msg.textContent = 'Ո���]'; msg.className='modal-msg err'; msg.style.display='block'; return; }
-  if (!uid && !pw) { msg.textContent = 'Ո��ܴa'; msg.className='modal-msg err'; msg.style.display='block'; return; }
-
-  btn.disabled = true;
-  btn.textContent = '̎����...';
-
-  var shopMap = {admin:'', central:'�� �Эh����', pioneer:'�� ʼ������'};
-
-  if (!uid) {
-    // Create new auth user + user doc
-    auth.createUserWithEmailAndPassword(email, pw).then(function(cred) {
-      return db.collection('admins').doc(cred.user.uid).set({
-        role: role, shop: shopMap[role]||'', active: true,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      }).then(function() {
-        msg.textContent = '��̖�ф�����';
-        msg.className = 'modal-msg ok';
-        msg.style.display = 'block';
-        btn.textContent = '����';
-        btn.disabled = false;
-        loadAccounts();
-        setTimeout(closeAcctModal, 1200);
-      });
-    }).catch(function(e) {
-      msg.textContent = '�e�`��'+e.message;
-      msg.className = 'modal-msg err';
-      msg.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = '����';
-    });
-  } else {
-    // Update user doc only
-    var updates = {role: role, shop: shopMap[role]||'', active: active};
-    db.collection('admins').doc(uid).update(updates).then(function() {
-      // If password changed, would need to use Firebase Auth Admin SDK (not possible client-side)
-      msg.textContent = '�Ѹ��£�';
-      msg.className = 'modal-msg ok';
-      msg.style.display = 'block';
-      btn.textContent = '����';
-      btn.disabled = false;
-      loadAccounts();
-      setTimeout(closeAcctModal, 1200);
-    }).catch(function(e) {
-      msg.textContent = '�e�`��'+e.message;
-      msg.className = 'modal-msg err';
-      msg.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = '����';
-    });
-  }
-}
-
-function toggleAcct(uid, activate) {
-  if (!confirm(activate ? '���ôˎ�̖��' : 'ͣ�ôˎ�̖��')) return;
-  db.collection('admins').doc(uid).update({active: activate}).then(function() {
-    loadAccounts();
-  }).catch(function(e) {
-    alert('����ʧ����'+e.message);
-  });
-}
-
-// ====== CLOCK SYSTEM ======
-var allEmployees = [];
-var allClockins = [];
-var selectedClockEmp = null;
-
-function onClockStoreChange() {
-    var store = document.getElementById('clockStoreSelect').value;
-    var section = document.getElementById('clockSection');
-    if (!store) { section.style.display = 'none'; return; }
-    section.style.display = '';
-    document.getElementById('empListClock').innerHTML = '<span style="font-size:.85rem;color:var(--muted)">載入中...</span>';
-    document.getElementById('clockBtn').disabled = true;
-    document.getElementById('clockBtn').className = 'clock-btn clock-in';
-    document.getElementById('clockBtn').textContent = '返工';
-    document.getElementById('clockStatus').style.display = 'none';
-    document.getElementById('clockPin').value = '';
-    Promise.all([
-        db.collection('employees').where('active','==',true).get(),
-        db.collection('checkins').where('date','==',getTodayStr()).get()
-    ]).then(function(results) {
-        allEmployees = []; results[0].forEach(function(d){ var e=d.data();e._id=d.id;allEmployees.push(e); });
-        allClockins = []; results[1].forEach(function(d){ var c2=d.data();c2._id=d.id;allClockins.push(c2); });
-        renderEmpButtons(store);
-        renderTodayRecords(store);
-        if(currentUser && currentUser.role==='admin'){
-            document.getElementById('clockRecordsAdmin').style.display='';
-            renderClockRecords();
-        }
-    }).catch(function(e){ document.getElementById('empListClock').innerHTML='<span style="color:var(--a)">載入失敗:'+e.message+'</span>'; });
-}
-
-function renderEmpButtons(store) {
-    var div = document.getElementById('empListClock');
-    if(allEmployees.length===0){ div.innerHTML='<span style="font-size:.85rem;color:var(--muted)">請先用 admin 新增員工</span>'; return; }
-    var html='';
-    allEmployees.forEach(function(emp){
-        var todayCI=allClockins.filter(function(c2){return c2.employeeId===emp._id && c2.store===store;});
-        var hasCI=todayCI.length>0;
-        var hasCO=todayCI.some(function(c2){return c2.clockOut!=null;});
-        var cls='emp-btn'+(hasCI?' clocked':'');
-        html+='<button class="'+cls+'" onclick="selectEmp(\''+emp._id+'\',\''+store+'\')">'+escHtml(emp.name)+'</button>';
-    });
-    div.innerHTML=html;
-}
-
-function renderTodayRecords(store) {
-    var div=document.getElementById('clockTodayRecords');
-    var recs=allClockins.filter(function(c2){return c2.store===store;});
-    if(recs.length===0){ div.innerHTML='<span style="font-size:.85rem;color:var(--muted)">今日尚無記錄</span>'; return; }
-    var html='<table class="clock-table" style="width:100%"><thead><tr><th>員工</th><th>返工</th><th>收工</th><th>時數</th></tr></thead><tbody>';
-    recs.forEach(function(c2){
-        var ci=c2.clockIn?new Date(c2.clockIn).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'-';
-        var co=c2.clockOut?new Date(c2.clockOut).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'<span style="color:var(--a);font-weight:600">工作中</span>';
-        var dur=calcDuration(c2);
-        html+='<tr><td class="clock-emp">'+escHtml(c2.employeeName)+'</td><td class="clock-time">'+ci+'</td><td>'+co+'</td><td class="clock-dur">'+(dur?dur+'h':'<span style="color:var(--muted)">-</span>')+'</td></tr>';
-    });
-    html+='</tbody></table>';
-    div.innerHTML=html;
-}
-
-function selectEmp(empId, store) {
-    selectedClockEmp=empId;
-    var emp=allEmployees.find(function(e){return e._id===empId;});
-    if(!emp)return;
-    document.querySelectorAll('#empListClock .emp-btn').forEach(function(b){b.classList.remove('active');});
-    document.querySelectorAll('#empListClock .emp-btn').forEach(function(b){if(b.textContent.indexOf(emp.name)>=0||b.getAttribute('onclick').indexOf(empId)>=0)b.classList.add('active');});
-    document.getElementById('clockPin').value='';
-    document.getElementById('clockPin').focus();
-    var todayCI=allClockins.filter(function(c2){return c2.employeeId===empId&&c2.store===store;});
-    var hasCI=todayCI.length>0;
-    var hasCO=todayCI.some(function(c2){return c2.clockOut!=null;});
-    var btn=document.getElementById('clockBtn');
-    var st=document.getElementById('clockStatus');
-    if(!hasCO){
-        btn.className=hasCI?'clock-btn clock-out':'clock-btn clock-in';
-        btn.textContent=hasCI?'收工':'返工';
-        btn.disabled=false;
-        st.style.display='none';
-    } else {
-        btn.className='clock-btn clock-in';
-        btn.textContent='已完成（明日再打）';
-        btn.disabled=true;
-        st.style.display='';
-        st.className='clock-status on';
-        st.innerHTML='<strong>'+escHtml(emp.name)+'</strong> 今日已完成工作';
-    }
-}
-
-function doClock() {
-    var store=document.getElementById('clockStoreSelect').value;
-    var pin=document.getElementById('clockPin').value.trim();
-    var btn=document.getElementById('clockBtn');
-    var st=document.getElementById('clockStatus');
-    if(!selectedClockEmp||!pin){alert('請選擇員工並輸入 PIN');return;}
-    var emp=allEmployees.find(function(e){return e._id===selectedClockEmp;});
-    if(!emp)return;
-    if(emp.pin!==pin){
-        st.style.display='';
-        st.className='clock-status off';
-        st.innerHTML='PIN 錯誤';
-        return;
-    }
-    var todayCI=allClockins.filter(function(c2){return c2.employeeId===emp._id&&c2.store===store;});
-    var hasCI=todayCI.length>0;
-    var hasCO=todayCI.some(function(c2){return c2.clockOut!=null;});
-    btn.disabled=true; btn.textContent='處理中...';
-    if(!hasCI){
-        db.collection('checkins').add({
-            employeeId:emp._id, employeeName:emp.name, store:store,
-            date:getTodayStr(), clockIn:firebase.firestore.FieldValue.serverTimestamp(),
-            clockOut:null, createdBy:currentUser?currentUser.uid:null
-        }).then(function(){onClockStoreChange();}).catch(function(e){btn.disabled=false;btn.textContent='返工';alert('失敗:'+e.message);});
-    } else if(!hasCO){
-        var rec=todayCI.find(function(c2){return c2.clockOut==null;});
-        if(!rec)return;
-        db.collection('checkins').doc(rec._id).update({
-            clockOut:firebase.firestore.FieldValue.serverTimestamp()
-        }).then(function(){onClockStoreChange();}).catch(function(e){btn.disabled=false;btn.textContent='收工';alert('失敗:'+e.message);});
-    }
-}
-
-function renderClockRecords() {
-    if(!currentUser||currentUser.role!=='admin')return;
-    var storeF=document.getElementById('clockRecordStoreFilter').value;
-    var dateF=document.getElementById('clockRecordDateFilter').value;
-    var body=document.getElementById('clockRecordsBody');
-    var filtered=allClockins.filter(function(c2){
-        if(storeF&&c2.store!==storeF)return false;
-        if(dateF&&c2.date!==dateF)return false;
-        return true;
-    });
-    if(filtered.length===0){body.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted)">暫無記錄</td></tr>';return;}
-    var storeName={pioneer:'旺角',central:'中環'};
-    var html='';
-    filtered.forEach(function(c2){
-        var ci=c2.clockIn?new Date(c2.clockIn).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'-';
-        var co=c2.clockOut?new Date(c2.clockOut).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'<span style="color:var(--a)">工作中</span>';
-        var dur=calcDuration(c2);
-        var status=c2.clockOut?'完成':'<span style="color:var(--a)">工作中</span>';
-        html+='<tr><td class="clock-emp">'+escHtml(c2.employeeName)+'</td><td class="clock-store">'+storeName[c2.store]+'</td><td class="clock-time">'+ci+'</td><td>'+co+'</td><td class="clock-dur">'+(dur?dur+'h':'<span style="color:var(--muted)">-</span>')+'</td><td>'+status+'</td></tr>';
-    });
-    body.innerHTML=html;
-}
-
-function calcDuration(c2) {
-    if(!c2.clockIn||!c2.clockOut)return null;
-    var ms=new Date(c2.clockOut).getTime()-new Date(c2.clockIn).getTime();
-    if(ms<=0)return null;
-    return(ms/3600000).toFixed(1);
-}
-
-function getTodayStr() {
-    var d=new Date();
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
-function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-// Employee management (admin)
-function loadEmployees() {
-    if(!currentUser||currentUser.role!=='admin')return;
-    var div=document.getElementById('empListManage');
-    if(!div)return;
-    div.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">載入中...</div>';
-    db.collection('employees').orderBy('name').get().then(function(snap){
-        if(snap.empty){div.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">尚無員工，點擊右上角新增</div>';return;}
-        var html='';
-        snap.forEach(function(d){var emp=d.data();emp._id=d.id;html+=renderEmpCard(emp);});
-        div.innerHTML=html;
-    }).catch(function(e){div.innerHTML='<div style="color:var(--a)">載入失敗:'+e.message+'</div>';});
-}
-
-function renderEmpCard(emp) {
-    return '<div class="emp-manage-card">'+
-        '<div class="emp-manage-header">'+
-          '<div><div class="emp-manage-name">'+escHtml(emp.name)+'</div>'+
-               '<div class="emp-manage-info">PIN: '+String(emp.pin||'').replace(/./g,'*')+'</div>'+
-          '</div>'+
-          '<div class="emp-manage-actions">'+
-            '<span class="emp-stat-badge '+(emp.active!==false?'active':'inactive')+'">'+(emp.active!==false?'在職':'停用')+'</span>'+
-            '<button class="acct-btn" onclick="openEditEmp(\''+emp._id+'\')">編輯</button>'+
-            '<button class="acct-btn danger" onclick="toggleEmp(\''+emp._id+'\','+String(emp.active!==false)+')">'+(emp.active!==false?'停用':'啟用')+'</button>'+
-          '</div>'+
-        '</div></div>';
-}
-
-function openAddEmp() {
-    var name=prompt('員工姓名:');
-    if(!name||!name.trim())return;
-    var pin=prompt('PIN (4-6位數字):');
-    if(!pin||!/^\d{4,6}$/.test(pin)){alert('PIN需為4-6位數字');return;}
-    db.collection('employees').add({
-        name:name.trim(), pin:pin, active:true,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-        createdBy:currentUser?currentUser.uid:null
-    }).then(function(){loadEmployees();}).catch(function(e){alert('新增失敗:'+e.message);});
-}
-
-function openEditEmp(empId) {
-    var newName=prompt('新員工姓名:');
-    if(!newName||!newName.trim())return;
-    var newPin=prompt('新PIN (留空不改):');
-    var updates={name:newName.trim()};
-    if(newPin&&/^\d{4,6}$/.test(newPin))updates.pin=newPin;
-    db.collection('employees').doc(empId).update(updates).then(function(){loadEmployees();}).catch(function(e){alert('更新失敗:'+e.message);});
-}
-
-function toggleEmp(empId, currentlyActive) {
-    if(!confirm(currentlyActive?'停用此員工？':'啟用此員工？'))return;
-    db.collection('employees').doc(empId).update({active:!currentlyActive}).then(function(){loadEmployees();}).catch(function(e){alert('操作失敗:'+e.message);});
-}
-
-// ====== END CLOCK SYSTEM ======
-
+function doLogin(){var e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPassword').value,b=document.getElementById('loginBtn'),err=document.getElementById('loginError');if(!e||!p){err.textContent='請輸入電郵和密碼';err.style.display='block';return;}b.disabled=true;b.innerHTML='<span class="spinner"></span> 登入中...';err.style.display='none';auth.signInWithEmailAndPassword(e,p).then(function(c){return checkUserPerms(c.user);}).catch(function(ex){err.textContent='登入失敗：'+ex.message;err.style.display='block';b.disabled=false;b.textContent='登入';});}
+function checkUserPerms(user){db.collection('admins').doc(user.uid).get().then(function(doc){if(!doc.exists){auth.signOut();var e=document.getElementById('loginError');e.textContent='此帳號未授權使用管理後台';e.style.display='block';document.getElementById('loginBtn').disabled=false;document.getElementById('loginBtn').textContent='登入';return;}var d=doc.data();if(d.active===false){auth.signOut();var e=document.getElementById('loginError');e.textContent='此帳號已停用，請聯絡管理員';e.style.display='block';document.getElementById('loginBtn').disabled=false;document.getElementById('loginBtn').textContent='登入';return;}currentUser={uid:user.uid,email:user.email,role:d.role,shop:d.shop};showAdminPanel();}).catch(function(ex){auth.signOut();document.getElementById('loginError').textContent='無法讀取權限：'+ex.message;document.getElementById('loginError').style.display='block';document.getElementById('loginBtn').disabled=false;document.getElementById('loginBtn').textContent='登入';});}
+function doLogout(){auth.signOut();}
+auth.onAuthStateChanged(function(user){if(user){checkUserPerms(user);}else{showLoginPage();}});
+function showLoginPage(){document.getElementById('loginPage').style.display='flex';document.getElementById('adminPanel').classList.remove('show');document.getElementById('loginBtn').disabled=false;document.getElementById('loginBtn').textContent='登入';document.getElementById('loginEmail').value='';document.getElementById('loginPassword').value='';document.getElementById('loginError').style.display='none';}
+function showAdminPanel(){document.getElementById('loginPage').style.display='none';document.getElementById('adminPanel').classList.add('show');document.getElementById('userEmail').textContent=currentUser.email;var badge=document.getElementById('roleBadge');var roleMap={admin:'admin',central:'中環店',pioneer:'始創中心'};badge.textContent=roleMap[currentUser.role]||currentUser.role;document.getElementById('acctTab').style.display=currentUser.role==='admin'?'':'none';document.getElementById('clockTab').style.display='';document.getElementById('empTab').style.display=currentUser.role==='admin'?'':'none';switchTab('orders');loadOrders();if(currentUser.role==='admin')loadAccounts();}
+function switchTab(name){document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});var tab=document.querySelector('.tab[data-tab="'+name+'"]');if(tab)tab.classList.add('active');var panel=document.getElementById(name+'Panel');if(panel)panel.classList.add('active');if(name==='clock')onClockStoreChange();if(name==='employees')loadEmployees();}
+function loadOrders(){var body=document.getElementById('ordersBody');body.innerHTML='<tr class="loading-row"><td colspan="9" style="text-align:center;padding:2rem">載入中...</td></tr>';db.collection('orders').orderBy('createdAt','desc').limit(200).get().then(function(snap){allOrders=[];snap.forEach(function(d){var o=d.data();o._id=d.id;allOrders.push(o);});renderOrders();}).catch(function(e){body.innerHTML='<tr><td colspan="9" style="color:var(--a);text-align:center;padding:2rem">載入失敗：'+e.message+'</td></tr>';});}
+function renderOrders(){var body=document.getElementById('ordersBody'),shopF=document.getElementById('filterShop').value,statusF=document.getElementById('filterStatus').value,dateF=document.getElementById('filterDate').value;var filtered=allOrders.filter(function(o){if(currentUser.role==='central'&&o.pickupShop&&o.pickupShop.indexOf('中環')===-1)return false;if(currentUser.role==='pioneer'&&o.pickupShop&&o.pickupShop.indexOf('旺角')===-1)return false;if(shopF&&(!o.pickupShop||o.pickupShop.indexOf(shopF)===-1))return false;if(statusF&&o.status!==statusF)return false;if(dateF){var d=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate():new Date(o.createdAt);var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(ds!==dateF)return false;}return true;});var today=new Date().toISOString().slice(0,10),todayOrders=allOrders.filter(function(o){var d=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate():new Date(o.createdAt);var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');return ds===today;}),totalAmt=todayOrders.reduce(function(s,o){return s+(o.finalTotal||o.total||0);},0),pendingCnt=todayOrders.filter(function(o){return o.status==='pending';}).length,paidCnt=todayOrders.filter(function(o){return o.status==='paid'||o.status==='shipped'||o.status==='completed';}).length;document.getElementById('statsCards').innerHTML='<div class="stat-card"><div class="stat-label">今日訂單</div><div class="stat-value">'+todayOrders.length+'</div></div><div class="stat-card"><div class="stat-label">待確認</div><div class="stat-value red">'+pendingCnt+'</div></div><div class="stat-card"><div class="stat-label">已確認</div><div class="stat-value green">'+paidCnt+'</div></div><div class="stat-card"><div class="stat-label">今日金額</div><div class="stat-value">HK$'+totalAmt+'</div></div>';if(filtered.length===0){body.innerHTML='<tr><td colspan="9"><div class="empty-state">暫無訂單</div></td></tr>';return;}var html='',statusLabel={pending:'待付款',paid:'已付款',shipped:'已發貨',completed:'已完成',cancelled:'已取消'};filtered.forEach(function(o){var d=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate():new Date(o.createdAt),timeStr=(d.getMonth()+1)+'/'+d.getDate()+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),items=(o.items||[]).map(function(i){return(i.name||'')+(i.variant?' ('+i.variant+')':'');}).join(', '),isPending=o.status==='pending',canConfirm=(currentUser.role==='admin')||(currentUser.role==='central'&&o.pickupShop&&o.pickupShop.indexOf('中環')>=0)||(currentUser.role==='pioneer'&&o.pickupShop&&o.pickupShop.indexOf('旺角')>=0);html+='<tr><td class="order-id">#'+(o.orderId||o._id)+'</td><td style="font-size:.78rem;color:var(--muted)">'+timeStr+'</td><td>'+(o.customerName||'-')+'</td><td style="font-size:.78rem">'+(o.customerPhone||'-')+'</td><td style="font-size:.78rem">'+(o.pickupShop||'-')+'</td><td style="font-weight:700;color:var(--a)">HK$'+(o.finalTotal||o.total||0)+'</td><td><span class="order-status '+(o.status||'pending')+'">'+(statusLabel[o.status]||'未知')+'</span></td><td style="max-width:180px"><div class="order-items" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+items+'">'+items+'</div></td><td>'+(isPending&&canConfirm?'<button class="confirm-btn" onclick="confirmPayment(\''+o._id+'\')">確認付款</button>':'<span style="font-size:.75rem;color:var(--muted)">-</span>')+'</td></tr>';});body.innerHTML=html;}
+function confirmPayment(orderId){if(!confirm('確認已付款？'))return;var btn=event.target;btn.disabled=true;btn.textContent='處理中...';db.collection('orders').doc(orderId).update({status:'paid'}).then(function(){for(var i=0;i<allOrders.length;i++){if(allOrders[i]._id===orderId){allOrders[i].status='paid';break;}}renderOrders();}).catch(function(e){btn.disabled=false;btn.textContent='確認付款';alert('更新失敗：'+e.message);});}
+function loadAccounts(){if(currentUser.role!=='admin')return;var body=document.getElementById('acctsBody');body.innerHTML='<tr class="loading-row"><td colspan="6" style="text-align:center;padding:2rem">載入中...</td></tr>';db.collection('admins').get().then(function(snap){var html='',roleMap={admin:'admin',central:'中環店',pioneer:'始創中心'};snap.forEach(function(d){var o=d.data();html+='<tr><td>'+d.id+'</td><td><span class="acct-role '+o.role+'">'+roleMap[o.role]+'</span></td><td>'+(o.shop||'-')+'</td><td class="'+(o.active===false?'acct-inactive':'acct-active')+'">'+(o.active===false?'停用':'啟用')+'</td><td style="font-size:.78rem;color:var(--muted)">'+(o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().toLocaleDateString('zh-HK'):'-')+'</td><td class="acct-actions"><button class="acct-btn" onclick="openEditAcct(\''+d.id+'\')">編輯</button>'+(o.role!=='admin'?' <button class="acct-btn danger" onclick="toggleAcct(\''+d.id+'\','+!o.active+')">'+(o.active===false?'啟用':'停用')+'</button>':'')+'</td></tr>';});body.innerHTML=html||'<tr><td colspan="6"><div class="empty-state">暫無帳號</div></td></tr>';}).catch(function(e){body.innerHTML='<tr><td colspan="6" style="color:var(--a)">載入失敗：'+e.message+'</td></tr>';});}
+function openAddAcct(){document.getElementById('acctModalTitle').textContent='新增帳戶';document.getElementById('acctEditId').value='';document.getElementById('acctEmail').value='';document.getElementById('acctPw').value='';document.getElementById('acctEmail').parentElement.style.display='';document.getElementById('acctPwLabel').textContent='密碼 *';document.getElementById('acctRole').value='central';document.getElementById('acctActive').value='true';document.getElementById('acctMsg').style.display='none';document.getElementById('acctModal').classList.add('open');}
+function openEditAcct(uid){document.getElementById('acctModalTitle').textContent='編輯帳戶';document.getElementById('acctEditId').value=uid;document.getElementById('acctEmail').value=uid;document.getElementById('acctEmail').parentElement.style.display='none';document.getElementById('acctPw').value='';document.getElementById('acctPwLabel').textContent='新密碼（留空不改）';db.collection('admins').doc(uid).get().then(function(doc){if(doc.exists){var o=doc.data();document.getElementById('acctRole').value=o.role||'central';document.getElementById('acctActive').value=String(o.active!==false);}document.getElementById('acctMsg').style.display='none';document.getElementById('acctModal').classList.add('open');});}
+function closeAcctModal(){document.getElementById('acctModal').classList.remove('open');}
+function saveAcct(){var uid=document.getElementById('acctEditId').value,email=document.getElementById('acctEmail').value.trim(),pw=document.getElementById('acctPw').value,role=document.getElementById('acctRole').value,active=document.getElementById('acctActive').value==='true',msg=document.getElementById('acctMsg'),btn=document.getElementById('acctSaveBtn');msg.style.display='none';if(!uid&&!email){msg.textContent='請輸入電郵';msg.className='modal-msg err';msg.style.display='block';return;}if(!uid&&!pw){msg.textContent='請輸入密碼';msg.className='modal-msg err';msg.style.display='block';return;}btn.disabled=true;btn.textContent='處理中...';var shopMap={admin:'',central:'旺角 始創中心',pioneer:'中環 中環街市'};if(!uid){auth.createUserWithEmailAndPassword(email,pw).then(function(cred){return db.collection('admins').doc(cred.user.uid).set({role:role,shop:shopMap[role]||'',active:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()});}).then(function(){msg.textContent='帳號已建立';msg.className='modal-msg ok';msg.style.display='block';btn.textContent='儲存';btn.disabled=false;loadAccounts();setTimeout(closeAcctModal,1200);}).catch(function(e){msg.textContent='錯誤：'+e.message;msg.className='modal-msg err';msg.style.display='block';btn.disabled=false;btn.textContent='儲存';});}else{db.collection('admins').doc(uid).update({role:role,shop:shopMap[role]||'',active:active}).then(function(){msg.textContent='已更新';msg.className='modal-msg ok';msg.style.display='block';btn.textContent='儲存';btn.disabled=false;loadAccounts();setTimeout(closeAcctModal,1200);}).catch(function(e){msg.textContent='錯誤：'+e.message;msg.className='modal-msg err';msg.style.display='block';btn.disabled=false;btn.textContent='儲存';});}}
+function toggleAcct(uid,activate){if(!confirm(activate?'啟用此帳號？':'停用此帳號？'))return;db.collection('admins').doc(uid).update({active:activate}).then(function(){loadAccounts();}).catch(function(e){alert('更新失敗：'+e.message);});}
+function onClockStoreChange(){var store=document.getElementById('clockStoreSelect').value,section=document.getElementById('clockSection');if(!store){section.style.display='none';return;}section.style.display='';document.getElementById('empListClock').innerHTML='<span style="font-size:.85rem;color:var(--muted)">載入中...</span>';document.getElementById('clockBtn').disabled=true;document.getElementById('clockBtn').className='clock-btn clock-in';document.getElementById('clockBtn').textContent='返工';document.getElementById('clockStatus').style.display='none';document.getElementById('clockPin').value='';Promise.all([db.collection('employees').where('active','==',true).get(),db.collection('checkins').where('date','==',getTodayStr()).get()]).then(function(results){allEmployees=[];results[0].forEach(function(d){var e=d.data();e._id=d.id;allEmployees.push(e);});allClockins=[];results[1].forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});renderEmpButtons(store);renderTodayRecords(store);if(currentUser&&currentUser.role==='admin'){document.getElementById('clockRecordsAdmin').style.display='';renderClockRecords();}}).catch(function(e){document.getElementById('empListClock').innerHTML='<span style="color:var(--a)">載入失敗:'+e.message+'</span>';});}
+function renderEmpButtons(store){var div=document.getElementById('empListClock');if(allEmployees.length===0){div.innerHTML='<span style="font-size:.85rem;color:var(--muted)">請先用 admin 新增員工</span>';return;}var html='';allEmployees.forEach(function(emp){var todayCI=allClockins.filter(function(c){return c.employeeId===emp._id&&c.store===store;});var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});var cls='emp-btn'+(hasCI?' clocked':'');html+='<button class="'+cls+'" onclick="selectEmp(\''+emp._id+'\',\''+store+'\')">'+escHtml(emp.name)+'</button>';});div.innerHTML=html;}
+function renderTodayRecords(store){var div=document.getElementById('clockTodayRecords'),recs=allClockins.filter(function(c){return c.store===store;});if(recs.length===0){div.innerHTML='<span style="font-size:.85rem;color:var(--muted)">今日尚無記錄</span>';return;}var html='<table class="clock-table" style="width:100%"><thead><tr><th>員工</th><th>返工</th><th>收工</th><th>時數</th></tr></thead><tbody>';recs.forEach(function(c){var ci=c.clockIn?new Date(c.clockIn).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'-',co=c.clockOut?new Date(c.clockOut).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'<span style="color:var(--a);font-weight:600">工作中</span>',dur=calcDuration(c);html+='<tr><td class="clock-emp">'+escHtml(c.employeeName)+'</td><td class="clock-time">'+ci+'</td><td>'+co+'</td><td class="clock-dur">'+(dur?dur+'h':'<span style="color:var(--muted)">-</span>')+'</td></tr>';});html+='</tbody></table>';div.innerHTML=html;}
+function selectEmp(empId,store){selectedClockEmp=empId;var emp=allEmployees.find(function(e){return e._id===empId;});if(!emp)return;document.querySelectorAll('#empListClock .emp-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('#empListClock .emp-btn').forEach(function(b){if(b.textContent.indexOf(emp.name)>=0||b.getAttribute('onclick').indexOf(empId)>=0)b.classList.add('active');});document.getElementById('clockPin').value='';document.getElementById('clockPin').focus();var todayCI=allClockins.filter(function(c){return c.employeeId===empId&&c.store===store;}),hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;}),btn=document.getElementById('clockBtn'),status=document.getElementById('clockStatus');if(hasCO){btn.disabled=true;btn.className='clock-btn clock-in';btn.textContent='已完成（明日再打）';status.style.display='block';status.className='clock-status on';status.textContent='今日已完成打卡';}else if(hasCI){btn.disabled=false;btn.className='clock-btn clock-out';btn.textContent='收工';status.style.display='block';status.className='clock-status off';status.textContent='已返工，等待收工';}else{btn.disabled=false;btn.className='clock-btn clock-in';btn.textContent='返工';status.style.display='none';}}
+function doClock(){if(!selectedClockEmp){alert('請選擇員工');return;}var emp=allEmployees.find(function(e){return e._id===selectedClockEmp;});if(!emp)return;var pin=document.getElementById('clockPin').value.trim();if(pin!==emp.pin){alert('PIN 錯誤');document.getElementById('clockPin').value='';document.getElementById('clockPin').focus();return;}var store=document.getElementById('clockStoreSelect').value,btn=document.getElementById('clockBtn'),todayCI=allClockins.filter(function(c){return c.employeeId===selectedClockEmp&&c.store===store;}),hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});btn.disabled=true;btn.textContent='處理中...';if(!hasCI){db.collection('checkins').add({employeeId:selectedClockEmp,employeeName:emp.name,store:store,date:getTodayStr(),clockIn:new Date().toISOString(),clockOut:null,duration:null}).then(function(){alert('打卡成功！返工時間：'+new Date().toLocaleTimeString('zh-HK'));onClockStoreChange();}).catch(function(e){alert('打卡失敗：'+e.message);btn.disabled=false;});}else{var ciDoc=todayCI.find(function(c){return c.clockOut==null;});if(!ciDoc){alert('找不到打卡記錄');return;}var clockInTime=new Date(ciDoc.clockIn),clockOutTime=new Date(),duration=Math.round((clockOutTime-clockInTime)/60000);db.collection('checkins').doc(ciDoc._id).update({clockOut:clockOutTime.toISOString(),duration:duration}).then(function(){alert('收工成功！工作時數：'+(duration/60).toFixed(1)+'h');onClockStoreChange();}).catch(function(e){alert('收工失敗：'+e.message);btn.disabled=false;});}}
+function renderClockRecords(){if(!currentUser||currentUser.role!=='admin')return;var storeF=document.getElementById('clockRecordStoreFilter').value,dateF=document.getElementById('clockRecordDateFilter').value||getTodayStr(),body=document.getElementById('clockRecordsBody');body.innerHTML='<tr class="loading-row"><td colspan="6" style="text-align:center;padding:1rem">載入中...</td></tr>';db.collection('checkins').where('date','==',dateF).get().then(function(snap){var recs=[];snap.forEach(function(d){var c=d.data();c._id=d.id;recs.push(c);});if(storeF)recs=recs.filter(function(c){return c.store===storeF;});if(recs.length===0){body.innerHTML='<tr><td colspan="6"><div class="empty-state">暫無記錄</div></td></tr>';return;}var html='';recs.forEach(function(c){var ci=c.clockIn?new Date(c.clockIn).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'-',co=c.clockOut?new Date(c.clockOut).toLocaleTimeString('zh-HK',{hour:'2-digit',minute:'2-digit'}):'<span style="color:var(--a);font-weight:600">工作中</span>',dur=calcDuration(c),storeName=c.store==='pioneer'?'旺角':c.store==='central'?'中環':c.store,status=c.clockOut?'已完成':'工作中';html+='<tr><td class="clock-emp">'+escHtml(c.employeeName)+'</td><td class="clock-store">'+storeName+'</td><td class="clock-time">'+ci+'</td><td>'+co+'</td><td class="clock-dur">'+(dur?dur+'h':'-')+'</td><td>'+status+'</td></tr>';});body.innerHTML=html;}).catch(function(e){body.innerHTML='<tr><td colspan="6" style="color:var(--a)">載入失敗：'+e.message+'</td></tr>';});}
+function loadEmployees(){if(!currentUser||currentUser.role!=='admin')return;var div=document.getElementById('empListManage');div.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">載入中...</div>';db.collection('employees').get().then(function(snap){if(snap.empty){div.innerHTML='<div class="empty-state">暫無員工</div>';return;}var html='';snap.forEach(function(d){var e=d.data();e._id=d.id;html+='<div class="emp-manage-card"><div class="emp-manage-header"><div class="emp-manage-name">'+escHtml(e.name)+'</div><span class="emp-stat-badge '+(e.active!==false?'active':'inactive')+'">'+(e.active!==false?'在職':'離職')+'</span></div><div class="emp-manage-info">PIN: '+escHtml(e.pin||'****')+'</div><div class="emp-manage-actions"><button class="acct-btn" onclick="openEditEmp(\''+e._id+'\')">編輯</button><button class="acct-btn danger" onclick="toggleEmp(\''+e._id+'\','+!e.active+')">'+(e.active!==false?'停用':'啟用')+'</button></div></div>';});div.innerHTML=html;}).catch(function(e){div.innerHTML='<div style="color:var(--a)">載入失敗：'+e.message+'</div>';});}
+function openAddEmp(){document.getElementById('empModalTitle').textContent='新增員工';document.getElementById('empEditId').value='';document.getElementById('empName').value='';document.getElementById('empPin').value='';document.getElementById('empActive').value='true';document.getElementById('empMsg').style.display='none';document.getElementById('empModal').classList.add('open');}
+function openEditEmp(id){document.getElementById('empModalTitle').textContent='編輯員工';document.getElementById('empEditId').value=id;db.collection('employees').doc(id).get().then(function(doc){if(doc.exists){var e=doc.data();document.getElementById('empName').value=e.name||'';document.getElementById('empPin').value=e.pin||'';document.getElementById('empActive').value=String(e.active!==false);}document.getElementById('empMsg').style.display='none';document.getElementById('empModal').classList.add('open');});}
+function closeEmpModal(){document.getElementById('empModal').classList.remove('open');}
+function saveEmp(){var id=document.getElementById('empEditId').value,name=document.getElementById('empName').value.trim(),pin=document.getElementById('empPin').value.trim(),active=document.getElementById('empActive').value==='true',msg=document.getElementById('empMsg'),btn=document.getElementById('empSaveBtn');msg.style.display='none';if(!name){msg.textContent='請輸入姓名';msg.className='modal-msg err';msg.style.display='block';return;}if(!pin||!/^[0-9]{4,6}$/.test(pin)){msg.textContent='PIN 必須為4-6位數字';msg.className='modal-msg err';msg.style.display='block';return;}btn.disabled=true;btn.textContent='處理中...';var data={name:name,pin:pin,active:active},promise;if(id){promise=db.collection('employees').doc(id).update(data);}else{data.createdAt=firebase.firestore.FieldValue.serverTimestamp();promise=db.collection('employees').add(data);}promise.then(function(){msg.textContent='已儲存';msg.className='modal-msg ok';msg.style.display='block';btn.textContent='儲存';btn.disabled=false;loadEmployees();setTimeout(closeEmpModal,1200);}).catch(function(e){msg.textContent='錯誤：'+e.message;msg.className='modal-msg err';msg.style.display='block';btn.disabled=false;btn.textContent='儲存';});}
+function toggleEmp(id,activate){if(!confirm(activate?'啟用此員工？':'停用此員工？'))return;db.collection('employees').doc(id).update({active:activate}).then(function(){loadEmployees();}).catch(function(e){alert('更新失敗：'+e.message);});}
+function getTodayStr(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function calcDuration(c){if(!c.clockIn||!c.clockOut)return null;var ci=new Date(c.clockIn),co=new Date(c.clockOut);return((co-ci)/3600000).toFixed(1);}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
