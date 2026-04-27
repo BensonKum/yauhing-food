@@ -769,27 +769,6 @@ async function selectStore(store){
   document.getElementById('storeDialog').classList.remove('show');
   loadInventory();
 }
-  const email = currentUser ? currentUser.email.toLowerCase() : '';
-  const isAdmin = (email === 'admin@yauhing.hk');
-  
-  // Non-admin: enforce store permission
-  if(!isAdmin){
-    let allowed = null;
-    if(email.includes('central')) allowed = 'central';
-    else if(email.includes('pioneer')) allowed = 'pioneer';
-    if(allowed && store !== allowed){
-      toast('你沒有權限使用此分店');
-      return;
-    }
-  }
-
-  // Non-admin users can only use their assigned store
-  if (!isAdmin && userStore && store !== userStore) {
-    toast('你沒有權限使用此分店');
-    return;
-  }
-
-  currentStore = store;
   const btn = document.getElementById('storeBtn');
   if (store === 'central') {
     btn.textContent = '🏠 中環店 ✓';
