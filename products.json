@@ -5,8 +5,8 @@
     "price": "HKD 10",
     "note": "",
     "stock": false,
-    "image": null,
-    "local_img": null,
+    "image": "images/product_31.jpg",
+    "local_img": "product_31.jpg",
     "sku": "YH001"
   },
   {
