@@ -4,7 +4,7 @@
     "name": "上海麵 盒裝",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": "images/product_31.jpg",
     "local_img": "product_31.jpg",
     "sku": "YH001"
@@ -74,7 +74,7 @@
     "name": "油麵 (盒裝)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": "images/product_32.jpg",
     "local_img": "product_32.jpg",
     "sku": "YH008"
