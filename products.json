@@ -94,9 +94,9 @@
     "name": "生粗麵 (盒裝)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
+    "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "images/product_33.jpg",
     "sku": "YH010"
   },
   {
