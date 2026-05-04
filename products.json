@@ -64,9 +64,9 @@
     "name": "水河 (盒裝)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
+    "stock": true,
+    "image": "images/product_36.jpg",
+    "local_img": "product_36.jpg",
     "sku": "YH007"
   },
   {
