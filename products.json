@@ -84,9 +84,9 @@
     "name": "生幼麵 (盒裝)",
     "price": "HKD 10",
     "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
+    "stock": true,
+    "image": "images/product_35.jpg",
+    "local_img": "product_35.jpg",
     "sku": "YH009"
   },
   {
