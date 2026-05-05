@@ -862,7 +862,7 @@ function setMode(mode){
 
 // --- Category Bar ---
 function renderCatBar(){
-  const cats=['全部',...new Set(products.map(p=>p.cat))];
+  const catSet=new Set();products.forEach(p=>p.cat.split(' ').forEach(c=>catSet.add(c)));const cats=['全部',...catSet];
   const bar=document.getElementById('pcatBar');
   bar.innerHTML='';
   cats.forEach(cat=>{
@@ -919,7 +919,7 @@ function getPackImg(p,packLabel){
 }
 
 function renderGrid(){
-  const filtered=currentCat==='全部'?products:products.filter(p=>p.cat===currentCat);
+  const filtered=currentCat==='全部'?products:products.filter(p=>p.cat.split(' ').indexOf(currentCat)>=0);
   const grid=document.getElementById('pgrid');
   grid.innerHTML='';
   filtered.forEach(p=>{
