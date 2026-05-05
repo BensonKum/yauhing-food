@@ -18,3 +18,10 @@ excel_analysis.txt
 excel_detail.json
 excel_structure.json
 __pycache__/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
