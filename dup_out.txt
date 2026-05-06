@@ -1,0 +1,9 @@
+Found 上海 at bytes: [33217, 33329, 58925, 59042]
+
+no-image card at ~58925:
+  class: b'no-image'
+  name: 上海麵 (幼) 盒裝
+
+no-image card at ~59042:
+  class: b'no-image'
+  name: 上海麵 (幼) 盒裝

@@ -1,0 +1,127 @@
+=== 7 素纖麵 cards - detailed analysis ===
+
+--- Card 1: byte -1 to 106185 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: NO IMG
+note: NO NOTE
+<div>: 0, </div>: 0, balance: OK
+素纖麵 occurrences in card: 0
+
+--- Card 2: byte 53247 to 53458 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/product_46.jpg
+note: NO NOTE
+<div>: 2, </div>: 1, balance: MISMATCH
+素纖麵 occurrences in card: 2
+
+--- Card 3: byte 54336 to 54769 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/南瓜麵.jpg
+note: NO NOTE
+<div>: 3, </div>: 2, balance: MISMATCH
+素纖麵 occurrences in card: 1
+
+--- Card 4: byte 56064 to 56497 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/紫薯麵.jpg
+note: NO NOTE
+<div>: 3, </div>: 2, balance: MISMATCH
+素纖麵 occurrences in card: 1
+
+--- Card 5: byte 56721 to 57154 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/菠菜麵.jpg
+note: NO NOTE
+<div>: 3, </div>: 2, balance: MISMATCH
+素纖麵 occurrences in card: 1
+
+--- Card 6: byte 57378 to 57811 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/蕃茄麵.jpg
+note: NO NOTE
+<div>: 3, </div>: 2, balance: MISMATCH
+素纖麵 occurrences in card: 1
+
+--- Card 7: byte 58035 to 58468 ---
+grad-ch: NO GRAD-CH
+p-name: NO P-NAME
+img: images/豆乳麵.jpg
+note: NO NOTE
+<div>: 3, </div>: 2, balance: MISMATCH
+素纖麵 occurrences in card: 1
+
+=== Overall div balance ===
+<div>: 563, </div>: 562
+MISMATCH: 1
+
+=== All 62 p-card div balance ===
+MISMATCH at byte 33052 (?): 2 open vs 1 close
+MISMATCH at byte 33397 (?): 2 open vs 1 close
+MISMATCH at byte 33746 (?): 2 open vs 1 close
+MISMATCH at byte 34095 (?): 2 open vs 1 close
+MISMATCH at byte 34438 (紅菜): 3 open vs 2 close
+MISMATCH at byte 34842 (?): 2 open vs 1 close
+MISMATCH at byte 35215 (?): 2 open vs 1 close
+MISMATCH at byte 35588 (?): 2 open vs 1 close
+MISMATCH at byte 35960 (蕃茄): 3 open vs 2 close
+MISMATCH at byte 36361 (?): 2 open vs 1 close
+MISMATCH at byte 36735 (?): 2 open vs 1 close
+MISMATCH at byte 37092 (?): 2 open vs 1 close
+MISMATCH at byte 37461 (?): 2 open vs 1 close
+MISMATCH at byte 37812 (?): 2 open vs 1 close
+MISMATCH at byte 38187 (?): 2 open vs 1 close
+MISMATCH at byte 38550 (?): 2 open vs 1 close
+MISMATCH at byte 38927 (?): 3 open vs 2 close
+MISMATCH at byte 39655 (?): 2 open vs 1 close
+MISMATCH at byte 40011 (?): 3 open vs 2 close
+MISMATCH at byte 40762 (?): 2 open vs 1 close
+MISMATCH at byte 41139 (?): 2 open vs 1 close
+MISMATCH at byte 41507 (?): 2 open vs 1 close
+MISMATCH at byte 41869 (?): 3 open vs 2 close
+MISMATCH at byte 42757 (?): 2 open vs 1 close
+MISMATCH at byte 43130 (?): 2 open vs 1 close
+MISMATCH at byte 43474 (?): 3 open vs 2 close
+MISMATCH at byte 44165 (?): 3 open vs 2 close
+MISMATCH at byte 44928 (?): 2 open vs 1 close
+MISMATCH at byte 45309 (?): 2 open vs 1 close
+MISMATCH at byte 45686 (?): 3 open vs 2 close
+MISMATCH at byte 46395 (?): 3 open vs 2 close
+MISMATCH at byte 47147 (?): 3 open vs 2 close
+MISMATCH at byte 47899 (?): 3 open vs 2 close
+MISMATCH at byte 48608 (?): 3 open vs 2 close
+MISMATCH at byte 49317 (?): 3 open vs 2 close
+MISMATCH at byte 50024 (?): 3 open vs 2 close
+MISMATCH at byte 50731 (?): 3 open vs 2 close
+MISMATCH at byte 51470 (?): 3 open vs 2 close
+MISMATCH at byte 52184 (?): 2 open vs 1 close
+MISMATCH at byte 52533 (?): 3 open vs 2 close
+MISMATCH at byte 53247 (?): 2 open vs 1 close
+MISMATCH at byte 53606 (?): 2 open vs 1 close
+MISMATCH at byte 53971 (?): 2 open vs 1 close
+MISMATCH at byte 54336 (?): 3 open vs 2 close
+MISMATCH at byte 54993 (?): 2 open vs 1 close
+MISMATCH at byte 55348 (?): 3 open vs 2 close
+MISMATCH at byte 56064 (?): 3 open vs 2 close
+MISMATCH at byte 56721 (?): 3 open vs 2 close
+MISMATCH at byte 57378 (?): 3 open vs 2 close
+MISMATCH at byte 58035 (?): 3 open vs 2 close
+MISMATCH at byte 58689 (上海麵 (幼) 盒裝): 3 open vs 2 close
+MISMATCH at byte 59115 (河粉 盒裝): 3 open vs 2 close
+MISMATCH at byte 59523 (油麵 盒裝): 3 open vs 2 close
+MISMATCH at byte 59931 (生幼麵 盒裝): 3 open vs 2 close
+MISMATCH at byte 60345 (生粗麵 盒裝): 3 open vs 2 close
+MISMATCH at byte 60759 (豆卜 盒裝): 3 open vs 2 close
+MISMATCH at byte 61167 (瀨粉 盒裝): 3 open vs 2 close
+MISMATCH at byte 61575 (銀針粉 盒裝): 3 open vs 2 close
+MISMATCH at byte 61989 (水餃皮 盒裝): 3 open vs 2 close
+MISMATCH at byte 62403 (雲吞皮 盒裝): 3 open vs 2 close
+MISMATCH at byte 62817 (齋腸粉 盒裝): 3 open vs 2 close
+MISMATCH at byte 63231 (蝦米腸粉 盒裝): 3 open vs 2 close
+
+Total p-card mismatches: 62

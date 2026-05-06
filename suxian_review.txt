@@ -1,0 +1,24 @@
+素纖麵 found 23 times
+
+=== All p-card with 素纖麵 ===
+pos 32499: cls=? grad="?" pname="?"
+pos 53277: cls=has-image grad="?" pname="五色素纖麵 5個裝"
+pos 54377: cls=has-image multi-pack grad="?" pname="?"
+pos 56105: cls=has-image multi-pack grad="?" pname="?"
+pos 56762: cls=has-image multi-pack grad="?" pname="?"
+pos 57419: cls=has-image multi-pack grad="?" pname="?"
+pos 58076: cls=has-image multi-pack grad="?" pname="?"
+
+=== All data-cat values ===
+  "新鮮粉麵": 13
+  "手工麵": 12
+  "蝦籽麵": 11
+  "禮盒套裝": 11
+  "特色麵": 9
+  "素纖麵": 7
+  "醬汁配料": 4
+  "罐頭/零售裝": 3
+  "全部": 1
+
+Total p-card: 62
+no-image: 14

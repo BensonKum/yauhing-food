@@ -1,0 +1,31 @@
+Total p-card: 62
+Total p-card no-image: 14
+
+Fresh powder section cards (pos >= 58689):
+  pos 58689: 上海麵 (幼) 盒裝
+  pos 59115: 河粉 盒裝
+  pos 59523: 油麵 盒裝
+  pos 59931: 生幼麵 盒裝
+  pos 60345: 生粗麵 盒裝
+  pos 60759: 豆卜 盒裝
+  pos 61167: 瀨粉 盒裝
+  pos 61575: 銀針粉 盒裝
+  pos 61989: 水餃皮 盒裝
+  pos 62403: 雲吞皮 盒裝
+  pos 62817: 齋腸粉 盒裝
+  pos 63231: 蝦米腸粉 盒裝
+Total in fresh section: 12
+
+All grad-ch >= 58689:
+  pos 58916: 上海麵 (幼) 盒裝
+  pos 59342: 河粉 盒裝
+  pos 59750: 油麵 盒裝
+  pos 60158: 生幼麵 盒裝
+  pos 60572: 生粗麵 盒裝
+  pos 60986: 豆卜 盒裝
+  pos 61394: 瀨粉 盒裝
+  pos 61802: 銀針粉 盒裝
+  pos 62216: 水餃皮 盒裝
+  pos 62630: 雲吞皮 盒裝
+  pos 63044: 齋腸粉 盒裝
+  pos 63458: 蝦米腸粉 盒裝

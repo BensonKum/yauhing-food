@@ -1,0 +1,4 @@
+pg_close=58696
+last_card=58047
+last_card_price=58623
+insert_point=58677

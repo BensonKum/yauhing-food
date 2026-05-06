@@ -1,0 +1,131 @@
+Git log:
+None
+Git status: On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	add_cards.py
+	all_12.py
+	all_12.txt
+	all_fresh.py
+	all_fresh.txt
+	all_out.txt
+	all_suxian_raw.py
+	all_suxian_raw.txt
+	card_end_out.txt
+	card_structure.py
+	card_structure.txt
+	cc_out.txt
+	check12.py
+	check_insert_out.txt
+	confirm.txt
+	confirm_card.py
+	count_fresh.py
+	count_out.txt
+	ct_content.py
+	ct_content.txt
+	ct_html.txt
+	ct_out.txt
+	deeper.py
+	deeper.txt
+	dup2_out.txt
+	dup_out.txt
+	f2_out.txt
+	fc_out.txt
+	filter_out.txt
+	final_out.txt
+	fresh_cards_out.txt
+	fresh_summary.py
+	fresh_summary.txt
+	full_analysis.py
+	full_analysis.txt
+	git_push.py
+	gitout.txt
+	gitstat.txt
+	grads.txt
+	hex_area.py
+	hex_area.txt
+	hex_check.py
+	hex_check.txt
+	hexdata.bin
+	ids_out.txt
+	insert_info.txt
+	js3_out.txt
+	js_out.txt
+	just_hex.py
+	new_check.py
+	new_out.txt
+	out.txt
+	pg_close.py
+	pg_close2_out.txt
+	pg_close_out.txt
+	precise_insert.py
+	raw_area.py
+	raw_area.txt
+	result.txt
+	result_write.py
+	result_write2.py
+	scan_area.py
+	scan_out.txt
+	script.txt
+	sh_out.txt
+	shanghai_all_out.txt
+	shanghai_out.txt
+	simple_check.py
+	simple_out.txt
+	structure_out.txt
+	suxian_cards.py
+	suxian_cards.txt
+	suxian_detail.py
+	suxian_detail.txt
+	suxian_review.py
+	suxian_review.txt
+	ver.txt
+	verify.py
+	verify2.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+=== All 14 no-image cards ===
+
+1. byte 34438: cat="手工麵" grad="紅菜" pname="NO-PNAME" (255 bytes)
+
+2. byte 35960: cat="手工麵" grad="蕃茄" pname="NO-PNAME" (255 bytes)
+
+3. byte 58689: cat="新鮮粉麵" grad="上海麵 (幼) 盒裝" pname="NO-PNAME" (277 bytes)
+
+4. byte 59115: cat="新鮮粉麵" grad="河粉 盒裝" pname="NO-PNAME" (268 bytes)
+
+5. byte 59523: cat="新鮮粉麵" grad="油麵 盒裝" pname="NO-PNAME" (268 bytes)
+
+6. byte 59931: cat="新鮮粉麵" grad="生幼麵 盒裝" pname="NO-PNAME" (271 bytes)
+
+7. byte 60345: cat="新鮮粉麵" grad="生粗麵 盒裝" pname="NO-PNAME" (271 bytes)
+
+8. byte 60759: cat="新鮮粉麵" grad="豆卜 盒裝" pname="NO-PNAME" (268 bytes)
+
+9. byte 61167: cat="新鮮粉麵" grad="瀨粉 盒裝" pname="NO-PNAME" (268 bytes)
+
+10. byte 61575: cat="新鮮粉麵" grad="銀針粉 盒裝" pname="NO-PNAME" (271 bytes)
+
+11. byte 61989: cat="新鮮粉麵" grad="水餃皮 盒裝" pname="NO-PNAME" (271 bytes)
+
+12. byte 62403: cat="新鮮粉麵" grad="雲吞皮 盒裝" pname="NO-PNAME" (271 bytes)
+
+13. byte 62817: cat="新鮮粉麵" grad="齋腸粉 盒裝" pname="NO-PNAME" (271 bytes)
+
+14. byte 63231: cat="新鮮粉麵" grad="蝦米腸粉 盒裝" pname="NO-PNAME" (274 bytes)
+
+Last suxian (豆乳麵) card ends at byte 58306
+Gap (383 bytes):
+<img src="images/豆乳麵.jpg" alt="豆乳麵" loading="lazy"><img src="images/豆乳麵 5個裝.jpg" alt="豆乳麵" loading="lazy" style="display:none;"></div><div class="p-info"><div class="p-cat">素纖麵</div><h3 class="p-name">豆乳麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div
+
+Area 58500-58689 (189 bytes):
+p-cat">素纖麵</div><h3 class="p-name">豆乳麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div
+
+上海麵 card ends at 58966
+After 上海麵 (next 200 bytes):
+<div class="p-info"><div class="p-cat">新鮮粉麵</div><h3 class="p-name">上海麵 (幼) 盒裝</h3><div class="p-price">HKD --</div></div></div>
+<div class="p-card no-image" data-cat="新鮮粉麵

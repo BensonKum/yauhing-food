@@ -1,0 +1,20 @@
+Git HEAD: b'ref: refs/heads/master\n'
+
+=== All 14 no-image cards ===
+1. byte 34438: cat=手工麵 grad=紅菜 pname=NO-PNAME (255 bytes)
+2. byte 35960: cat=手工麵 grad=蕃茄 pname=NO-PNAME (255 bytes)
+3. byte 58689: cat=新鮮粉麵 grad=上海麵 (幼) 盒裝 pname=NO-PNAME (277 bytes)
+4. byte 59115: cat=新鮮粉麵 grad=河粉 盒裝 pname=NO-PNAME (268 bytes)
+5. byte 59523: cat=新鮮粉麵 grad=油麵 盒裝 pname=NO-PNAME (268 bytes)
+6. byte 59931: cat=新鮮粉麵 grad=生幼麵 盒裝 pname=NO-PNAME (271 bytes)
+7. byte 60345: cat=新鮮粉麵 grad=生粗麵 盒裝 pname=NO-PNAME (271 bytes)
+8. byte 60759: cat=新鮮粉麵 grad=豆卜 盒裝 pname=NO-PNAME (268 bytes)
+9. byte 61167: cat=新鮮粉麵 grad=瀨粉 盒裝 pname=NO-PNAME (268 bytes)
+10. byte 61575: cat=新鮮粉麵 grad=銀針粉 盒裝 pname=NO-PNAME (271 bytes)
+11. byte 61989: cat=新鮮粉麵 grad=水餃皮 盒裝 pname=NO-PNAME (271 bytes)
+12. byte 62403: cat=新鮮粉麵 grad=雲吞皮 盒裝 pname=NO-PNAME (271 bytes)
+13. byte 62817: cat=新鮮粉麵 grad=齋腸粉 盒裝 pname=NO-PNAME (271 bytes)
+14. byte 63231: cat=新鮮粉麵 grad=蝦米腸粉 盒裝 pname=NO-PNAME (274 bytes)
+
+Last suxian ends at byte 58468
+First fresh at 58689

@@ -1,0 +1,87 @@
+U+7D20/7E4B/9EB5 (e7b4a0e7b4abe9bab5): 0 times
+2-char 素纖 (e7b4a0e7b4ab): 0 times
+3rd char 麵 (e9bab5): 289 times
+LATIN SMALL LETTER mu (c2b5): 0 times
+LATIN SUBSCRIPT SMALL MU (cb9c): 0 times
+
+CT div: bytes 32149-32753, len=604
+CT raw bytes: 3c64697620636c6173733d226374223e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e585a8e983a8223ee585a8e983a83c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e206163746976652220646174612d6361743d22e89da6e7b1bde9bab5223ee89da6e7b1bde9bab53c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e789b9e889b2e9bab5223ee789b9e889b2e9bab53c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e7a6aee79b92e5a597e8a39d223ee7a6aee79b92e5a597e8a39d3c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e6898be5b7a5e9bab5223ee6898be5b7a5e9bab53c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e7b4a0e7ba96e9bab5223ee7b4a0e7ba96e9bab53c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e986ace6b181e9858de69699223ee986ace6b181e9858de696993c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e7bd90e9a0ad2fe99bb6e594aee8a39d223ee7bd90e9a0ad2fe99bb6e594aee8a39d3c2f627574746f6e3e3c627574746f6e20636c6173733d22742d62746e2220646174612d6361743d22e696b0e9aeaee7b289e9bab5223ee696b0e9aeaee7b289e9bab53c2f627574746f6e3e3c2f6469763e
+CT decoded: <div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特色麵">特色麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="手工麵">手工麵</button><button class="t-btn" data-cat="素纖麵">素纖麵</button><button class="t-btn" data-cat="醬汁配料">醬汁配料</button><button class="t-btn" data-cat="罐頭/零售裝">罐頭/零售裝</button><button class="t-btn" data-cat="新鮮粉麵">新鮮粉麵</button></div>
+
+In CT:
+  素 (e7b4a0): 2
+  纖 (e7b4ab): 0
+  麵 (e9bab5): 10
+
+=== Scanning all data-cat attributes ===
+  byte 32187: cat="全部" raw=e585a8e983a8
+  byte 32249: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 32310: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 32371: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 32438: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 32499: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 32560: cat="醬汁配料" raw=e986ace6b181e9858de69699
+  byte 32627: cat="罐頭/零售裝" raw=e7bd90e9a0ad2fe99bb6e594aee8a39d
+  byte 32702: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 33082: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 33427: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 33776: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 34125: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 34467: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 34872: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 35245: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 35618: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 35989: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 36391: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 36765: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 37122: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 37491: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 37842: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 38217: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 38580: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 38968: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 39685: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 40052: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 40792: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 41169: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 41537: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 41910: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 42787: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 43160: cat="禮盒套裝" raw=e7a6aee79b92e5a597e8a39d
+  byte 43515: cat="罐頭/零售裝" raw=e7bd90e9a0ad2fe99bb6e594aee8a39d
+  byte 44206: cat="罐頭/零售裝" raw=e7bd90e9a0ad2fe99bb6e594aee8a39d
+  byte 44958: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 45339: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 45727: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 46436: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 47188: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 47940: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 48649: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 49358: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 50065: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 50772: cat="蝦籽麵" raw=e89da6e7b1bde9bab5
+  byte 51511: cat="醬汁配料" raw=e986ace6b181e9858de69699
+  byte 52214: cat="醬汁配料" raw=e986ace6b181e9858de69699
+  byte 52574: cat="醬汁配料" raw=e986ace6b181e9858de69699
+  byte 53277: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 53636: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 54001: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 54377: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 55023: cat="手工麵" raw=e6898be5b7a5e9bab5
+  byte 55389: cat="特色麵" raw=e789b9e889b2e9bab5
+  byte 56105: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 56762: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 57419: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 58076: cat="素纖麵" raw=e7b4a0e7ba96e9bab5
+  byte 58718: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 59144: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 59552: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 59960: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 60374: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 60788: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 61196: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 61604: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 62018: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 62432: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 62846: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
+  byte 63260: cat="新鮮粉麵" raw=e696b0e9aeaee7b289e9bab5
