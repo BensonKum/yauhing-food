@@ -642,5 +642,15 @@
     "label2": "5個裝",
     "local_img": "豆乳麵 5個裝.jpg",
     "sku": "YH056"
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "新鮮粉麵",
+    "price": "HKD 0",
+    "note": "",
+    "stock": false,
+    "image": null,
+    "local_img": null,
+    "sku": "YH000"
   }
 ]
