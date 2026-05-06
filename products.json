@@ -211,7 +211,7 @@
   },
   {
     "cat": "禮盒套裝",
-    "name": "素纖麵5個+保溫壺套裝",
+    "name": "素紫麵5個+保溫壺套裝",
     "price": "HKD 78",
     "note": "",
     "stock": true,
@@ -245,16 +245,16 @@
   },
   {
     "cat": "禮盒套裝",
-    "name": "蝦籽麵+素纖麵 (套裝)",
+    "name": "蝦籽麵+素紫麵 (套裝)",
     "price": "HKD 68 (套裝) / HKD 78 (+保溫壺)",
     "note": "+保溫壺 HKD 78",
     "stock": true,
-    "image": "E:\\Lum\\禮盒_套裝\\蝦籽麵+素纖麵(套裝).jpg",
-    "img1": "蝦籽麵+素纖麵(套裝).jpg",
-    "img2": "蝦籽麵+素纖麵(套裝)+保溫壺.jpg",
+    "image": "E:\\Lum\\禮盒_套裝\\蝦籽麵+素紫麵(套裝).jpg",
+    "img1": "蝦籽麵+素紫麵(套裝).jpg",
+    "img2": "蝦籽麵+素紫麵(套裝)+保溫壺.jpg",
     "label1": "套裝",
     "label2": "+保溫壺",
-    "local_img": "蝦籽麵+素纖麵(套裝)+保溫壺.jpg",
+    "local_img": "蝦籽麵+素紫麵(套裝)+保溫壺.jpg",
     "sku": "YH025"
   },
   {
@@ -520,12 +520,12 @@
     "sku": "YH046"
   },
   {
-    "cat": "素纖麵",
-    "name": "五色素纖麵 5個裝",
+    "cat": "素紫麵",
+    "name": "五色素紫麵 5個裝",
     "price": "HKD 50",
     "note": "",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\五色素纖麵 5個裝.jpg",
+    "image": "E:\\Lum\\素紫麵\\五色素紫麵 5個裝.jpg",
     "local_img": "product_46.jpg",
     "sku": "YH047"
   },
@@ -550,12 +550,12 @@
     "sku": "YH049"
   },
   {
-    "cat": "素纖麵",
+    "cat": "素紫麵",
     "name": "南瓜麵",
     "price": "HKD 12 (單包) / HKD 50 (5個裝)",
     "note": "單包 HKD 12 / 5個裝 HKD 50",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\南瓜麵.jpg",
+    "image": "E:\\Lum\\素紫麵\\南瓜麵.jpg",
     "img1": "南瓜麵.jpg",
     "img2": "南瓜麵 5個裝.jpg",
     "label1": "單包",
@@ -588,12 +588,12 @@
     "sku": "YH052"
   },
   {
-    "cat": "素纖麵",
+    "cat": "素紫麵",
     "name": "紫薯麵",
     "price": "HKD 12 (單包) / HKD 50 (5個裝)",
     "note": "單包 HKD 12 / 5個裝 HKD 50",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\紫薯麵.jpg",
+    "image": "E:\\Lum\\素紫麵\\紫薯麵.jpg",
     "img1": "紫薯麵.jpg",
     "img2": "紫薯麵 5個裝.jpg",
     "label1": "單包",
@@ -602,12 +602,12 @@
     "sku": "YH053"
   },
   {
-    "cat": "素纖麵",
+    "cat": "素紫麵",
     "name": "菠菜麵",
     "price": "HKD 12 (單包) / HKD 50 (5個裝)",
     "note": "單包 HKD 12 / 5個裝 HKD 50",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\菠菜麵.jpg",
+    "image": "E:\\Lum\\素紫麵\\菠菜麵.jpg",
     "img1": "菠菜麵.jpg",
     "img2": "菠菜麵 5個裝.jpg",
     "label1": "單包",
@@ -616,12 +616,12 @@
     "sku": "YH054"
   },
   {
-    "cat": "素纖麵",
+    "cat": "素紫麵",
     "name": "蕃茄麵",
     "price": "HKD 12 (單包) / HKD 50 (5個裝)",
     "note": "單包 HKD 12 / 5個裝 HKD 50",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\蕃茄麵.jpg",
+    "image": "E:\\Lum\\素紫麵\\蕃茄麵.jpg",
     "img1": "蕃茄麵.jpg",
     "img2": "蕃茄麵 5個裝.jpg",
     "label1": "單包",
@@ -630,12 +630,12 @@
     "sku": "YH055"
   },
   {
-    "cat": "素纖麵",
+    "cat": "素紫麵",
     "name": "豆乳麵",
     "price": "HKD 12 (單包) / HKD 50 (5個裝)",
     "note": "單包 HKD 12 / 5個裝 HKD 50",
     "stock": true,
-    "image": "E:\\Lum\\素纖麵\\豆乳麵.jpg",
+    "image": "E:\\Lum\\素紫麵\\豆乳麵.jpg",
     "img1": "豆乳麵.jpg",
     "img2": "豆乳麵 5個裝.jpg",
     "label1": "單包",
