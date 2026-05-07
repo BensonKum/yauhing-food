@@ -1,16 +1,6 @@
 [
   {
     "cat": "手工麵",
-    "name": "上海麵 盒裝",
-    "price": "HKD 10",
-    "note": "",
-    "stock": true,
-    "image": "images/product_31.jpg",
-    "local_img": "product_31.jpg",
-    "sku": "YH001"
-  },
-  {
-    "cat": "手工麵",
     "name": "半熟幼麵 (乾) 5個",
     "price": "HKD 50",
     "note": "",
@@ -51,56 +41,6 @@
   },
   {
     "cat": "手工麵",
-    "name": "日式拉麵 (盒裝)",
-    "price": "HKD 15",
-    "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
-    "sku": "YH006"
-  },
-  {
-    "cat": "手工麵",
-    "name": "水河 (盒裝)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": true,
-    "image": "images/product_36.jpg",
-    "local_img": "product_36.jpg",
-    "sku": "YH007"
-  },
-  {
-    "cat": "手工麵",
-    "name": "油麵 (盒裝)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": true,
-    "image": "images/product_32.jpg",
-    "local_img": "product_32.jpg",
-    "sku": "YH008"
-  },
-  {
-    "cat": "手工麵",
-    "name": "生幼麵 (盒裝)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": true,
-    "image": "images/product_35.jpg",
-    "local_img": "product_35.jpg",
-    "sku": "YH009"
-  },
-  {
-    "cat": "手工麵",
-    "name": "生粗麵 (盒裝)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": true,
-    "image": null,
-    "local_img": "product_33.jpg",
-    "sku": "YH010"
-  },
-  {
-    "cat": "手工麵",
     "name": "紅菜頭麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
@@ -138,16 +78,6 @@
     "image": null,
     "local_img": "product_tomato_noodle.jpg",
     "sku": "YH014"
-  },
-  {
-    "cat": "手工麵",
-    "name": "蕃茄拉麵 (盒裝)",
-    "price": "HKD 15",
-    "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
-    "sku": "YH015"
   },
   {
     "cat": "手工麵",
