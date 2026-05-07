@@ -652,5 +652,125 @@
     "image": null,
     "local_img": null,
     "sku": "YH000"
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "豆卜 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "河粉 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "瀨粉 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "銀針粉 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "上海麵 (幼) 盒裝",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "生幼麵 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "生粗麵 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "油麵 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "水餃皮 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "雲吞皮 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "齋腸粉 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "蝦米腸粉 (盒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": null
   }
 ]
