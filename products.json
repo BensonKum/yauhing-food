@@ -574,6 +574,16 @@
     "sku": "YH056"
   },
   {
+    "cat": "特色麵",
+    "name": "南瓜薑黃麵(6個裝)",
+    "price": "HKD 70",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": null,
+    "sku": "YH057"
+  },
+  {
     "cat": "新鮮粉麵",
     "name": "豆卜 (盒裝)",
     "price": "HKD 10",
