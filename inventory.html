@@ -523,6 +523,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <option value="all">全部</option>
         <option value="alert">⚠️ 低庫存</option>
         <option value="zero">🔴 缺貨</option>
+        <option value="discontinued">❌ 停售</option>
       </select>
     </div>
     <div class="report-section">
@@ -639,6 +640,8 @@ const auth = firebase.auth();
 
 // --- State ---
 let products = [];
+// --- Discontinued Products (停售) ---
+const discontinuedSkus = ['YH017']; // Add SKUs here to mark as 停售
 let cart = {};       // {cartKey: {qty, price, cat, pack}}
 let selectedPack = {}; // {productName: selectedPackLabel}
 let currentMode = 'sale';
@@ -1344,7 +1347,11 @@ async function renderReport(){
     const pioneer=inv.pioneer??0;
     const total=central+pioneer;
     let status='stock-ok',statusText='充足',badge='badge-green';
-    if(total===0){status='stock-zero';statusText='缺貨';badge='badge-red';}
+    // Check if discontinued first
+    const isDiscontinued = discontinuedSkus.includes(p.sku || '');
+    if(isDiscontinued){
+      status='stock-discontinued';statusText='停售';badge='badge-red';
+    }else if(total===0){status='stock-zero';statusText='缺貨';badge='badge-red';}
     else if(total<5){status='stock-zero';statusText='庫存緊張';badge='badge-red';}
     else if(total<15){status='stock-low';statusText='偏低';badge='badge-orange';}
     prodMap[p.name]={sku:p.sku||p.name,name:p.name,cat:p.cat,central,pioneer,total,status,statusText,badge};
@@ -1358,9 +1365,10 @@ async function renderReport(){
   const statusFilter=document.getElementById('repStatus').value;
   if(statusFilter==='alert') rows=rows.filter(r=>r.total>0&&r.total<15);
   if(statusFilter==='zero') rows=rows.filter(r=>r.total===0);
+  if(statusFilter==='discontinued') rows=rows.filter(r=>r.statusText==='停售');
 
-  let alertN=0,lowN=0;
-  Object.values(prodMap).forEach(r=>{if(r.total===0)alertN++;else if(r.total<15)lowN++;});
+  let alertN=0,lowN=0,discN=0;
+  Object.values(prodMap).forEach(r=>{if(r.statusText==='停售')discN++;else if(r.total===0)alertN++;else if(r.total<15)lowN++;});
   document.getElementById('alertCount').textContent=alertN+' 缺貨';
   document.getElementById('lowCount').textContent=lowN+' 偏低';
 
