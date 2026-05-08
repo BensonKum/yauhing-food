@@ -575,16 +575,6 @@
   },
   {
     "cat": "新鮮粉麵",
-    "name": "新鮮粉麵",
-    "price": "HKD 0",
-    "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
-    "sku": "YH000"
-  },
-  {
-    "cat": "新鮮粉麵",
     "name": "豆卜 (盒裝)",
     "price": "HKD 10",
     "note": "",
