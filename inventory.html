@@ -604,7 +604,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <option value="sale">銷售</option>
         <option value="purchase">進貨</option>
       </select>
+      <span class="filter-label">日期：</span>
+      <input type="date" id="logDate" class="filter-select" style="width:140px" onchange="renderLog()">
     </div>
+    <div id="logSummary"></div>
     <div id="logList"></div>
   </div>
 </div>
@@ -1679,6 +1682,12 @@ async function renderReport(){
 
 // --- Log Tab ---
 async function renderLog(){
+  // Set today as default date if not set
+  const dateInput = document.getElementById('logDate');
+  if(!dateInput.value){
+    const t = new Date();
+    dateInput.value = t.getFullYear()+'-'+(String(t.getMonth()+1)).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
+  }
   let txns=[];
   try {
     const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(100).get();
@@ -1693,6 +1702,43 @@ async function renderLog(){
     if(typeFilter!=='all'&&t.type!==typeFilter) return false;
     return true;
   });
+
+  // Calculate daily summary (always use all txns before date filter for accurate totals)
+  const selDate = document.getElementById('logDate').value;
+  const selStore = document.getElementById('logStore').value;
+  const todaySales = txns.filter(t=>{
+    const d = t.createdAt ? t.createdAt.toDate() : new Date();
+    const ds = d.getFullYear()+'-'+(String(d.getMonth()+1)).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return t.type==='sale' && (selDate ? ds===selDate : true) && (selStore==='all'||t.store===selStore);
+  }).reduce((s,t)=>s+(t.total||0),0);
+  const todayPurchase = txns.filter(t=>{
+    const d = t.createdAt ? t.createdAt.toDate() : new Date();
+    const ds = d.getFullYear()+'-'+(String(d.getMonth()+1)).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return t.type==='purchase' && (selDate ? ds===selDate : true) && (selStore==='all'||t.store===selStore);
+  }).reduce((s,t)=>s+(t.total||0),0);
+  document.getElementById('logSummary').innerHTML = `
+    <div style="display:flex;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap">
+      <div style="flex:1;background:#E8F5E9;border-radius:12px;padding:1rem;text-align:center;min-width:120px">
+        <div style="font-size:.7rem;color:#2E7D32;margin-bottom:.3rem">銷售</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#2E7D32">HK$${todaySales.toLocaleString()}</div>
+      </div>
+      <div style="flex:1;background:#FFF3E0;border-radius:12px;padding:1rem;text-align:center;min-width:120px">
+        <div style="font-size:.7rem;color:#E65100;margin-bottom:.3rem">進貨</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#E65100">HK$${todayPurchase.toLocaleString()}</div>
+      </div>
+      <div style="flex:1;background:${todaySales-todayPurchase>=0?'#E3F2FD':'#FFEBEE'};border-radius:12px;padding:1rem;text-align:center;min-width:120px">
+        <div style="font-size:.7rem;color:#1565C0;margin-bottom:.3rem">淨額</div>
+        <div style="font-size:1.4rem;font-weight:700;color:${todaySales-todayPurchase>=0?'#1565C0':'#C62828'}">${todaySales-todayPurchase>=0?'+':''}HK$${(todaySales-todayPurchase).toLocaleString()}</div>
+      </div>
+      <div style="background:#F5F5F5;border-radius:12px;padding:1rem;text-align:center;min-width:100px">
+        <div style="font-size:.7rem;color:#757575;margin-bottom:.3rem">記錄數</div>
+        <div style="font-size:1.4rem;font-weight:700;color:#424242">${txns.filter(t=>{
+          const d = t.createdAt ? t.createdAt.toDate() : new Date();
+          const ds = d.getFullYear()+'-'+(String(d.getMonth()+1)).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+          return selDate ? ds===selDate : true;
+        }).filter(t=>selStore==='all'||t.store===selStore).length}</div>
+      </div>
+    </div>`;
 
   if(txns.length===0){
     document.getElementById('logList').innerHTML='<div style="text-align:center;padding:3rem;color:var(--muted)">暫無交易記錄<br><small>在POS頁面完成交易後，記錄會顯示在這裡</small></div>';
