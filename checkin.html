@@ -163,6 +163,16 @@ function onStoreChange(){
     {_id:'joey',name:'Joey',pin:'3350',store:'central',active:true},
     {_id:'ron',name:'Ron',pin:'1371',store:'central',active:true}
   ];
+  // 載入今日打卡記錄，然後渲染員工網格
+  db.collection('checkins').where('date','==',getTodayStr()).get().then(function(snap){
+    allClockins=[];
+    snap.forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});
+    renderEmpGrid(store);
+  }).catch(function(e){
+    console.error('checkins load error:',e);
+    allClockins=[];
+    renderEmpGrid(store); // 即使失敗也顯示員工
+  });
 }
 
 // Lock store select to a single store (remove other options, disable select)
