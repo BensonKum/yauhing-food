@@ -118,13 +118,11 @@ var allEmployees=[],allClockins=[],selectedEmp=null,currentStore='',currentUser=
     var email = u.email.toLowerCase();
     var sel = document.getElementById('storeSelect');
     if(email.includes('central')){
-      // Central staff: hide pioneer option, auto-select central
-      sel.value = 'central';
-      onStoreChange();
+      // Central staff: lock to central only
+      lockStoreSelect(sel, 'central');
     } else if(email.includes('pioneer')){
-      // Pioneer staff: hide central option, auto-select pioneer
-      sel.value = 'pioneer';
-      onStoreChange();
+      // Pioneer staff: lock to pioneer only
+      lockStoreSelect(sel, 'pioneer');
     }
     // admin: show both options (default)
   });
@@ -162,6 +160,22 @@ function onStoreChange(){
     {_id:'daisy',name:'Daisy',pin:'1234',active:true},
     {_id:'mok',name:'Mok',pin:'1234',active:true}
   ];
+}
+
+// Lock store select to a single store (remove other options, disable select)
+function lockStoreSelect(sel, lockedStore){
+  // Remove all options except the locked one
+  var opts = sel.options;
+  for(var i = opts.length - 1; i >= 0; i--){
+    if(opts[i].value && opts[i].value !== lockedStore){
+      sel.remove(i);
+    }
+  }
+  // Select the remaining option and disable the dropdown
+  sel.value = lockedStore;
+  sel.disabled = true;
+  onStoreChange();
+}
   // 只從 Firestore 讀取打卡記錄
   db.collection('checkins').where('date','==',getTodayStr()).get().then(function(snap){
     allClockins=[];
