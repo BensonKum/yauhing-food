@@ -832,10 +832,21 @@ async function pinLogin(){
     };
     
     // Determine role/store from employee record
-    const role = empData.role || 'central';
+    const role = empData.role || '';
+    const empStore = empData.store || '';  // Prefer explicit store field
     isAdminUser = (role === 'admin' || role === 'sm');
     isSMUser = (role === 'sm');
-    userStore = (role === 'central' || role === 'pioneer') ? role : null;
+
+    // Store priority: explicit store field > infer from role > null
+    if(empStore){
+      userStore = empStore;
+    } else if(role === 'pioneer'){
+      userStore = 'pioneer';
+    } else if(role === 'central'){
+      userStore = 'central';
+    } else {
+      userStore = null;  // Unknown — will try email fallback or show dialog
+    }
     
     // Reset fail count on success
     pinFailCount = 0;
