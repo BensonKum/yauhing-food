@@ -160,6 +160,8 @@ function renderEmpGrid(store){
   }
   var html='';
   allEmployees.forEach(function(emp){
+    // Only show employees belonging to the selected store
+    if(emp.store && emp.store !== store) return;
     var todayCI=allClockins.filter(function(c){return c.employeeId===emp._id&&c.store===store;});
     var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});
     var cls='emp-btn'+(hasCI&&!hasCO?' clocked':'');
