@@ -1416,7 +1416,7 @@ async function renderEmployeeList(){
       <div class="emp-card">
         <div class="emp-info">
           <div class="emp-name">${e.name || '—'}<span class="emp-role ${e.role}">${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
-          <div class="emp-email">${e.email}${e.phone ? ' | 📱 ' + e.phone : ''}</div>
+          <div class="emp-email">${e.email || '（無電郵）'}${e.phone ? ' | 📱 ' + e.phone : ''}</div>
         </div>
         <div class="emp-actions">
           <button class="btn-emp-edit" onclick="editEmployee('${e.id}')">✏️</button>
@@ -1455,7 +1455,7 @@ async function editEmployee(id){
     editingEmpId = id;
     document.getElementById('empModalTitle').textContent = '✏️ 編輯員工';
     document.getElementById('empName').value = e.name || '';
-    document.getElementById('empEmail').value = e.email || '';
+    document.getElementById('empEmail').value = (e.email || '');
     document.getElementById('empPhone').value = e.phone || '';
     document.getElementById('empRole').value = e.role || 'central';
     document.getElementById('empPwdRow').style.display = 'none';
@@ -1485,7 +1485,7 @@ async function saveEmployee(){
   const pwd = document.getElementById('empPwd').value;
   const phone = document.getElementById('empPhone').value.trim();
   
-  if(!name || !email){ toast('請填寫姓名和電郵'); return; }
+  if(!name){ toast('請填寫姓名'); return; }
   
   // Generate PIN from phone last 4 digits
   let pin = '';
@@ -1497,12 +1497,15 @@ async function saveEmployee(){
   
   try{
     if(editingEmpId){
-      const updateData = {name, email, role};
+      const updateData = {name, email: email || null, role};
       if(phone) updateData.phone = phone;
       if(pin) updateData.pin = pin;
       await db.collection('employees').doc(editingEmpId).update(updateData);
       toast('已更新');
     } else {
+      // Generate a unique doc ID for PIN-only employees
+      const empId = email ? email : ('emp_' + Date.now() + '_' + Math.random().toString(36).substr(2,6));
+      if(email){
       if(!pwd || pwd.length < 6){ toast('請設定密碼（至少6位）'); return; }
       // Create Firebase Auth via REST API (won't kick admin out)
       const apiKey = firebase.app().options.apiKey;
@@ -1513,10 +1516,14 @@ async function saveEmployee(){
       });
       const rd = await resp.json();
       if(!resp.ok){ toast(rd.error && rd.error.message ? rd.error.message : '帳號建立失敗'); return; }
-      const newData = {name, email, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()};
+      }
+      const newData = {name, email: email || null, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()};
       if(phone) newData.phone = phone;
       if(pin) newData.pin = pin;
-      await db.collection('employees').doc(email).set(newData);
+      await db.collection('employees').doc(empId).set(newData);
+      await db.collection('employees').doc(empId).set(newData);
+      if(!email){ toast('員工已建立（PIN 登入，無電郵）'); }
+      else { toast('員工帳號已建立'); }
       toast('員工帳號已建立');
     }
     closeAddEmployee();
