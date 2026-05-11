@@ -229,6 +229,22 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .auth-btn{width:100%;padding:.75rem;border:none;border-radius:50px;background:var(--red);color:white;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;margin-top:.6rem}
 .auth-error{font-size:.75rem;color:var(--red);margin-top:.4rem;text-align:center;min-height:1em}
 
+/* PIN Login */
+.pin-login-divider{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0 .8rem;color:var(--muted)}
+.pin-login-divider::before,.pin-login-divider::after{content:'';flex:1;height:1px;background:var(--bd)}
+.pin-login-label{font-size:.75rem;white-space:nowrap;font-weight:500}
+.pin-inputs{display:flex;justify-content:center;gap:.5rem;margin-bottom:.6rem}
+.pin-digit{width:48px;height:54px;border:2px solid var(--bd);border-radius:10px;font-size:1.4rem;font-weight:700;text-align:center;outline:none;transition:var(--tr);font-family:'Courier New',monospace;background:#FAFAFA}
+.pin-digit:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(45,106,79,.12)}
+.pin-hint{font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:.8rem}
+.pin-btn{width:100%;padding:.65rem;border:none;border-radius:50px;background:var(--green);color:white;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr)}
+.pin-btn:hover{background:#236B3F}
+.pin-btn:disabled{background:#ccc;cursor:not-allowed}
+.pin-lock-msg{font-size:.72rem;color:var(--red);text-align:center;margin-top:.4rem;display:none}
+
+/* Phone field in employee form */
+.emp-phone-field{margin-top:.3rem}
+
 @media(max-width:768px){
   .topbar{flex-direction:column;align-items:stretch;height:auto;padding:.4rem .6rem;gap:.35rem}
   .topbar-title{font-size:.9rem;margin-bottom:.2rem}
@@ -430,18 +446,41 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <!-- Auth Overlay -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-box">
-    <div class="auth-title">祐興倉存系統</div>
-    <div class="auth-sub">輸入電郵登入（員工專用）</div>
-    <div class="auth-field">
-      <label class="auth-label">電郵地址</label>
-      <input class="auth-input" type="email" id="authEmail" placeholder="例：central@yauhing.hk" onkeydown="if(event.key==='Enter')authLogin()">
+    <!-- Email Login (default) -->
+    <div id="emailLoginForm">
+      <div class="auth-title">祐興倉存系統</div>
+      <div class="auth-sub">輸入電郵登入（員工專用）</div>
+      <div class="auth-field">
+        <label class="auth-label">電郵地址</label>
+        <input class="auth-input" type="email" id="authEmail" placeholder="例：central@yauhing.hk" onkeydown="if(event.key==='Enter')authLogin()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">密碼</label>
+        <input class="auth-input" type="password" id="authPass" placeholder="密碼" onkeydown="if(event.key==='Enter')authLogin()">
+      </div>
+      <button class="auth-btn" onclick="authLogin()">登入</button>
+      <div class="auth-error" id="authError"></div>
+      <div class="pin-login-divider"><span class="pin-login-label">或使用快速登入</span></div>
+      <button class="pin-btn" onclick="showPinLogin()" style="background:none;color:var(--green);border:2px solid var(--green);margin-top:0">📱 PIN 快速登入</button>
     </div>
-    <div class="auth-field">
-      <label class="auth-label">密碼</label>
-      <input class="auth-input" type="password" id="authPass" placeholder="密碼" onkeydown="if(event.key==='Enter')authLogin()">
+    
+    <!-- PIN Login -->
+    <div id="pinLoginForm" style="display:none">
+      <div class="auth-title">📱 PIN 快速登入</div>
+      <div class="auth-sub">輸入手機號碼最後 4 位數字</div>
+      <div class="pin-inputs" id="pinInputs">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="0">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3">
+      </div>
+      <div class="pin-hint">輸入 4 位數字後自動登入</div>
+      <button class="pin-btn" id="pinLoginBtn" onclick="pinLogin()">確認登入</button>
+      <div class="pin-lock-msg" id="pinLockMsg"></div>
+      <div style="text-align:center;margin-top:.8rem">
+        <button onclick="showEmailLogin()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;text-decoration:underline">← 返回電郵登入</button>
+      </div>
     </div>
-    <button class="auth-btn" onclick="authLogin()">登入</button>
-    <div class="auth-error" id="authError"></div>
   </div>
 </div>
 
@@ -652,6 +691,10 @@ let isSMUser = false;    // Global SM (Store Manager) flag
 let userStore = null;    // Employee's assigned home store (central/pioneer)
 let currentCat = '全部';
 
+// --- PIN Login State ---
+let pinFailCount = 0;
+let pinLockedUntil = 0;
+
 // --- Load Products from products.json ---
 fetch('products.json').then(r=>r.json()).then(data=>{
   products = data;
@@ -668,6 +711,175 @@ auth.onAuthStateChanged(user=>{
     document.getElementById('userInfo').textContent='';
   }
 });
+
+// --- PIN Login Functions ---
+function showPinLogin(){
+  document.getElementById('emailLoginForm').style.display='none';
+  document.getElementById('pinLoginForm').style.display='block';
+  // Check if locked
+  checkPinLock();
+  // Setup PIN input auto-focus
+  const digits = document.querySelectorAll('.pin-digit');
+  digits.forEach((d, i) => {
+    d.value = '';
+    d.addEventListener('keydown', function(e){
+      if(e.key >= '0' && e.key <= '9'){
+        this.value = e.key;
+        if(i < 3) digits[i+1].focus();
+        else {
+          this.blur();
+          // Auto-submit when 4th digit entered
+          setTimeout(()=>pinLogin(), 150);
+        }
+      } else if(e.key === 'Backspace'){
+        this.value = '';
+        if(i > 0) digits[i-1].focus();
+      } else if(e.key === 'Enter'){
+        pinLogin();
+      }
+    });
+    d.addEventListener('input', function(){
+      this.value = this.value.replace(/[^0-9]/g, '');
+      if(this.value && i < 3) digits[i+1].focus();
+    });
+  });
+  digits[0].focus();
+}
+
+function showEmailLogin(){
+  document.getElementById('pinLoginForm').style.display='none';
+  document.getElementById('emailLoginForm').style.display='block';
+}
+
+function checkPinLock(){
+  const lockMsg = document.getElementById('pinLockMsg');
+  const btn = document.getElementById('pinLoginBtn');
+  if(pinLockedUntil > Date.now()){
+    const remain = Math.ceil((pinLockedUntil - Date.now()) / 1000);
+    lockMsg.textContent = 'PIN 已鎖定，請等待 ' + remain + ' 秒';
+    lockMsg.style.display = 'block';
+    btn.disabled = true;
+    // Clear existing digits
+    document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=true;});
+    // Countdown timer
+    clearInterval(window._pinTimer);
+    window._pinTimer = setInterval(()=>{
+      if(pinLockedUntil <= Date.now()){
+        clearInterval(window._pinTimer);
+        lockMsg.style.display='none';
+        btn.disabled = false;
+        document.querySelectorAll('.pin-digit').forEach(d=>d.disabled=false);
+        document.querySelector('.pin-digit').focus();
+      } else {
+        const r = Math.ceil((pinLockedUntil - Date.now()) / 1000);
+        lockMsg.textContent = 'PIN 已鎖定，請等待 ' + r + ' 秒';
+      }
+    }, 1000);
+  } else {
+    lockMsg.style.display='none';
+    btn.disabled = false;
+    document.querySelectorAll('.pin-digit').forEach(d=>d.disabled=false);
+  }
+}
+
+async function pinLogin(){
+  const digits = document.querySelectorAll('.pin-digit');
+  let pin = '';
+  digits.forEach(d => { pin += d.value; });
+  
+  if(pin.length !== 4){
+    document.getElementById('authError').textContent = '請輸入完整 4 位 PIN';
+    return;
+  }
+  
+  // Check lock
+  if(pinLockedUntil > Date.now()){ checkPinLock(); return; }
+  
+  document.getElementById('authError').textContent = '';
+  const btn = document.getElementById('pinLoginBtn');
+  btn.textContent = '驗證中...';
+  btn.disabled = true;
+  
+  try {
+    // Query Firestore for matching PIN
+    const snap = await db.collection('employees').where('pin', '==', pin).get();
+    
+    if(snap.empty){
+      handlePinFail('PIN 不正確');
+      return;
+    }
+    
+    if(snap.size > 1){
+      // Multiple matches — rare case, show names to pick
+      btn.textContent = '確認登入';
+      btn.disabled = false;
+      document.getElementById('authError').textContent = '發現多個帳號，請用電郵登入';
+      // Reset PIN inputs
+      digits.forEach(d=>d.value='');
+      digits[0].focus();
+      return;
+    }
+    
+    // Exactly 1 match — login successful
+    const empData = snap.docs[0].data();
+    const empId = snap.docs[0].id;
+    
+    // Set user state (mock user object for PIN login)
+    currentUser = {
+      email: empData.email || ('pin@' + empId),
+      isPinLogin: true,
+      uid: 'pin_' + empId
+    };
+    
+    // Determine role/store from employee record
+    const role = empData.role || 'central';
+    isAdminUser = (role === 'admin' || role === 'sm');
+    isSMUser = (role === 'sm');
+    userStore = (role === 'central' || role === 'pioneer') ? role : null;
+    
+    // Reset fail count on success
+    pinFailCount = 0;
+    
+    document.getElementById('authOverlay').style.display = 'none';
+    document.getElementById('userInfo').textContent = (empData.name || '員工') + ' (PIN)';
+    
+    // Navigate based on role
+    if(isAdminUser || isSMUser){
+      showEmployeeTab();
+      showStoreSelect();
+    } else if(userStore){
+      selectStore(userStore);
+    } else {
+      showStoreSelect();
+    }
+    
+    btn.textContent = '確認登入';
+    btn.disabled = false;
+    
+  } catch(err){
+    console.error('PIN login error:', err);
+    handlePinFail('登入失敗，請重試');
+  }
+}
+
+function handlePinFail(msg){
+  pinFailCount++;
+  const btn = document.getElementById('pinLoginBtn');
+  btn.textContent = '確認登入';
+  btn.disabled = false;
+  document.getElementById('authError').textContent = msg;
+  
+  // Clear PIN inputs
+  document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';});
+  document.querySelector('.pin-digit').focus();
+  
+  // Lock after 5 failed attempts
+  if(pinFailCount >= 5){
+    pinLockedUntil = Date.now() + (5 * 60 * 1000); // 5 minutes
+    pinFailCount = 0;
+    checkPinLock();
+  }
+}
 
 function authLogin(){
   const email=document.getElementById('authEmail').value.trim();
@@ -1204,7 +1416,7 @@ async function renderEmployeeList(){
       <div class="emp-card">
         <div class="emp-info">
           <div class="emp-name">${e.name || '—'}<span class="emp-role ${e.role}">${e.role==='admin'?'Admin':e.role==='central'?'中環':'始創'}</span></div>
-          <div class="emp-email">${e.email}</div>
+          <div class="emp-email">${e.email}${e.phone ? ' | 📱 ' + e.phone : ''}</div>
         </div>
         <div class="emp-actions">
           <button class="btn-emp-edit" onclick="editEmployee('${e.id}')">✏️</button>
@@ -1223,6 +1435,7 @@ function showAddEmployee(){
   document.getElementById('empModalTitle').textContent = '＋ 新增員工';
   document.getElementById('empName').value = '';
   document.getElementById('empEmail').value = '';
+  document.getElementById('empPhone').value = '';
   document.getElementById('empRole').value = 'central';
   document.getElementById('empPwd').value = '';
   document.getElementById('empPwdRow').style.display = '';
@@ -1243,6 +1456,7 @@ async function editEmployee(id){
     document.getElementById('empModalTitle').textContent = '✏️ 編輯員工';
     document.getElementById('empName').value = e.name || '';
     document.getElementById('empEmail').value = e.email || '';
+    document.getElementById('empPhone').value = e.phone || '';
     document.getElementById('empRole').value = e.role || 'central';
     document.getElementById('empPwdRow').style.display = 'none';
   document.getElementById('addEmpModal').style.display = 'flex';
@@ -1269,12 +1483,24 @@ async function saveEmployee(){
   const email = document.getElementById('empEmail').value.trim().toLowerCase();
   const role = document.getElementById('empRole').value;
   const pwd = document.getElementById('empPwd').value;
+  const phone = document.getElementById('empPhone').value.trim();
   
   if(!name || !email){ toast('請填寫姓名和電郵'); return; }
   
+  // Generate PIN from phone last 4 digits
+  let pin = '';
+  if(phone && phone.length >= 4){
+    pin = phone.slice(-4);
+    // Validate PIN is all digits
+    if(!/^[0-9]{4}$/.test(pin)){ toast('手機號碼最後4位必須是數字'); return; }
+  }
+  
   try{
     if(editingEmpId){
-      await db.collection('employees').doc(editingEmpId).update({name, email, role});
+      const updateData = {name, email, role};
+      if(phone) updateData.phone = phone;
+      if(pin) updateData.pin = pin;
+      await db.collection('employees').doc(editingEmpId).update(updateData);
       toast('已更新');
     } else {
       if(!pwd || pwd.length < 6){ toast('請設定密碼（至少6位）'); return; }
@@ -1287,7 +1513,10 @@ async function saveEmployee(){
       });
       const rd = await resp.json();
       if(!resp.ok){ toast(rd.error && rd.error.message ? rd.error.message : '帳號建立失敗'); return; }
-      await db.collection('employees').doc(email).set({name, email, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+      const newData = {name, email, role, createdAt: firebase.firestore.FieldValue.serverTimestamp()};
+      if(phone) newData.phone = phone;
+      if(pin) newData.pin = pin;
+      await db.collection('employees').doc(email).set(newData);
       toast('員工帳號已建立');
     }
     closeAddEmployee();
@@ -1307,6 +1536,9 @@ window.closeAddEmployee = closeAddEmployee;
 window.editEmployee = editEmployee;
 window.deleteEmployee = deleteEmployee;
 window.saveEmployee = saveEmployee;
+window.showPinLogin = showPinLogin;
+window.showEmailLogin = showEmailLogin;
+window.pinLogin = pinLogin;
 
 function switchTab(tab){
   currentTab=tab;
@@ -1472,6 +1704,10 @@ window.renderReport=renderReport;window.renderLog=renderLog;
       <div id="empPwdRow">
         <label>登入密碼</label>
         <input type="password" id="empPwd" placeholder="設定員工登入密碼（6位以上）" minlength="6">
+      </div>
+      <div class="emp-phone-field">
+        <label>手機號碼 <span style="color:var(--muted);font-size:.72rem">（PIN 自動取最後4位）</span></label>
+        <input type="tel" id="empPhone" placeholder="例：91234567" maxlength="11">
       </div>
       <div class="add-emp-btns">
         <button class="btn-emp-cancel" onclick="closeAddEmployee()">取消</button>
