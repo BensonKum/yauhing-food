@@ -156,9 +156,12 @@ function onStoreChange(){
   selectedEmp=null;
   // 硬編碼員工列表（無需 Firestore 讀取權限）
   allEmployees=[
-    {_id:'bobo',name:'BoBo',pin:'1234',active:true},
-    {_id:'daisy',name:'Daisy',pin:'1234',active:true},
-    {_id:'mok',name:'Mok',pin:'1234',active:true}
+    {_id:'bobo',name:'BoBo',pin:'8707',store:'pioneer',active:true},
+    {_id:'coco',name:'Coco',pin:'3367',store:'pioneer',active:true},
+    {_id:'mok',name:'Mok',pin:'0005',store:'pioneer',active:true},
+    {_id:'daisy',name:'Daisy',pin:'3030',store:'central',active:true},
+    {_id:'joey',name:'Joey',pin:'3350',store:'central',active:true},
+    {_id:'ron',name:'Ron',pin:'1371',store:'central',active:true}
   ];
 }
 
@@ -201,19 +204,29 @@ function lockStoreSelect(sel, lockedStore){
 
 function renderEmpGrid(store){
   var div=document.getElementById('empGrid');
+  if(!store){
+    div.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted)">請先選擇分店</div>';
+    return;
+  }
   if(allEmployees.length===0){
     div.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted)">暫無員工，請聯絡管理員</div>';
     return;
   }
   var html='';
+  var count=0;
   allEmployees.forEach(function(emp){
     // Only show employees belonging to the selected store
     if(emp.store && emp.store !== store) return;
+    count++;
     var todayCI=allClockins.filter(function(c){return c.employeeId===emp._id&&c.store===store;});
     var hasCI=todayCI.length>0,hasCO=todayCI.some(function(c){return c.clockOut!=null;});
     var cls='emp-btn'+(hasCI&&!hasCO?' clocked':'');
     html+='<button class="'+cls+'" onclick="selectEmp(\''+escHtml(emp._id)+'\',\''+escHtml(emp.name)+'\',\''+escHtml(emp.pin)+'\')">'+escHtml(emp.name)+'</button>';
   });
+  if(count===0){
+    div.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1rem;color:var(--muted)">此分店暫無員工</div>';
+    return;
+  }
   div.innerHTML=html;
 }
 
