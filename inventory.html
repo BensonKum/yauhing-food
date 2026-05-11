@@ -1771,7 +1771,7 @@ async function renderLog(){
         <div style="font-size:1.4rem;font-weight:700;color:#424242">${txns.filter(t=>{
           const d = t.createdAt ? t.createdAt.toDate() : new Date();
           const ds = d.getFullYear()+'-'+(String(d.getMonth()+1)).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-          return dateFilterFn(t) && storeFilterFn(t)).length}</div>
+          return dateFilterFn(t) && storeFilterFn(t)}).length</div>
       </div>
     </div>`;
 
