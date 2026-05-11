@@ -1041,7 +1041,19 @@ async function selectStore(store){
   }
   document.getElementById('storeDialog').classList.remove('show');
   lockStoreFilters();
-  loadInventory();
+
+  // Ensure POS tab is visible and active after store selection
+  try {
+    switchTab('pos');
+    setMode('sale');
+  } catch(e) {
+    console.warn('selectStore: tab/mode init error:', e);
+  }
+
+  loadInventory().catch(err => {
+    console.error('selectStore: loadInventory failed:', err);
+    toast('載入產品失敗，請刷新頁面');
+  });
 }
 
 // Lock report/log store filter for non-admin/SM based on their assigned store
