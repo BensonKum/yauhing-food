@@ -718,30 +718,30 @@ function showPinLogin(){
   document.getElementById('pinLoginForm').style.display='block';
   // Check if locked
   checkPinLock();
-  // Setup PIN input auto-focus
+  // Setup PIN input (only bind listeners ONCE)
   const digits = document.querySelectorAll('.pin-digit');
   digits.forEach((d, i) => {
     d.value = '';
-    d.addEventListener('keydown', function(e){
-      if(e.key >= '0' && e.key <= '9'){
-        this.value = e.key;
-        if(i < 3) digits[i+1].focus();
-        else {
-          this.blur();
-          // Auto-submit when 4th digit entered
-          setTimeout(()=>pinLogin(), 150);
+    if(!d.dataset.pinBound){
+      d.dataset.pinBound = '1';
+      d.addEventListener('keydown', function(e){
+        if(e.key >= '0' && e.key <= '9'){
+          e.preventDefault(); // prevent default to avoid double-input on some browsers
+          this.value = e.key;
+          if(i < 3) digits[i+1].focus();
+          else {
+            this.blur();
+            // Auto-submit when 4th digit entered
+            setTimeout(()=>pinLogin(), 150);
+          }
+        } else if(e.key === 'Backspace'){
+          this.value = '';
+          if(i > 0) digits[i-1].focus();
+        } else if(e.key === 'Enter'){
+          pinLogin();
         }
-      } else if(e.key === 'Backspace'){
-        this.value = '';
-        if(i > 0) digits[i-1].focus();
-      } else if(e.key === 'Enter'){
-        pinLogin();
-      }
-    });
-    d.addEventListener('input', function(){
-      this.value = this.value.replace(/[^0-9]/g, '');
-      if(this.value && i < 3) digits[i+1].focus();
-    });
+      });
+    }
   });
   digits[0].focus();
 }
