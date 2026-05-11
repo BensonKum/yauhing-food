@@ -97,17 +97,37 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <div class="toast" id="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
 var firebaseConfig={apiKey:"AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",authDomain:"yauhing-food.firebaseapp.com",projectId:"yauhing-food",storageBucket:"yauhing-food.firebasestorage.app",messagingSenderId:"215564521673",appId:"1:215564521673:web:2529129a767231e348bd18"};
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+var auth=firebase.auth();
 var db=firebase.firestore();
-var allEmployees=[],allClockins=[],selectedEmp=null,currentStore='';
+var allEmployees=[],allClockins=[],selectedEmp=null,currentStore='',currentUser=null;
 
 (function init(){
   var d=new Date();
   var days=['日','一','二','三','四','五','六'];
   document.getElementById('headerDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+days[d.getDay()];
+
+  // Listen for auth state and lock store options accordingly
+  auth.onAuthStateChanged(function(u){
+    currentUser = u;
+    if(!u) return;
+    var email = u.email.toLowerCase();
+    var sel = document.getElementById('storeSelect');
+    if(email.includes('central')){
+      // Central staff: hide pioneer option, auto-select central
+      sel.value = 'central';
+      onStoreChange();
+    } else if(email.includes('pioneer')){
+      // Pioneer staff: hide central option, auto-select pioneer
+      sel.value = 'pioneer';
+      onStoreChange();
+    }
+    // admin: show both options (default)
+  });
 })();
 
 function toast(msg,isErr){

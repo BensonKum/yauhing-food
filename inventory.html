@@ -626,9 +626,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   <div class="confirm-box">
     <div class="confirm-title">選擇分店</div>
     <div class="confirm-msg">請選擇你所在的分店</div>
-    <div class="confirm-btns">
-      <button class="confirm-yes" onclick="selectStore('central')" style="background:#E65100">中環店</button>
-      <button class="confirm-yes" onclick="selectStore('pioneer')" style="background:#6A1B9A">始創店</button>
+    <div class="confirm-btns" id="storeDialogBtns">
+      <button class="confirm-yes" onclick="selectStore('central')" id="storeBtnCentral" style="background:#E65100">中環店</button>
+      <button class="confirm-yes" onclick="selectStore('pioneer')" id="storeBtnPioneer" style="background:#6A1B9A">始創店</button>
     </div>
   </div>
 </div>
@@ -850,7 +850,11 @@ async function pinLogin(){
     } else if(userStore){
       selectStore(userStore);
     } else {
-      showStoreSelect();
+      // Fallback: detect store from login email (same logic as showApp)
+      var pinEmail = currentUser ? currentUser.email.toLowerCase() : '';
+      if(pinEmail.includes('central')){ selectStore('central'); }
+      else if(pinEmail.includes('pioneer')){ selectStore('pioneer'); }
+      else { showStoreSelect(); }
     }
     
     btn.textContent = '確認登入';
@@ -961,7 +965,28 @@ async function showStoreSelect(){
 
   isAdminUser = false;
   isSMUser = false;
-  if(userStore) selectStore(userStore);
+  if(userStore) {
+    selectStore(userStore);
+  } else {
+    // Unknown store: show dialog but hide irrelevant buttons
+    lockStoreDialogButtons(email);
+    document.getElementById('storeDialog').classList.add('show');
+  }
+}
+
+// Hide store buttons that don't belong to the logged-in user's email domain
+function lockStoreDialogButtons(email){
+  var btnC = document.getElementById('storeBtnCentral');
+  var btnP = document.getElementById('storeBtnPioneer');
+  if(!btnC || !btnP) return;
+  if(email.includes('central')){
+    btnP.style.display = 'none';
+    btnC.style.display = '';
+  } else if(email.includes('pioneer')){
+    btnC.style.display = 'none';
+    btnP.style.display = '';
+  }
+  // admin/SM: show both (default)
 }
 function selectStoreDisplay(store){
   currentStore = store;
