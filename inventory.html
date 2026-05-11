@@ -861,11 +861,9 @@ async function pinLogin(){
     } else if(userStore){
       selectStore(userStore);
     } else {
-      // Fallback: detect store from login email (same logic as showApp)
-      var pinEmail = currentUser ? currentUser.email.toLowerCase() : '';
-      if(pinEmail.includes('central')){ selectStore('central'); }
-      else if(pinEmail.includes('pioneer')){ selectStore('pioneer'); }
-      else { showStoreSelect(); }
+      // No store info in Firestore — show store selection dialog
+      console.warn('PIN login: no store/role set for', empData.name, '(id:', empId, ') — showing store selector');
+      showStoreSelect();
     }
     
     btn.textContent = '確認登入';
@@ -1703,11 +1701,27 @@ async function renderLog(){
 
 // window expose (at end, so all functions are defined)
 function doLogout(){
-  auth.signOut();
-  currentStore='';
-  cart={};
+  // Reset all state
+  currentUser = null;
+  isAdminUser = false;
+  isSMUser = false;
+  userStore = null;
+  currentStore = '';
+  cart = {};
+  pinFailCount = 0;
+  // Sign out from Firebase Auth (safe even if not logged in via auth)
+  try { auth.signOut(); } catch(e){ /* ignore */ }
+  // Reset UI
   document.getElementById('storeBtn').textContent='選擇分店 ▼';
   document.getElementById('storeBtn').className='store-badge central';
+  document.getElementById('userInfo').textContent = '';
+  document.getElementById('topbarStore').textContent = '';
+  // Show login overlay
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('emailLoginForm').style.display = 'block';
+  document.getElementById('pinLoginForm').style.display = 'none';
+  // Clear PIN inputs
+  document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
 }
 window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
 window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
