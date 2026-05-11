@@ -176,15 +176,28 @@ function lockStoreSelect(sel, lockedStore){
   sel.disabled = true;
   onStoreChange();
 }
-  // 只從 Firestore 讀取打卡記錄
-  db.collection('checkins').where('date','==',getTodayStr()).get().then(function(snap){
-    allClockins=[];
-    snap.forEach(function(d){var c=d.data();c._id=d.id;allClockins.push(c);});
-    renderEmpGrid(store);
-  }).catch(function(e){
-    document.getElementById('empGrid').innerHTML='<div style="grid-column:1/-1;color:var(--a);text-align:center;padding:1rem">載入失敗：'+esc(e.message)+'</div>';
+
+(function init(){
+  var d=new Date();
+  var days=['日','一','二','三','四','五','六'];
+  document.getElementById('headerDate').textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+days[d.getDay()];
+
+  // Listen for auth state and lock store options accordingly
+  auth.onAuthStateChanged(function(u){
+    currentUser = u;
+    if(!u) return;
+    var email = u.email.toLowerCase();
+    var sel = document.getElementById('storeSelect');
+    if(email.includes('central')){
+      // Central staff: lock to central only
+      lockStoreSelect(sel, 'central');
+    } else if(email.includes('pioneer')){
+      // Pioneer staff: lock to pioneer only
+      lockStoreSelect(sel, 'pioneer');
+    }
+    // admin: show both options (default)
   });
-}
+})();
 
 function renderEmpGrid(store){
   var div=document.getElementById('empGrid');
