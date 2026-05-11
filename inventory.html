@@ -1709,7 +1709,7 @@ function setQuickDate(days){
   renderLog();
 }
 
-function renderLog(){
+async function renderLog(){
   // Set today as default date if not set
   const dateInput = document.getElementById('logDate');
   if(!dateInput.value){
