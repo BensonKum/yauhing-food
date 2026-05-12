@@ -734,12 +734,45 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
             const container = document.getElementById('editTransactionItems');
             container.innerHTML += buildEditItemRow('', '', 0);
         }
+
+        // Save edited transaction back to Firestore
+        async function saveEditTransaction() {
+            if(!window._editTxId) { alert('無交易ID'); return; }
+            // Collect all item rows from modal
+            const rows = document.querySelectorAll('#editTransactionItems .edit-item-row');
+            const items = [];
+            rows.forEach(row => {
+                const name = row.querySelector('.item-name').value.trim();
+                const pack = row.querySelector('.item-pack').value.trim();
+                const qty = parseInt(row.querySelector('.item-qty').value) || 0;
+                if(name && qty > 0) {
+                    items.push({ name, pack, qty });
+                }
+            });
+            if(items.length === 0) {
+                alert('至少需要一項貨品');
+                return;
+            }
+            if(!confirm('確定保存修改？')) return;
+            try {
+                await db.collection('inventory_transactions').doc(window._editTxId).update({
+                    items: items,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                closeEditModal();
+                renderLog();
+            } catch(e) {
+                console.error(e);
+                alert('保存失敗: ' + e.message);
+            }
+        }
         
 
         window.openEditModal = openEditModal;
         window.closeEditModal = closeEditModal;
         window.buildEditItemRow = buildEditItemRow;
         window.addEditItemRow = addEditItemRow;
+        window.saveEditTransaction = saveEditTransaction;
         
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
