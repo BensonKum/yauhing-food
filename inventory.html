@@ -1796,6 +1796,33 @@ async function renderLog(){
   }).join('');
 }
 
+
+// Edit transaction - simple prompt-based editing
+async function editTransaction(id) {
+  if(!confirm('確定要編輯此交易？')) return;
+  try {
+    const doc = await db.collection('inventory_transactions').doc(id).get();
+    if(!doc.exists) { alert('交易不存在'); return; }
+    const data = doc.data();
+    const newType = prompt('交易類型 (sale/purchase):', data.type || 'sale');
+    if(newType === null) return;
+    if(newType !== 'sale' && newType !== 'purchase') { alert('類型必須是 sale 或 purchase'); return; }
+    const newStore = prompt('分店 (central/start):', data.store || 'central');
+    if(newStore === null) return;
+    if(newStore !== 'central' && newStore !== 'start') { alert('分店必須是 central 或 start'); return; }
+    await db.collection('inventory_transactions').doc(id).update({
+      type: newType,
+      store: newStore,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    alert('✅ 交易已更新');
+    renderLog();
+  } catch(e) {
+    console.error(e);
+    alert('❌ 更新失敗: ' + e.message);
+  }
+}
+
 // window expose (at end, so all functions are defined)
 function doLogout(){
   // Reset all state
