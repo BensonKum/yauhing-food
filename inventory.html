@@ -690,19 +690,56 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js">
         
         // Open edit transaction modal
-        function openEditModal(id) {
-            // TODO: Load transaction data from Firestore
-            document.getElementById('editTransactionModal').style.display = 'block';
+        async function openEditModal(id) {
+            try {
+                const doc = await db.collection('inventory_transactions').doc(id).get();
+                if(!doc.exists) { alert('交易不存在'); return; }
+                const data = doc.data();
+                // Store transaction id for saving later
+                window._editTxId = id;
+                // Build item rows
+                const container = document.getElementById('editTransactionItems');
+                container.innerHTML = '';
+                if(data.items && data.items.length > 0) {
+                    data.items.forEach(item => {
+                        container.innerHTML += buildEditItemRow(item.name||'', item.pack||'', item.qty||0);
+                    });
+                } else {
+                    container.innerHTML = '<p>此交易無貨品記錄</p>';
+                }
+                document.getElementById('editTransactionModal').style.display = 'block';
+            } catch(e) {
+                console.error(e);
+                alert('載入交易失敗: ' + e.message);
+            }
+        }
+
+        // Build one editable item row HTML
+        function buildEditItemRow(name, pack, qty) {
+            return '<div class="edit-item-row">' +
+                '<input class="item-name" value="' + name + '" placeholder="貨品名稱">' +
+                '<input class="item-pack" value="' + pack + '" placeholder="包裝">' +
+                '<input class="item-qty" type="number" value="' + qty + '" placeholder="數量" min="0">' +
+                '<span class="remove-item" onclick="this.parentElement.remove()">✕</span>' +
+                '</div>';
         }
         
         // Close edit transaction modal
         function closeEditModal() {
             document.getElementById('editTransactionModal').style.display = 'none';
         }
+
+        // Add a new empty item row to the edit modal
+        function addEditItemRow() {
+            const container = document.getElementById('editTransactionItems');
+            container.innerHTML += buildEditItemRow('', '', 0);
+        }
         
 
         window.openEditModal = openEditModal;
         window.closeEditModal = closeEditModal;
+        window.buildEditItemRow = buildEditItemRow;
+        window.addEditItemRow = addEditItemRow;
         
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
