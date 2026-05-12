@@ -1823,6 +1823,20 @@ async function editTransaction(id) {
   }
 }
 
+
+// Delete transaction - simple confirm-based deletion
+async function deleteTransaction(id) {
+  if(!confirm('Confirm DELETE this transaction? This cannot be undone.')) return;
+  try {
+    await db.collection('inventory_transactions').doc(id).delete();
+    alert('Transaction deleted');
+    renderLog();
+  } catch(e) {
+    console.error(e);
+    alert('Delete failed: ' + e.message);
+  }
+}
+
 // window expose (at end, so all functions are defined)
 function doLogout(){
   // Reset all state
