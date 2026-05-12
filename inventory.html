@@ -1071,14 +1071,14 @@ function lockStoreFilters(){
   const logStore = document.getElementById('logStore');
   if(!repStore || !logStore) return;
 
-  if(isAdminUser || isSMUser){
-    // Admin/SM: can see all stores
+  if(isAdminUser){
+    // Admin only: can see all stores
     repStore.disabled = false;
     repStore.classList.remove('locked-filter');
     logStore.disabled = false;
     logStore.classList.remove('locked-filter');
   } else {
-    // Regular employee: lock to their assigned store only
+    // SM and regular employee: lock to their assigned store only
     const storeToLock = currentStore || userStore;
     if(storeToLock){
       repStore.value = storeToLock;
