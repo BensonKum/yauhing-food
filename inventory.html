@@ -687,7 +687,24 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js">
+        
+        // Open edit transaction modal
+        function openEditModal(id) {
+            // TODO: Load transaction data from Firestore
+            document.getElementById('editTransactionModal').style.display = 'block';
+        }
+        
+        // Close edit transaction modal
+        function closeEditModal() {
+            document.getElementById('editTransactionModal').style.display = 'none';
+        }
+        
+
+        window.openEditModal = openEditModal;
+        window.closeEditModal = closeEditModal;
+        
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
@@ -1811,30 +1828,9 @@ async function renderLog(){
 }
 
 
-// Edit transaction - simple prompt-based editing
+// Edit transaction - opens modal for editing
 async function editTransaction(id) {
-  if(!confirm('確定要編輯此交易？')) return;
-  try {
-    const doc = await db.collection('inventory_transactions').doc(id).get();
-    if(!doc.exists) { alert('交易不存在'); return; }
-    const data = doc.data();
-    const newType = prompt('交易類型 (sale/purchase):', data.type || 'sale');
-    if(newType === null) return;
-    if(newType !== 'sale' && newType !== 'purchase') { alert('類型必須是 sale 或 purchase'); return; }
-    const newStore = prompt('分店 (central/start):', data.store || 'central');
-    if(newStore === null) return;
-    if(newStore !== 'central' && newStore !== 'start') { alert('分店必須是 central 或 start'); return; }
-    await db.collection('inventory_transactions').doc(id).update({
-      type: newType,
-      store: newStore,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert('✅ 交易已更新');
-    renderLog();
-  } catch(e) {
-    console.error(e);
-    alert('❌ 更新失敗: ' + e.message);
-  }
+  openEditModal(id);
 }
 
 
