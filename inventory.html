@@ -701,7 +701,27 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // --- Edit Transaction Functions ---
+
+async function populateEditProductList() {
+    try {
+        const snap = await db.collection('inventory').get();
+        const datalist = document.getElementById('editProductList');
+        datalist.innerHTML = '';
+        const seen = new Set();
+        snap.forEach(doc => {
+            const name = doc.id;
+            if(!seen.has(name)){
+                seen.add(name);
+                const opt = document.createElement('option');
+                opt.value = name;
+                datalist.appendChild(opt);
+            }
+        });
+    } catch(e) { console.error('populateEditProductList error:', e); }
+}
+
 async function openEditModal(id) {
+    await populateEditProductList();
     try {
         const doc = await db.collection('inventory_transactions').doc(id).get();
         if(!doc.exists) { alert('交易不存在'); return; }
@@ -725,7 +745,7 @@ async function openEditModal(id) {
 
 function buildEditItemRow(name, pack, qty) {
     return '<div class="edit-item-row">' +
-        '<input class="item-name" value="' + name + '" placeholder="貨品名稱">' +
+        '<input class="item-name" list="editProductList" value="' + name + '" placeholder="貨品名稱">' +
         '<input class="item-pack" value="' + pack + '" placeholder="包裝">' +
         '<input class="item-qty" type="number" value="' + qty + '" placeholder="數量" min="0">' +
         '<span class="remove-item" onclick="this.parentElement.remove()">✕</span>' +
@@ -1981,6 +2001,7 @@ window.openEditModal=openEditModal;window.closeEditModal=closeEditModal;window.b
         <span class="close" onclick="closeEditModal()">&times;</span>
         <h2>編輯交易貨品</h2>
         <div id="editTransactionItems"></div>
+        <datalist id="editProductList"></datalist>
         <div style="margin-top: 1rem;">
           <button onclick="addEditItemRow()">+ 加貨品</button>
           <button onclick="saveEditTransaction()">保存</button>
