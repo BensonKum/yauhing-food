@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "cat": "手工麵",
     "name": "半熟幼麵 (乾)",
@@ -28,26 +28,6 @@
     "image": null,
     "local_img": "product_squid_ink_noodle.jpg",
     "sku": "YH004"
-  },
-  {
-    "cat": "手工麵",
-    "name": "山藥粗麵 (手工麵)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
-    "sku": "YH005"
-  },
-  {
-    "cat": "手工麵",
-    "name": "紅菜頭麵 (手工麵)",
-    "price": "HKD 10",
-    "note": "",
-    "stock": false,
-    "image": null,
-    "local_img": null,
-    "sku": "YH011"
   },
   {
     "cat": "手工麵",
