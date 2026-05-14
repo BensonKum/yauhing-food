@@ -584,6 +584,16 @@
     "sku": "YH057"
   },
   {
+    "cat": "醬汁配料",
+    "name": "秘製蝦籽",
+    "price": "HKD 50",
+    "note": "",
+    "stock": true,
+    "image": "images/product_56.jpg",
+    "local_img": "product_56.jpg",
+    "sku": "YH508"
+  },
+  {
     "cat": "新鮮粉麵",
     "name": "豆卜 (盒裝)",
     "price": "HKD 10",
