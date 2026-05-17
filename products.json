@@ -560,7 +560,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_pumpkin_turmeric.jpg",
     "sku": "YH057"
   },
   {
@@ -580,7 +580,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_tofu_puff.jpg",
     "sku": null
   },
   {
@@ -590,7 +590,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_fresh_rice_noodle_sheet.jpg",
     "sku": null
   },
   {
@@ -600,7 +600,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_fresh_rice_noodles.jpg",
     "sku": null
   },
   {
@@ -610,7 +610,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_silver_needle_noodles.jpg",
     "sku": null
   },
   {
@@ -620,7 +620,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_shanghai_fine_noodle.jpg",
     "sku": null
   },
   {
@@ -630,7 +630,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_raw_fine_noodle.jpg",
     "sku": null
   },
   {
@@ -640,7 +640,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_raw_thick_noodle.jpg",
     "sku": null
   },
   {
@@ -650,7 +650,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_oil_noodle.jpg",
     "sku": null
   },
   {
@@ -660,7 +660,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_dumpling_skin.jpg",
     "sku": null
   },
   {
@@ -670,7 +670,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_wonton_skin.jpg",
     "sku": null
   },
   {
@@ -680,7 +680,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_plain_rice_roll.jpg",
     "sku": null
   },
   {
@@ -690,7 +690,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": null,
+    "local_img": "product_shrimp_rice_roll.jpg",
     "sku": null
   }
 ]
