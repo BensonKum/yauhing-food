@@ -5,8 +5,8 @@
     "price": "HKD 10",
     "note": "",
     "stock": false,
-    "image": null,
-    "local_img": null,
+    "image": "product_semi_cooked_fine.jpg",
+    "local_img": "product_semi_cooked_fine.jpg",
     "sku": "YH002"
   },
   {
@@ -15,8 +15,8 @@
     "price": "HKD 10",
     "note": "",
     "stock": false,
-    "image": null,
-    "local_img": null,
+    "image": "product_semi_cooked_thick.jpg",
+    "local_img": "product_semi_cooked_thick.jpg",
     "sku": "YH003"
   },
   {
@@ -26,7 +26,7 @@
     "note": "",
     "stock": true,
     "image": null,
-    "local_img": "product_squid_ink_noodle.jpg",
+    "local_img": "product_ink_thick_noodle.jpg",
     "sku": "YH004"
   },
   {
