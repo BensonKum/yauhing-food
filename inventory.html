@@ -283,6 +283,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .log-sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:.6rem}
 .log-card{background:white;border-radius:12px;padding:.9rem;border:1px solid var(--bd);text-align:center}
 .log-card .num{font-family:'Noto Serif TC',serif;font-size:26px;font-weight:700;color:var(--red)}
+.quick-btns{display:flex;gap:.4rem;margin-bottom:.5rem;flex-wrap:wrap;justify-content:center}
+.quick-btn{background:#f5f5f5;border:1px solid #ddd;border-radius:12px;padding:.3rem .6rem;font-size:.75rem;cursor:pointer;transition:all .2s}
+.quick-btn:hover{background:#e0e0e0}
+.quick-btn.active{background:var(--red);color:white;border-color:var(--red)}
+.log-date-card input[type="date"]{width:100%;padding:.3rem;border:1px solid #ddd;border-radius:8px;font-size:.85rem;text-align:center}
+
 .log-card .num.green{color:var(--green)}
 .log-card .num.blue{color:#1565C0}
 .log-card .label{font-size:.95rem;color:var(--muted);margin-top:.15rem}
@@ -1864,8 +1870,15 @@ async function renderLog(){
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
-    '<div class="log-card date-btn" onclick="document.getElementById(\'logDateInput\').click()"><div class="label">選擇日期</div></div>' +
-    '<input type="date" id="logDateInput" style="display:none" value="'+todayStr+'" onchange="document.getElementById(\'logDate\').value=this.value;renderLog()">';
+    '<div class="log-card log-date-card">' +
+      '<div class="quick-btns">' +
+        '<button class="quick-btn'+(quickDays===1?' active':'')+'" data-days="1">今日</button>' +
+        '<button class="quick-btn'+(quickDays===3?' active':'')+'" data-days="3">3日</button>' +
+        '<button class="quick-btn'+(quickDays===7?' active':'')+'" data-days="7">7日</button>' +
+        '<button class="quick-btn'+(quickDays===30?' active':'')+'" data-days="30">30日</button>' +
+      '</div>' +
+      '<input type="date" id="logDateInput" value="'+todayStr+'" onchange="quickDays=0;renderLog()">' +
+    '</div>';
 
   // Right side: summary + list
   document.getElementById('logSummary').innerHTML = '';
@@ -1893,6 +1906,17 @@ async function renderLog(){
     '</div>';
   }).join('');
 }
+// Quick button click handler for log date card
+document.getElementById('logSidebar').addEventListener('click', function(e){
+  if(e.target.classList.contains('quick-btn')){
+    const days = parseInt(e.target.dataset.days);
+    quickDays = days;
+    document.getElementById('logDateInput').value = '';
+    renderLog();
+  }
+});
+
+
 
 
 // Edit transaction - opens modal for editing
