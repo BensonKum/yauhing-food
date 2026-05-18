@@ -1860,10 +1860,10 @@ async function renderLog(){
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
-    '<div class="log-card" style="background:transparent;border:none"></div>' +
-    '<div class="log-card"><div class="label">銷售</div><div class="num green">HK$'+sales.toLocaleString()+'</div></div>' +
-    '<div class="log-card"><div class="label">進貨</div><div class="num">HK$'+purchase.toLocaleString()+'</div></div>' +
-    '<div class="log-card"><div class="label">淨額</div><div class="num blue">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
+    '<div class="log-card" style="background:#fffde7;border-left:4px solid #ffc107"></div>' +
+    '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
+    '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
+    '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
     '<div class="log-card date-btn" onclick="document.getElementById(\'logDateInput\').click()"><div class="label">選擇日期</div></div>' +
     '<input type="date" id="logDateInput" style="display:none" value="'+todayStr+'" onchange="document.getElementById(\'logDate\').value=this.value;renderLog()">';
 
