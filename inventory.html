@@ -279,21 +279,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 /* Inventory Report Tab */
 .report-wrap{padding:1.2rem;overflow-y:auto;height:calc(100vh - 68px)}
-/* Report Tab - Left Sidebar + Right Content Layout */
-.report-wrap{display:flex;gap:1.2rem;padding:1.2rem;height:calc(100vh - 68px);overflow:hidden}
-.report-sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:.6rem}
-.report-card{
-  background:white;border-radius:12px;padding:.9rem;border:1px solid var(--bd);text-align:center;
+.report-summary{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.2rem;
 }
-.report-card .num{font-family:'Noto Serif TC',serif;font-size:19.7px;font-weight:700;color:var(--red)}
-.report-card .num.green{color:var(--green)}
-.report-card .num.orange{color:var(--orange)}
-.report-card .num.blue{color:#1565C0}
-.report-card .label{font-size:.7rem;color:var(--muted);margin-top:.15rem}
-.report-card.date-btn{background:#E8D84F;cursor:pointer;border:2px solid #D4A843;transition:all .2s}
-.report-card.date-btn:hover{background:#DDD540;transform:scale(1.02)}
-.report-card.date-btn .label{font-weight:600;color:#5D4E00}
-.report-main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .report-card{
   background:white;border-radius:12px;padding:1rem;border:1px solid var(--bd);text-align:center;
 }
@@ -577,24 +565,39 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <!-- Report Tab -->
 <div class="tab-content" id="tabContentReport">
   <div class="report-wrap">
-    <div class="report-sidebar" id="reportSidebar"></div>
-    <div class="report-main">
-      <div class="report-filter">
-        <span class="filter-label">分店：</span>
-        <select class="filter-select" id="repStore" onchange="renderLog()">
-          <option value="all">全部</option>
-          <option value="central">中環店</option>
-          <option value="pioneer">始創店</option>
-        </select>
-        <span class="filter-label">類型：</span>
-        <select class="filter-select" id="repType" onchange="renderLog()">
-          <option value="all">全部</option>
-          <option value="sale">銷售</option>
-          <option value="purchase">進貨</option>
-        </select>
+    <div class="report-summary" id="reportSummary"></div>
+    <div class="report-filter">
+      <span class="filter-label">分店：</span>
+      <select class="filter-select" id="repStore" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="central">中環店</option>
+        <option value="pioneer">始創店</option>
+      </select>
+      <span class="filter-label">狀態：</span>
+      <select class="filter-select" id="repStatus" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="alert">⚠️ 低庫存</option>
+        <option value="zero">🔴 缺貨</option>
+        <option value="discontinued">❌ 停售</option>
+      </select>
+    </div>
+    <div class="report-section">
+      <div class="report-section-title">
+        📦 庫存概況
+        <span class="badge badge-red" id="alertCount"></span>
+        <span class="badge badge-orange" id="lowCount"></span>
       </div>
-      <div id="logSummary"></div>
-      <div id="logList"></div>
+      <div class="report-table">
+        <table>
+          <thead>
+            <tr>
+              <th>SKU</th><th>產品名稱</th><th>分類</th>
+              <th>中環</th><th>始創</th><th>總庫存</th><th>狀態</th>
+            </tr>
+          </thead>
+          <tbody id="reportBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
