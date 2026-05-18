@@ -1529,7 +1529,16 @@ function switchTab(tab){
   document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   document.getElementById('tabContent'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   if(tab==='employee') renderEmployeeList();
-  if(tab==='report') loadReportData();
+  if(tab==='report') {
+      console.log('[switchTab] tab: report');
+      // 自動填入當前分店
+      const repStoreEl = document.getElementById('repStore');
+      if(repStoreEl && currentStore && !repStoreEl.value) {
+        repStoreEl.value = currentStore;
+        console.log('[switchTab] auto-set store:', currentStore);
+      }
+      loadReportData();
+    }
 }
 // --- Log Tab ---
 // window expose (at end, so all functions are defined)
