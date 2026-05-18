@@ -419,6 +419,15 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .log-entry-items{font-size:.8rem;color:var(--muted);margin-top:.3rem}
 .log-entry-detail{font-size:.78rem;color:var(--muted);margin-top:.5rem;padding-top:.5rem;border-top:1px dashed var(--bd);display:none}
 
+
+/* Force filter row visible */
+body > #tabContentReport.active > .report-wrap > .report-filter{
+  display:flex !important; visibility:visible !important; opacity:1 !important;
+  position:relative !important; z-index:10 !important;
+  overflow:visible !important;
+  background:#f8f8f8; padding:.8rem; border-radius:8px;
+  margin-bottom:1rem; border:1px solid #ddd;
+}
 </style>
 </head>
 <body>
@@ -548,6 +557,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     <input type="date" id="repTo">
     <button class="quick-btn" onclick="setRepQuick('today')">今日</button>
     <button class="quick-btn" onclick="setRepQuick('month')">今月</button>
+    <button class="quick-btn" onclick="document.getElementById('repType').value='';document.getElementById('repFrom').value='';document.getElementById('repTo').value='';loadReportData();" style="background:#999">↺ 重置</button>
     <button class="rep-search-btn" onclick="loadReportData()">&#x1F50D; 搜尋</button>
   </div>
 
