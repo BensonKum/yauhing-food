@@ -1634,7 +1634,7 @@ async function loadReportData() {
       detailHtml += '&#x1F4B0; 總額：HK$' + total + ' &nbsp;&nbsp; &#x1F3EA; 分店：' + (d.store === 'central' ? '中環街市' : '旺角始創');
       detailHtml += '</div>';
 
-      html += '<div class="log-entry" onclick="this.querySelector('.log-entry-detail').style.display = (this.querySelector('.log-entry-detail').style.display === 'block' ? 'none' : 'block')">'
+      html += '<div class="log-entry" data-toggle="1">'
         + '<div class="log-entry-header">'
         + '<span class="log-entry-type ' + (d.type || '') + '">' + typeName + '</span>'
         + '<span>' + dateStr + '</span>'
@@ -1650,6 +1650,16 @@ async function loadReportData() {
     alert('載入失敗: ' + e.message);
   }
 }
+
+
+// Event delegation for log entry toggle (Report tab)
+document.addEventListener('click', function(e) {
+  const entry = e.target.closest('.log-entry');
+  if (!entry) return;
+  const detail = entry.querySelector('.log-entry-detail');
+  if (!detail) return;
+  detail.style.display = (detail.style.display === 'block') ? 'none' : 'block';
+});
 
 </script>
 
