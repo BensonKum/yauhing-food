@@ -382,12 +382,17 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 /* --- Report Tab --- */
 .report-wrap{
-  padding:1.2rem;overflow-y:auto;min-height:calc(100vh - 68px);height:auto;
+  padding:1.2rem;overflow:visible !important;min-height:calc(100vh - 68px);height:auto !important;
 }
 .report-filter{
-  display:flex !important;gap:.6rem;align-items:center;flex-wrap:wrap;
+  display:flex !important;gap:.6rem;align-items:center;flex-wrap:wrap !important;
   margin-bottom:1rem;padding:1rem;background:#f5f5f5;border-radius:12px;
+  min-height:50px !important;height:auto !important;overflow:visible !important;
+  visibility:visible !important;opacity:1 !important;z-index:999 !important;
+  position:relative !important;font-size:0;line-height:0;
 }
+.report-filter::before{content:'';display:block;height:0;}
+.report-filter > *{font-size:.82rem;line-height:1.7;}
 .report-filter select,.report-filter input[type="date"]{
   padding:.4rem .7rem;border-radius:var(--r);border:1px solid var(--bd);
   font-size:.82rem;font-family:'Noto Sans TC',sans-serif;
@@ -421,13 +426,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 
 /* Force filter row visible */
-body > #tabContentReport.active > .report-wrap > .report-filter{
-  display:flex !important; visibility:visible !important; opacity:1 !important;
-  position:relative !important; z-index:10 !important;
-  overflow:visible !important;
-  background:#f8f8f8; padding:.8rem; border-radius:8px;
-  margin-bottom:1rem; border:1px solid #ddd;
-}
 
 .btn-cancel-tx{
   padding:.3rem .8rem;background:#C8462B;color:white;border:none;
