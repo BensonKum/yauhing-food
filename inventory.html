@@ -1860,6 +1860,7 @@ async function renderLog(){
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
+    '<div class="log-card" style="background:transparent;border:none"></div>' +
     '<div class="log-card"><div class="label">銷售</div><div class="num green">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card"><div class="label">進貨</div><div class="num">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card"><div class="label">淨額</div><div class="num blue">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
