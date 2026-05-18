@@ -382,7 +382,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 
 /* --- Report Tab --- */
 .report-wrap{
-  padding:1.2rem;overflow-y:auto;height:calc(100vh - 68px);
+  padding:1.2rem;overflow-y:auto;min-height:calc(100vh - 68px);
 }
 .report-filter{
   display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;
@@ -1628,9 +1628,24 @@ async function loadReportData() {
     console.log('[loadReportData] results:' + snap.size);
 
     let html = '';
+    // 按類型分組
+    const groups = { sale:[], purchase:[], transfer:[], loss:[] };
     snap.forEach(doc => {
+      const t = doc.data().type || '';
+      if(groups[t]) groups[t].push(doc);
+      else groups['sale'].push(doc); // default to sale
+    });
+
+    html = '';
+    const typeLabels = { sale:'🟢 銷售', purchase:'🔵 進貨', transfer:'🟠 調撥', loss:'🔴 報損' };
+    const typeOrder = ['sale','purchase','transfer','loss'];
+
+    typeOrder.forEach(type => {
+      if(!groups[type].length) return;
+      html += '<div class="rep-group-header">' + typeLabels[type] + ' (' + groups[type].length + '筆)</div>';
+      groups[type].forEach(doc => {
       const d = doc.data();
-      const dt = d.createdAt ? new Date(d.createdAt) : null;
+      const dt = d.createdAt ? (d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt)) : null;
       const dateStr = dt ? (dt.getFullYear() + '/' + String(dt.getMonth()+1).padStart(2,'0') + '/' + String(dt.getDate()).padStart(2,'0') + ' ' + String(dt.getHours()).padStart(2,'0') + ':' + String(dt.getMinutes()).padStart(2,'0')) : '';
       const typeName = d.type === 'sale' ? '銷售' : (d.type === 'purchase' ? '進貨' : (d.type === 'transfer' ? '調撥' : (d.type === 'loss' ? '報損' : d.type)));
       const items = d.items || [];
@@ -1653,6 +1668,7 @@ async function loadReportData() {
         + '<div class="log-entry-items">' + itemStr + '</div>'
         + detailHtml
         + '</div>';
+      });
     });
 
     document.getElementById('repList').innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:2rem">未有交易記錄</div>';
