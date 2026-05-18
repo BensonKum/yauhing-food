@@ -1605,6 +1605,15 @@ function setRepQuick(period) {
 }
 
 async function loadReportData() {
+  // Force filter row visible - inject if missing or hidden
+  (function fixFilter(){
+    var f = document.querySelector('#tabContentReport .report-filter');
+    if (!f) return;
+    f.style.cssText = 'display:flex !important;visibility:visible !important;opacity:1 !important;position:static !important;z-index:9999 !important;height:auto !important;min-height:50px !important;overflow:visible !important;background:#f5f5f5;padding:.8rem;border-radius:8px;margin-bottom:1rem;flex-wrap:wrap;gap:.6rem;align-items:center;';
+    // Also ensure parent doesn't clip
+    var wrap = document.querySelector('#tabContentReport .report-wrap');
+    if (wrap) wrap.style.cssText = 'padding:1.2rem;overflow:visible !important;height:auto !important;';
+  })();
   const store = document.getElementById('repStore').value;
   const type = document.getElementById('repType').value;
   const dateFrom = document.getElementById('repFrom').value;
