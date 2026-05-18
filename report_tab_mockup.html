@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>報表 Tab 示意圖 — 待 Ben 確認</title>
+<style>
+  body { font-family: sans-serif; background: #f5f5f5; padding: 20px; max-width: 900px; margin: 0 auto; }
+  .section { background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .section h2 { margin: 0 0 12px 0; font-size: 1rem; color: #333; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-row select, .filter-row input[type="date"] { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.85rem; }
+  .btn { padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem; }
+  .btn-green { background: #2D6A4F; color: white; }
+  .btn-outline { background: transparent; border: 1px solid #2D6A4F; color: #2D6A4F; }
+  .log-entry { border: 1px solid #e0d8c8; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; cursor: pointer; }
+  .log-entry-header { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; }
+  .log-entry-type { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+  .type-銷售 { background: #e8f5e9; color: #2D6A4F; }
+  .type-進貨 { background: #e3f2fd; color: #1565c0; }
+  .log-entry-items { font-size: 0.8rem; color: #555; margin-top: 4px; }
+  .log-entry-detail { font-size: 0.78rem; color: #777; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #ddd; display: none; }
+  .note { background: #fff8e1; padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; color: #e65100; margin-top: 8px; }
+  code { background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<h1>📊 報表 Tab 示意圖（待 Ben 確認）</h1>
+<div class="note">⚠️ 呢個係示意圖，確認 OK 後我會按呢個設計實作到 <code>inventory.html</code></div>
+
+<!-- 篩選列 -->
+<div class="section">
+  <h2>① 篩選列</h2>
+  <div class="filter-row">
+    <select>
+      <option>全部分店</option>
+      <option>中環街市</option>
+      <option>旺角始創</option>
+    </select>
+    <select>
+      <option>全部類型</option>
+      <option>銷售</option>
+      <option>進貨</option>
+      <option>調撥</option>
+      <option>報損</option>
+    </select>
+    <input type="date" value="2026-05-01">
+    <span>至</span>
+    <input type="date" value="2026-05-18">
+    <button class="btn btn-outline">今日</button>
+    <button class="btn btn-outline">今月</button>
+    <button class="btn btn-green">🔍 搜尋</button>
+  </div>
+  <div class="note">✅ 無 Summary 卡片（已按你要求刪除）</div>
+</div>
+
+<!-- 交易列表 -->
+<div class="section">
+  <h2>② 交易列表（可展開詳情）</h2>
+
+  <div class="log-entry" onclick="this.querySelector('.log-entry-detail').style.display = (this.querySelector('.log-entry-detail').style.display === 'block') ? 'none' : 'block'">
+    <div class="log-entry-header">
+      <span class="log-entry-type type-銷售">銷售</span>
+      <span>2026-05-18 14:30</span>
+    </div>
+    <div class="log-entry-items">半熟幼麵(乾) x2, 溫州麵 x1</div>
+    <div class="log-entry-detail">
+      📋 詳情：<br>
+      • 半熟幼麵(乾) — HK$8 x 2 = HK$16<br>
+      • 溫州麵 — HK$12 x 1 = HK$12<br>
+      💰 總額：HK$28 &nbsp;&nbsp; 🏪 分店：中環街市
+    </div>
+  </div>
+
+  <div class="log-entry" onclick="this.querySelector('.log-entry-detail').style.display = (this.querySelector('.log-entry-detail').style.display === 'block') ? 'none' : 'block'">
+    <div class="log-entry-header">
+      <span class="log-entry-type type-進貨">進貨</span>
+      <span>2026-05-17 09:15</span>
+    </div>
+    <div class="log-entry-items">上海粗麵 x10, 炸醬 x5</div>
+    <div class="log-entry-detail">
+      📋 詳情：<br>
+      • 上海粗麵 — HK$15 x 10 = HK$150<br>
+      • 炸醬 — HK$10 x 5 = HK$50<br>
+      💰 總額：HK$200 &nbsp;&nbsp; 🏪 分店：中環街市
+    </div>
+  </div>
+
+  <div class="log-entry" onclick="this.querySelector('.log-entry-detail').style.display = (this.querySelector('.log-entry-detail').style.display === 'block') ? 'none' : 'block'">
+    <div class="log-entry-header">
+      <span class="log-entry-type type-調撥">調撥</span>
+      <span>2026-05-16 11:00</span>
+    </div>
+    <div class="log-entry-items">半熟幼麵(乾) x5 （中環 → 旺角）</div>
+    <div class="log-entry-detail">
+      📋 詳情：<br>
+      • 半熟幼麵(乾) — 調撥數量：5<br>
+      📦 由：中環街市 → 旺角始創<br>
+      💰 總額：HK$0 &nbsp;&nbsp; 🏪 分店：中環街市
+    </div>
+  </div>
+
+  <div class="note">
+    ✅ 點一下交易 → 展開詳情<br>
+    ✅ 再點一下 → 收合<br>
+    ✅ 詳情顯示：每件貨品名稱 / 單價 / 數量 / 小計，以及總額 + 分店
+  </div>
+</div>
+
+<!-- 功能說明 -->
+<div class="section">
+  <h2>③ 功能說明（確認用）</h2>
+  <ul style="font-size:0.85rem; line-height:1.8;">
+    <li>✅ 無 Summary 卡片（已刪除）</li>
+    <li>✅ 交易列表可展開/收合詳情（點擊即切換）</li>
+    <li>✅ 快速日期按鈕：只有「今日」+「今月」（無「今週/本季/本年」）</li>
+    <li>✅ 篩選條件：分店 + 類型 + 日期由/至 + 快速鈕 + 搜尋</li>
+    <li>⚠️ 之後再處理 Firestore 讀取 + PIN 登入 Auth 問題</li>
+  </ul>
+</div>
+
+<!-- 確認區 -->
+<div class="section" style="background:#f0faf4;">
+  <h2>④ Ben 確認區</h2>
+  <p style="font-size:0.9rem;">如果你睇咗呢個示意圖，覺得 OK → 答我「OK，跟住做」</p>
+  <p style="font-size:0.9rem;">如果有想改嘅地方 → 直接講，我改咗示意圖再俾你確認</p>
+  <p style="font-size:0.9rem; color:#c8462b;">⚠️ 我會等你講「OK」先至開始寫入 <code>inventory.html</code>，唔會自己擅自開始。</p>
+</div>
+
+</body>
+</html>
