@@ -1907,17 +1907,9 @@ async function renderLog(){
   }).join('');
 }
 
-function editTransaction(id){
-  alert('編輯交易功能開發中\nID: '+id);
-}
+// OLD editTransaction removed
 
-function deleteTransaction(id){
-  if(!confirm('確定刪除這筆交易？')) return;
-  db.collection('inventory_transactions').doc(id).delete().then(()=>{
-    alert('已刪除');
-    renderLog();
-  }).catch(e=>alert('刪除失敗: '+e.message));
-}
+// OLD deleteTransaction removed
 
 // Quick button click handler for log date card
 document.getElementById('logSidebar').addEventListener('click', function(e){
@@ -1933,13 +1925,13 @@ document.getElementById('logSidebar').addEventListener('click', function(e){
 
 
 // Edit transaction - opens modal for editing
-async function editTransaction(id) {
+window.editTransaction = async function(id) {
   openEditModal(id);
-}
+};
 
 
 // Delete transaction - simple confirm-based deletion
-async function deleteTransaction(id) {
+window.deleteTransaction = async function(id) {
   if(!confirm('Confirm DELETE this transaction? This cannot be undone.')) return;
   try {
     await db.collection('inventory_transactions').doc(id).delete();
