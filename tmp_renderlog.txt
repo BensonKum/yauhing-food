@@ -1,0 +1,45 @@
+function renderLog(){
+  let txns=[];
+  try {
+    const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
+    snap.forEach(d=>txns.push({id:d.id,...d.data()}));
+  } catch(e){console.error(e);}
+
+  const now2 = new Date();
+  const y=now2.getFullYear(), m=now2.getMonth(), d=now2.getDate();
+  let fromDate=null, toDate=null;
+  const selDate = document.getElementById('logDate').value;
+  if(selDate){
+    fromDate = new Date(selDate+'T00:00:00');
+    toDate = new Date(selDate+'T23:59:59');
+  } else if(quickDays > 1){
+    fromDate = new Date(now2);
+    fromDate.setDate(fromDate.getDate()-quickDays+1);
+    fromDate.setHours(0,0,0,0);
+    toDate = new Date(now2); toDate.setHours(23,59,59,999);
+  }
+  const inDateRange = (t) => {
+    if(!fromDate) return true;
+    const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
+    return d2 >= fromDate && d2 <= toDate;
+  };
+
+  const storeFilter=document.getElementById('logStore').value;
+  const typeFilter=document.getElementById('logType').value;
+  txns=txns.filter(t=>{
+    if(storeFilter!=='all'&&t.store!==storeFilter) return false;
+    if(typeFilter!=='all'&&t.type!==typeFilter) return false;
+    if(!inDateRange(t)) return false;
+    return true;
+  });
+
+  const sales = txns.filter(t=>t.type==='sale'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
+  const purchase = txns.filter(t=>t.type==='purchase'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
+  const net = sales - purchase;
+  const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+
+  // Left sidebar cards
+  document.getElementById('logSidebar').innerHTML =
+    '<div class="log-card"><div class="label">銷售</div><div class="num green">HK$'+sales.toLocaleString()+'</div></div>' +
+    '<div class="log-card"><div class="label">進貨</div><div class="num">HK$'+purchase.toLocaleString()+'</div></div>' +
+    '<div class="log-card"><div class="label">淨額</div><div class="num blue">'+(net>=0?'+':'')+'HK$'+net.toLocal

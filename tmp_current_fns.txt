@@ -1,0 +1,9 @@
+editing
+window.editTransaction = async function(id) {
+  openEditModal(id);
+};
+
+
+// Delete transaction - simple confirm-based deletion
+window.deleteTransaction = async function(id) {
+  if(!confirm('Confirm DELETE this transaction? 

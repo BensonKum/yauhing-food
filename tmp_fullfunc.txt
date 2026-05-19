@@ -1,0 +1,24 @@
+async function saveEditTransaction() {
+    if(!window._editTxId) { alert('無交易ID'); return; }
+    const rows = document.querySelectorAll('#editTransactionItems .edit-item-row');
+    const items = [];
+    rows.forEach(row => {
+        const name = row.querySelector('.item-name').value.trim();
+        const pack = row.querySelector('.item-pack').value.trim();
+        const qty = parseInt(row.querySelector('.item-qty').value) || 0;
+        if(name && qty > 0) { items.push({ name, pack, qty }); }
+    });
+    if(items.length === 0) { alert('至少需要一項貨品'); return; }
+    if(!confirm('確定保存修改？')) return;
+    try {
+        await db.collection('inventory_transactions').doc(window._editTxId).update({
+            items: items,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeEditModal();
+        renderLog();
+    } catch(e) {
+        console.error(e);
+        alert('保存失敗: ' + e.message);
+    }
+}

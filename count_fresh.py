@@ -1,8 +1,0 @@
-data = open(r'C:\Users\admin\.qclaw\workspace\yauhing-food\index.html', 'rb').read()
-s = '上海麵'.encode('utf-8')
-count = data.count(s)
-print('上海麵 count:', count)
-s2 = '豆卜'.encode('utf-8')
-print('豆卜 count:', data.count(s2))
-s3 = '水餃皮'.encode('utf-8')
-print('水餃皮 count:', data.count(s3))

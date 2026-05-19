@@ -1,0 +1,3 @@
+log-card log-date-card">' +
+      '<div class="quick-btns">' +
+        '<button class="quick-btn'+(quickDays===1?' activ

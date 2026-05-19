@@ -1,0 +1,6 @@
+;
+
+  // Left sidebar cards
+  document.getElementById('logSidebar').innerHTML =
+    '<div class="log-card" style="background:#fffde7;border-left:4px solid #ffc107"></div>' +
+    '<div class="log-card" 

@@ -1,0 +1,10 @@
+async function saveEditTransaction() {
+    if(!window._editTxId) { alert('無交易ID'); return; }
+    const rows = document.querySelectorAll('#editTransactionItems .edit-item-row');
+    const items = [];
+    rows.forEach(row => {
+        const name = row.querySelector('.item-name').value.trim();
+        const pack = row.querySelector('.item-pack').value.trim();
+        const qty = parseInt(row.querySelector('.item-qty').value) || 0;
+        if(name && qty > 0) { items.push({ name, pack, qty }); }
+   

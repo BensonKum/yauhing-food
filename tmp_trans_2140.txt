@@ -1,0 +1,4 @@
+:pointer;transition:var(--tr);color:var(--muted);background:transparent;
+}
+.mode-btn.active{background:var(--red);color:white}
+.mode-btn.act

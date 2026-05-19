@@ -1,0 +1,19 @@
+logSidebar"></div>
+    <div class="log-main">
+      <div class="report-filter">
+        <span class="filter-label">分店：</span>
+        <select class="filter-select" id="logStore" onchange="renderLog()">
+          <option value="all">全部</option>
+          <option value="central">中環店</option>
+          <option value="pioneer">始創店</option>
+        </select>
+        <span class="filter-label">類型：</span>
+        <select class="filter-select" id="logType" onchange="renderLog()">
+          <option value="all">全部</option>
+          <option value="sale">銷售</option>
+          <option value="purchase">進貨</option>
+        </select>
+        <span class="filter-label">日期：</span>
+        <input type="date" id="logDate" class="filter-select" style="width:140px" onchange="renderLog()">
+      </div>
+      <d
