@@ -1820,7 +1820,7 @@ async function renderLog(){
   const sales = txns.filter(t=>t.type==='sale'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
   const purchase = txns.filter(t=>t.type==='purchase'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
   const net = sales - purchase;
-  const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+  // todayStr already defined above
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
@@ -1828,7 +1828,7 @@ async function renderLog(){
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
-    '<div class="log-card date-btn" onclick="setDateRange('today')">' +
+    '<div class="log-card date-btn" onclick="setDateRange(&#39;today&#39;)">' +
       '<div class="num" style="font-size:1.1rem">今日</div>' +
       '<div class="label">快速按鈕</div>' +
     '</div>' +
