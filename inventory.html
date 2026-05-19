@@ -297,10 +297,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .log-card.date-btn .label{font-weight:600;color:#5D4E00}
 .log-main{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:.8rem}
 .report-summary{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-bottom:1.2rem;
+  display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:1.2rem;
 }
+.report-summary .report-card{min-width:140px;flex:1;}
 .report-card{
-  background:white;border-radius:12px;padding:1rem;border:1px solid var(--bd);text-align:center;
+  background:#fff;border-radius:12px;padding:1rem;border:1px solid #ddd;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 .report-card .num{font-family:'Noto Serif TC',serif;font-size:1.8rem;font-weight:700;color:var(--red)}
 .report-card .num.green{color:var(--green)}
