@@ -1824,7 +1824,7 @@ async function renderLog(){
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
-    '<div class="log-card" style="background:#fff;border-left:4px solid transparent;height:55px"></div>' +
+    '<div class="log-card" style="background:#fff;border-left:4px solid #bbb;height:55px"></div>' +
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
@@ -1879,14 +1879,20 @@ async function renderLog(){
 
 
 
-// Set to today only
+// Date range functions - exposed to window for onclick handlers
+window.setDateRange = function(mode) {
+  // Clear custom date inputs, set quickDays mode, re-render
+  document.getElementById('logDateFrom').value = '';
+  document.getElementById('logDateTo').value = '';
+  renderLog();
+};
+
 window.setToday = function() {
   document.getElementById('logDateFrom').value = '';
   document.getElementById('logDateTo').value = '';
   renderLog();
 };
 
-// Validate date range <= 3 months
 window.onDateRangeChange = function() {
   const from = document.getElementById('logDateFrom').value;
   const to = document.getElementById('logDateTo').value;
