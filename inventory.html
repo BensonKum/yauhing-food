@@ -1805,7 +1805,7 @@ async function renderLog(){
       const to = new Date(logDateTo+'T23:59:59');
       return d2 <= to;
     }
-    return true; // 今日 mode：由 renderLog 處理
+    return false; // no date selected
   };
 
   const storeFilter=document.getElementById('logStore').value;
@@ -1883,16 +1883,19 @@ async function renderLog(){
 
 // Date range functions - exposed to window for onclick handlers
 window.setDateRange = function(mode) {
-  // Clear custom date inputs, set quickDays mode, re-render
-  document.getElementById('logFromDate').value = '';
-  document.getElementById('logToDate').value = '';
+  // Set today's date into both inputs, then re-render
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const d = String(now.getDate()).padStart(2,'0');
+  const todayStr = y+'-'+m+'-'+d;
+  document.getElementById('logFromDate').value = todayStr;
+  document.getElementById('logToDate').value = todayStr;
   renderLog();
 };
 
 window.setToday = function() {
-  document.getElementById('logFromDate').value = '';
-  document.getElementById('logToDate').value = '';
-  renderLog();
+  setDateRange('today');
 };
 
 window.onDateRangeChange = function() {
