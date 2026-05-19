@@ -1690,22 +1690,22 @@ async function renderReport(){
 
   // === Render 4 health cards ===
   document.getElementById('reportSummary').innerHTML=`
-    <div class="report-card" style="min-height:140px;background:transparent;border:none;box-shadow:none;"></div>
+    <div class="report-card" style="min-height:210px;background:#fff;border-radius:12px;border:1px solid #ddd;box-shadow:0 2px 6px rgba(0,0,0,0.08);"></div>
     <div class="report-card" style="border-left:4px solid #f44336">
       <div class="num">${outOfStock}</div>
       <div class="label">⚠️ 缺貨 (庫存=0)</div>
     </div>
-    <div class="report-card" style="min-height:140px;background:transparent;border:none;box-shadow:none;"></div>
+    <div class="report-card" style="min-height:210px;background:#fff;border-radius:12px;border:1px solid #ddd;box-shadow:0 2px 6px rgba(0,0,0,0.08);"></div>
     <div class="report-card" style="border-left:4px solid #ff9800">
       <div class="num">${lowStock}</div>
       <div class="label">⚡ 低庫存 (<${LOW_THRESHOLD})</div>
     </div>
-    <div class="report-card" style="min-height:140px;background:transparent;border:none;box-shadow:none;"></div>
+    <div class="report-card" style="min-height:210px;background:#fff;border-radius:12px;border:1px solid #ddd;box-shadow:0 2px 6px rgba(0,0,0,0.08);"></div>
     <div class="report-card" style="border-left:4px solid #4caf50">
       <div class="num">${overStock}</div>
       <div class="label">📦 過剩庫存 (>${OVER_THRESHOLD})</div>
     </div>
-    <div class="report-card" style="min-height:140px;background:transparent;border:none;box-shadow:none;"></div>
+    <div class="report-card" style="min-height:210px;background:#fff;border-radius:12px;border:1px solid #ddd;box-shadow:0 2px 6px rgba(0,0,0,0.08);"></div>
     <div class="report-card" style="border-left:4px solid #2196f3">
       <div class="num">${turnover}</div>
       <div class="label">🔄 平均周轉率 (次/月)</div>
