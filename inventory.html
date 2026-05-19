@@ -1839,7 +1839,7 @@ async function renderLog(){
         '<input type="date" id="logFromDate">' +
         '<label style="font-size:.65rem;color:#888">至</label>' +
         '<input type="date" id="logToDate">' +
-        '<button onclick="onDateRangeChange()" style="margin-top:.2rem;padding:.35rem;background:#2196f3;color:#fff;border:none;border-radius:4px;font-size:.8rem;cursor:pointer">確定</button>' +
+        '<button id="logDateConfirmBtn" style="margin-top:.2rem;padding:.35rem;background:#2196f3;color:#fff;border:none;border-radius:4px;font-size:.8rem;cursor:pointer">確定</button>' +
       '</div>' +
     '</div>';
 
@@ -1847,7 +1847,11 @@ async function renderLog(){
   document.getElementById('logSummary').innerHTML = '';
 
   if(txns.length===0){
-    document.getElementById('logList').innerHTML='<div style="text-align:center;padding:3rem;color:var(--muted)">暫無交易記錄<br><small>在POS頁面完成交易後，記錄會顯示在這裡</small></div>';
+      // Event delegation for date confirm button (inline onclick unreliable in WebView)
+  const _dcBtn = document.getElementById('logDateConfirmBtn');
+  if(_dcBtn) _dcBtn.addEventListener('click', function(){ onDateRangeChange(); });
+
+document.getElementById('logList').innerHTML='<div style="text-align:center;padding:3rem;color:var(--muted)">暫無交易記錄<br><small>在POS頁面完成交易後，記錄會顯示在這裡</small></div>';
     return;
   }
 
