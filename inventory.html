@@ -1824,7 +1824,7 @@ async function renderLog(){
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
-    '<div class="log-card" style="background:#fff;border:none;height:55px"></div>' +
+    '<div style="height:70px;flex-shrink:0"></div>' +
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
@@ -1835,9 +1835,11 @@ async function renderLog(){
     '<div class="log-card" style="background:#fff;border:1px solid #e0e0e0">' +
       '<div class="label" style="margin-bottom:.4rem;font-size:.75rem;color:#999">自訂日期範圍</div>' +
       '<div style="display:flex;flex-direction:column;gap:.3rem">' +
-        '<input type="date" id="logDateFrom" onchange="onDateRangeChange()">' +
-        '<div style="text-align:center;font-size:.7rem;color:#bbb">至</div>' +
-        '<input type="date" id="logDateTo" onchange="onDateRangeChange()">' +
+        '<label style="font-size:.7rem;color:#888">由</label>' +
+        '<input type="date" id="logFromDate">' +
+        '<label style="font-size:.7rem;color:#888">至</label>' +
+        '<input type="date" id="logToDate">' +
+        '<button onclick="onDateRangeChange()" style="margin-top:.3rem;padding:.4rem;background:#2196f3;color:#fff;border:none;border-radius:4px;font-size:.85rem;cursor:pointer">確定</button>' +
       '</div>' +
     '</div>';
 
