@@ -1781,8 +1781,8 @@ async function renderLog(){
   let fromDate=null, toDate=null;
 
   // 今日 mode：只顯示今日
-  const logDateFrom = document.getElementById('logDateFrom') ? document.getElementById('logDateFrom').value : '';
-  const logDateTo = document.getElementById('logDateTo') ? document.getElementById('logDateTo').value : '';
+  const logDateFrom = document.getElementById('logFromDate') ? document.getElementById('logFromDate').value : '';
+  const logDateTo = document.getElementById('logToDate') ? document.getElementById('logToDate').value : '';
 
   if(!logDateFrom && !logDateTo){
     // 今日 mode
@@ -1824,7 +1824,7 @@ async function renderLog(){
 
   // Left sidebar cards
   document.getElementById('logSidebar').innerHTML =
-    '<div class="log-card" style="background:#fff;border-left:4px solid #bbb;height:55px"></div>' +
+    '<div class="log-card" style="background:#fff;border:none;height:55px"></div>' +
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
@@ -1882,27 +1882,27 @@ async function renderLog(){
 // Date range functions - exposed to window for onclick handlers
 window.setDateRange = function(mode) {
   // Clear custom date inputs, set quickDays mode, re-render
-  document.getElementById('logDateFrom').value = '';
-  document.getElementById('logDateTo').value = '';
+  document.getElementById('logFromDate').value = '';
+  document.getElementById('logToDate').value = '';
   renderLog();
 };
 
 window.setToday = function() {
-  document.getElementById('logDateFrom').value = '';
-  document.getElementById('logDateTo').value = '';
+  document.getElementById('logFromDate').value = '';
+  document.getElementById('logToDate').value = '';
   renderLog();
 };
 
 window.onDateRangeChange = function() {
-  const from = document.getElementById('logDateFrom').value;
-  const to = document.getElementById('logDateTo').value;
+  const from = document.getElementById('logFromDate').value;
+  const to = document.getElementById('logToDate').value;
   if(from && to){
     const dFrom = new Date(from);
     const dTo = new Date(to);
     const diffDays = (dTo - dFrom) / (1000*60*60*24);
     if(diffDays > 90){
       alert('日期範圍不能超過3個月');
-      document.getElementById('logDateTo').value = '';
+      document.getElementById('logToDate').value = '';
       return;
     }
   }
