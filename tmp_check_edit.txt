@@ -1,0 +1,6 @@
+window.editTransaction = function(id) {
+  alert('Coming soon');
+};
+
+
+// Delete transaction - simple confirm-based deleti
