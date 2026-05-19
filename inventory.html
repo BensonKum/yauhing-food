@@ -1690,6 +1690,32 @@ async function renderReport(){
     prodMap[p.name]={sku:p.sku||p.name,name:p.name,cat:p.cat,central,pioneer,total,status,statusText,badge};
   });
 
+  // setDateRange: 設定日期範圍（今日 / 自訂）
+  const setDateRange = (mode) => {
+    const today = new Date();
+    const fmt = d => d.toISOString().split('T')[0];
+    if(mode==='today'){
+      document.getElementById('logFromDate').value = fmt(today);
+      document.getElementById('logToDate').value = fmt(today);
+    }
+    renderLog();
+  };
+  // onDateRangeChange: 自訂日期輸入變化時自動刷新
+  const onDateRangeChange = () => {
+    const from = document.getElementById('logFromDate').value;
+    const to = document.getElementById('logToDate').value;
+    if(from && to){
+      const fDate = new Date(from);
+      const tDate = new Date(to);
+      const diff = (tDate-fDate)/(1000*60*60*24);
+      if(diff > 93){
+        alert('日期範圍不可超過3個月');
+        return;
+      }
+    }
+    renderLog();
+  };
+
   const storeFilter=document.getElementById('repStore').value;
   let rows=Object.values(prodMap);
   if(storeFilter!=='all'){
@@ -1751,21 +1777,35 @@ async function renderLog(){
 
   const now2 = new Date();
   const y=now2.getFullYear(), m=now2.getMonth(), d=now2.getDate();
+  const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
-  const selDate = document.getElementById('logDate').value;
-  if(selDate){
-    fromDate = new Date(selDate+'T00:00:00');
-    toDate = new Date(selDate+'T23:59:59');
-  } else if(quickDays > 1){
-    fromDate = new Date(now2);
-    fromDate.setDate(fromDate.getDate()-quickDays+1);
-    fromDate.setHours(0,0,0,0);
-    toDate = new Date(now2); toDate.setHours(23,59,59,999);
+
+  // 今日 mode：只顯示今日
+  const logDateFrom = document.getElementById('logDateFrom') ? document.getElementById('logDateFrom').value : '';
+  const logDateTo = document.getElementById('logDateTo') ? document.getElementById('logDateTo').value : '';
+
+  if(!logDateFrom && !logDateTo){
+    // 今日 mode
+    fromDate = new Date(todayStr+'T00:00:00');
+    toDate = new Date(todayStr+'T23:59:59');
   }
+  // inDateRange 會用 logDateFrom / logDateTo 做細節過濾
   const inDateRange = (t) => {
-    if(!fromDate) return true;
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
-    return d2 >= fromDate && d2 <= toDate;
+    if(logDateFrom && logDateTo){
+      const from = new Date(logDateFrom+'T00:00:00');
+      const to = new Date(logDateTo+'T23:59:59');
+      return d2 >= from && d2 <= to;
+    }
+    if(logDateFrom){
+      const from = new Date(logDateFrom+'T00:00:00');
+      return d2 >= from;
+    }
+    if(logDateTo){
+      const to = new Date(logDateTo+'T23:59:59');
+      return d2 <= to;
+    }
+    return true; // 今日 mode：由 renderLog 處理
   };
 
   const storeFilter=document.getElementById('logStore').value;
@@ -1788,14 +1828,17 @@ async function renderLog(){
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
-    '<div class="log-card log-date-card">' +
-      '<div class="quick-btns">' +
-        '<button class="quick-btn'+(quickDays===1?' active':'')+'" data-days="1">今日</button>' +
-        '<button class="quick-btn'+(quickDays===3?' active':'')+'" data-days="3">3日</button>' +
-        '<button class="quick-btn'+(quickDays===7?' active':'')+'" data-days="7">7日</button>' +
-        '<button class="quick-btn'+(quickDays===30?' active':'')+'" data-days="30">30日</button>' +
+    '<div class="log-card date-btn" onclick="setDateRange('today')">' +
+      '<div class="num" style="font-size:1.1rem">今日</div>' +
+      '<div class="label">快速按鈕</div>' +
+    '</div>' +
+    '<div class="log-card" style="background:#fff;border:1px solid #e0e0e0">' +
+      '<div class="label" style="margin-bottom:.4rem;font-size:.75rem;color:#999">自訂日期範圍</div>' +
+      '<div style="display:flex;flex-direction:column;gap:.3rem">' +
+        '<input type="date" id="logDateFrom" onchange="onDateRangeChange()">' +
+        '<div style="text-align:center;font-size:.7rem;color:#bbb">至</div>' +
+        '<input type="date" id="logDateTo" onchange="onDateRangeChange()">' +
       '</div>' +
-      '<input type="date" id="logDateInput" value="'+todayStr+'" onchange="quickDays=0;renderLog()">' +
     '</div>';
 
   // Right side: summary + list
@@ -1830,17 +1873,35 @@ async function renderLog(){
 // OLD deleteTransaction removed
 
 // Quick button click handler for log date card
-document.getElementById('logSidebar').addEventListener('click', function(e){
-  if(e.target.classList.contains('quick-btn')){
-    const days = parseInt(e.target.dataset.days);
-    quickDays = days;
-    document.getElementById('logDateInput').value = '';
-    renderLog();
+
+
+
+
+
+
+// Set to today only
+window.setToday = function() {
+  document.getElementById('logDateFrom').value = '';
+  document.getElementById('logDateTo').value = '';
+  renderLog();
+};
+
+// Validate date range <= 3 months
+window.onDateRangeChange = function() {
+  const from = document.getElementById('logDateFrom').value;
+  const to = document.getElementById('logDateTo').value;
+  if(from && to){
+    const dFrom = new Date(from);
+    const dTo = new Date(to);
+    const diffDays = (dTo - dFrom) / (1000*60*60*24);
+    if(diffDays > 90){
+      alert('日期範圍不能超過3個月');
+      document.getElementById('logDateTo').value = '';
+      return;
+    }
   }
-});
-
-
-
+  renderLog();
+};
 
 // Edit transaction - opens modal for editing
 window.editTransaction = function(id) {
