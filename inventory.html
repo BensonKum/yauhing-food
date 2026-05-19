@@ -1792,18 +1792,16 @@ async function renderLog(){
   // inDateRange 會用 logDateFrom / logDateTo 做細節過濾
   const inDateRange = (t) => {
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
+    // Normalize both to local date string for comparison (avoids timezone issues)
+    const d2Str = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0');
     if(logDateFrom && logDateTo){
-      const from = new Date(logDateFrom+'T00:00:00');
-      const to = new Date(logDateTo+'T23:59:59');
-      return d2 >= from && d2 <= to;
+      return d2Str >= logDateFrom && d2Str <= logDateTo;
     }
     if(logDateFrom){
-      const from = new Date(logDateFrom+'T00:00:00');
-      return d2 >= from;
+      return d2Str >= logDateFrom;
     }
     if(logDateTo){
-      const to = new Date(logDateTo+'T23:59:59');
-      return d2 <= to;
+      return d2Str <= logDateTo;
     }
     return false; // no date selected
   };
