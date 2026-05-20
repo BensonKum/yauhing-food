@@ -1486,15 +1486,24 @@ function showEmployeeTab(){ document.getElementById('tabEmployee').style.display
 function hideEmployeeTab(){ document.getElementById('tabEmployee').style.display = 'none'; }
 
 async function renderEmployeeList(){
-  if(!isAdminUser && !isSMUser) return;
+  console.log('[EMP] renderEmployeeList called. isAdminUser='+isAdminUser+' isSMUser='+isSMUser+' userStore='+userStore);
+  if(!isAdminUser && !isSMUser){ console.log('[EMP] SKIP: not admin nor SM'); return; }
   const empList = document.getElementById('empList');
+  if(!empList){ console.error('[EMP] ERROR: empList element not found!'); return; }
   empList.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">載入中...</div>';
   
   try {
     let snap;
-    if(isAdminUser && !isSMUser){ snap = await db.collection('employees').orderBy('createdAt','desc').get(); }
-    else { snap = await db.collection('employees').where('role','in',['central','pioneer','sm']).get(); }
+    if(isAdminUser && !isSMUser){
+      console.log('[EMP] Querying as ADMIN (all employees, ordered)');
+      snap = await db.collection('employees').orderBy('createdAt','desc').get();
+    } else {
+      console.log('[EMP] Querying as SM/NonAdmin (central/pioneer/sm only)');
+      snap = await db.collection('employees').where('role','in',['central','pioneer','sm']).get();
+    }
+    console.log('[EMP] Firestore query returned '+snap.size+' results');
     const emps = []; snap.forEach(d => emps.push({id: d.id, ...d.data()}));
+    console.log('[EMP] Parsed '+emps.length+' employees:', emps.map(e=>e.name+'('+e.role+')').join(', '));
     const myStore = userStore;
     const canEdit = (emp) => isAdminUser ? true : (emp.role !== 'admin' && emp.role === myStore);
     const btnHtml = '<button onclick="showAddEmployee()" style="display:block;width:100%;padding:.8rem;background:var(--green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:Noto Sans TC,sans-serif;margin-bottom:1rem">＋ 新增員工</button>';
