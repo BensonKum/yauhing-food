@@ -875,10 +875,12 @@ async function pinLogin(){
     };
     
     // Determine role/store from employee record
+    console.log('[PIN] empData:', JSON.stringify(empData));  // DEBUG: show full employee record
     const role = empData.role || '';
     const empStore = empData.store || '';  // Prefer explicit store field
     isAdminUser = (role === 'admin' || role === 'sm');
     isSMUser = (role === 'sm');
+    console.log('[PIN] role='+role+' isAdminUser='+isAdminUser+' isSMUser='+isSMUser+' userStore='+userStore);  // DEBUG
 
     // Store priority: explicit store field > infer from role > null
     if(empStore){
