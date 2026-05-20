@@ -1030,8 +1030,12 @@ async function showStoreSelect(){
     else if(email.includes('pioneer')) userStore = 'pioneer';
   }
 
-  isAdminUser = false;
-  isSMUser = false;
+  // Only reset flags if they weren't already set by PIN login or email auth
+  // This prevents overwriting admin/SM permissions set earlier in the flow
+  if(!isAdminUser && !isSMUser) {
+    isAdminUser = false;
+    isSMUser = false;
+  }
   if(userStore) {
     selectStore(userStore);
   } else {
