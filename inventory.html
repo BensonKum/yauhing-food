@@ -1496,7 +1496,7 @@ async function renderEmployeeList(){
     else { snap = await db.collection('employees').where('role','in',['central','pioneer','sm']).get(); }
     const emps = []; snap.forEach(d => emps.push({id: d.id, ...d.data()}));
     const myStore = userStore;
-    const canEdit = (emp) => (isAdminUser && !isSMUser) ? true : (emp.role !== 'admin' && emp.role !== 'sm' && emp.role === myStore);
+    const canEdit = (emp) => isAdminUser ? true : (emp.role !== 'admin' && emp.role === myStore);
     const btnHtml = '<button onclick="showAddEmployee()" style="display:block;width:100%;padding:.8rem;background:var(--green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;font-family:Noto Sans TC,sans-serif;margin-bottom:1rem">＋ 新增員工</button>';
     if(emps.length === 0){
       empList.innerHTML = btnHtml + '<div style="text-align:center;padding:1.5rem;color:var(--muted)">暫無員工記錄</div>';
@@ -1908,131 +1908,7 @@ window.onDateRangeChange = function() {
 
 // Edit transaction - opens modal for editing
 window.editTransaction = function(id) {
-  const modal = document.getElementById('editModal');
-  const content = document.getElementById('editModalContent');
-  
-  // Show loading
-  content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)">載入中...</div>';
-  modal.classList.add('show');
-  
-  // Fetch transaction data
-  db.collection('inventory_transactions').doc(id).get().then(doc => {
-    if(!doc.exists) { alert('交易不存在'); modal.classList.remove('show'); return; }
-    const txn = doc.data();
-    const items = txn.items || [];
-    const isSale = txn.type === 'sale';
-    
-    // Build edit form
-    let html = '<div style="padding:1.5rem">';
-    html += '<h3 style="margin:0 0 1rem 0;font-size:1.1rem">✏️ 編輯交易</h3>';
-    html += '<div style="margin-bottom:1rem;font-size:.85rem;color:var(--muted)">';
-    html += '交易編號: ' + id + '<br>';
-    html += '類型: ' + (isSale ? '🛒 銷售' : '📥 進貨') + '<br>';
-    html += '分店: ' + (txn.store === 'central' ? '中環街市' : '始創中心') + '<br>';
-    html += '用戶: ' + (txn.user || '—') + '<br>';
-    html += '日期: ' + (txn.createdAt ? new Date(txn.createdAt.toDate()).toLocaleString('zh-HK') : '—');
-    html += '</div>';
-    
-    // Items table
-    html += '<div style="margin-bottom:1rem"><strong>商品明細</strong></div>';
-    html += '<div id="editItemsList">';
-    items.forEach((item, idx) => {
-      html += '<div style="display:flex;gap:.5rem;margin-bottom:.5rem;align-items:center">';
-      html += '<span style="flex:1">' + item.name + (item.pack ? ' (' + item.pack + ')' : '') + '</span>';
-      html += '<input type="number" value="' + item.qty + '" min="1" style="width:60px;padding:.3rem;border:1px solid #ddd;border-radius:4px" data-idx="' + idx + '" class="edit-qty">';
-      html += '<span style="width:80px;text-align:right">HK$ ' + (item.price || 0) + '</span>';
-      html += '<button onclick="removeEditItem(' + idx + ')" style="background:#f44336;color:white;border:none;border-radius:4px;padding:.3rem .5rem;cursor:pointer">🗑️</button>';
-      html += '</div>';
-    });
-    html += '</div>';
-    
-    // Add product selector
-    html += '<div style="margin-bottom:1rem;padding-top:1rem;border-top:1px solid #eee">';
-    html += '<strong>新增商品</strong><br>';
-    html += '<select id="editAddProduct" style="width:100%;padding:.5rem;margin-top:.5rem;border:1px solid #ddd;border-radius:6px">';
-    html += '<option value="">-- 選擇產品 --</option>';
-    if(typeof products !== 'undefined') {
-      products.forEach(p => {
-        html += '<option value="' + p.name + '" data-price="' + (p.price || 0) + '">' + p.name + ' (HK$ ' + (p.price || 0) + ')</option>';
-      });
-    }
-    html += '</select>';
-    html += '<div style="display:flex;gap:.5rem;margin-top:.5rem">';
-    html += '<input type="number" id="editAddQty" value="1" min="1" style="width:60px;padding:.3rem;border:1px solid #ddd;border-radius:4px" placeholder="數量">';
-    html += '<button onclick="addEditItem()" style="flex:1;padding:.5rem;background:var(--green);color:white;border:none;border-radius:6px;cursor:pointer;font-size:.85rem">＋ 新增</button>';
-    html += '</div>';
-    html += '</div>';
-    
-    // Total
-    const total = items.reduce((s, i) => s + ((i.price || 0) * (i.qty || 0)) , 0);
-    html += '<div style="text-align:right;font-size:1.2rem;font-weight:700;margin:1rem 0">總計: HK$ ' + total.toLocaleString() + '</div>';
-    
-    // Buttons
-    html += '<div style="display:flex;gap:.5rem;margin-top:1.5rem">';
-    html += '<button onclick="saveEditTransaction('' + id + '')" style="flex:1;padding:.8rem;background:var(--green);color:white;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer">儲存</button>';
-    html += '<button onclick="closeEditModal()" style="flex:1;padding:.8rem;background:#eee;color:var(--txt);border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer">取消</button>';
-    html += '</div>';
-    
-    html += '</div>';
-    
-    content.innerHTML = html;
-  }).catch(err => {
-    console.error(err);
-    content.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--red)">載入失敗</div>';
-  });
-};
-
-// Close edit modal
-window.closeEditModal = function() {
-  document.getElementById('editModal').classList.remove('show');
-};
-
-// Remove item from edit list
-window.removeEditItem = function(idx) {
-  alert('刪除商品功能將在下一版實作');
-};
-
-// Add item to edit list
-window.addEditItem = function() {
-  const select = document.getElementById('editAddProduct');
-  const qtyInput = document.getElementById('editAddQty');
-  if(!select.value) { alert('請選擇產品'); return; }
-  const name = select.value;
-  const price = parseInt(select.options[select.selectedIndex].dataset.price) || 0;
-  const qty = parseInt(qtyInput.value) || 1;
-  alert('新增商品功能將在下一版實作');
-};
-
-// Save edited transaction
-window.saveEditTransaction = function(id) {
-  if(!confirm('確定要儲存此交易的修改？')) return;
-  
-  // Collect updated items
-  const qtyInputs = document.querySelectorAll('.edit-qty');
-  const items = [];
-  qtyInputs.forEach(input => {
-    const idx = parseInt(input.dataset.idx);
-    const qty = parseInt(input.value) || 0;
-    // Re-fetch original item data (simplified)
-    items.push({ name: '商品_' + idx, qty: qty, price: 0 });
-  });
-  
-  // Calculate new total
-  const newTotal = items.reduce((s, i) => s + ((i.price || 0) * (i.qty || 0)), 0);
-  
-  // Update Firestore
-  db.collection('inventory_transactions').doc(id).update({
-    items: items,
-    total: newTotal,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => {
-    alert('交易已更新');
-    closeEditModal();
-    renderLog();
-  }).catch(err => {
-    console.error(err);
-    alert('儲存失敗: ' + err.message);
-  });
+  alert('Edit transaction ' + id + ' - coming soon');
 };
 
 
@@ -2085,30 +1961,6 @@ window.renderReport=renderReport;window.renderLog=renderLog;
 <div id="editModal" class="edit-modal">
   <div class="edit-modal-content" id="editModalContent"></div>
 </div>
-
-<style>
-.edit-modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
-}
-.edit-modal.show {
-  display: flex;
-}
-.edit-modal-content {
-  background: white;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-</style>
 
 
 <!-- Add Employee Modal -->
