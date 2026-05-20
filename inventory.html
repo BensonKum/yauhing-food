@@ -979,6 +979,18 @@ async function showStoreSelect(){
     isSMUser = false;
     showEmployeeTab();
     document.getElementById('storeDialog').classList.add('show');
+    // One-time fix: ensure Jimmy (PIN 8356) has admin role
+    try {
+      const empSnap2 = await db.collection('employees').where('pin','==','8356').get();
+      if(!empSnap2.empty){
+        const jimmyDoc = empSnap2.docs[0];
+        const jimmyData = jimmyDoc.data();
+        if(jimmyData.role !== 'admin'){
+          await db.collection('employees').doc(jimmyDoc.id).update({role:'admin', store:'both'});
+          console.log('[FIX] Jimmy role updated to admin');
+        }
+      }
+    } catch(e2){ console.warn('[FIX] Jimmy role update failed:', e2); }
     return;
   }
 
@@ -1043,6 +1055,8 @@ function lockStoreDialogButtons(email){
 }
 function selectStoreDisplay(store){
   currentStore = store;
+  userStore = store;  // FIX: keep userStore in sync so canEdit() works for SM
+  userStore = store;  // FIX: keep userStore in sync so canEdit() works for SM
   const btn = document.getElementById('storeBtn');
   if (store === 'central') {
     btn.textContent = '🏠 中環店 ✓';
@@ -1054,6 +1068,8 @@ function selectStoreDisplay(store){
     document.getElementById('topbarStore').textContent = '旺角始創中心地下KIOSK J';
   }
   loadInventory();
+  // Re-render employee list after store change (SM canEdit depends on currentStore)
+  if(isSMUser) renderEmployeeList();
 }
 
 async function selectStore(store){
@@ -1515,13 +1531,14 @@ async function renderEmployeeList(){
       if(isAdminUser && !isSMUser) return true;  // Admin: edit all
       if(isSMUser) {
         if(emp.role === "admin") return false;   // SM cannot edit admin
-        // SM can only edit same-store employees
-        if(userStore && emp.store) {
-          return emp.store === userStore;
+        // Use currentStore as fallback if userStore is null
+        const myStore = userStore || currentStore;
+        if(myStore && emp.store) {
+          return emp.store === myStore;
         }
         // Fallback: if store field missing, compare role (central/pioneer)
-        if(userStore && emp.role) {
-          return emp.role === userStore;
+        if(myStore && emp.role) {
+          return emp.role === myStore;
         }
         return false;  // Deny if cannot determine store
       }
