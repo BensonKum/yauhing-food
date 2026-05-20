@@ -839,9 +839,18 @@ document.querySelectorAll('.p-card[data-stock="in"]').forEach(function(card){
   var img=null;
   var imgEl=card.querySelector('.p-img img');
   if(imgEl&&imgEl.src)img='images/'+imgEl.src.split('/').pop();
-  var priceText=priceEl.textContent;
-  var match=priceText.match(/HKD (\d+)/);
-  var price=match?parseInt(match[1]):0;
+  var priceText = priceEl.textContent;
+  var allPrices = priceText.match(/HKD (\d+)/g);
+  var price = allPrices ? parseInt(allPrices[0].replace('HKD ', '')) : 0;
+  if (isMulti) {
+    var activeBtn = card.querySelector('.pk-btn.active');
+    if (activeBtn) {
+      var pkIndex = activeBtn.getAttribute('data-pk');
+      if (pkIndex && allPrices && allPrices[parseInt(pkIndex) - 1]) {
+        price = parseInt(allPrices[parseInt(pkIndex) - 1].replace('HKD ', ''));
+      }
+    }
+  }
   var btn=document.createElement('button');
   btn.className='add-cart-btn';
   btn.dataset.name=name;
