@@ -997,6 +997,7 @@ async function showStoreSelect(){
       if(empData.role === 'sm'){
         isAdminUser = true;   // SM has admin-level store access
         isSMUser = true;
+        userStore = empData.store || null;   // FIX: use store field (not role)
         showEmployeeTab();
         document.getElementById('storeDialog').classList.add('show');
         return;
@@ -1509,10 +1510,21 @@ async function renderEmployeeList(){
     }
     
     const myStore = userStore;
-    // canEdit: Admin=all; SM=cannot edit admin
+    // canEdit: Admin=all; SM=same store (cannot edit admin)
     const canEdit = (emp) => {
       if(isAdminUser && !isSMUser) return true;  // Admin: edit all
-      if(isSMUser) return (emp.role !== 'admin');   // SM: cannot edit admin
+      if(isSMUser) {
+        if(emp.role === "admin") return false;   // SM cannot edit admin
+        // SM can only edit same-store employees
+        if(userStore && emp.store) {
+          return emp.store === userStore;
+        }
+        // Fallback: if store field missing, compare role (central/pioneer)
+        if(userStore && emp.role) {
+          return emp.role === userStore;
+        }
+        return false;  // Deny if cannot determine store
+      }
       return false;
     };
     console.log('[EMP] canEdit logic set. isAdminUser='+isAdminUser+' isSMUser='+isSMUser);
