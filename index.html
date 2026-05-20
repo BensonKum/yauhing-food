@@ -861,7 +861,18 @@ document.querySelectorAll('.p-card[data-stock="in"]').forEach(function(card){
   btn.onclick=function(e){
     e.stopPropagation();
     var variant=isMulti?(card.querySelector('.pk-btn.active')||{}).textContent||null:null;
-    window.addToCart(name,price,variant,img);
+    // Recalculate price based on selected package at click time
+    var ct=priceEl.textContent;
+    var ap=ct.match(/HKD (\d+)/g);
+    var curP=ap?parseInt(ap[0].replace('HKD ','')):0;
+    if(isMulti){
+      var pk=card.querySelector('.pk-btn.active');
+      if(pk){
+        var pi=pk.getAttribute('data-pk');
+        if(pi&&ap&&ap[parseInt(pi)-1]){curP=parseInt(ap[parseInt(pi)-1].replace('HKD ',''));}
+      }
+    }
+    window.addToCart(name,curP,variant,img);
   };
   card.querySelector('.p-info').appendChild(btn);
 });
