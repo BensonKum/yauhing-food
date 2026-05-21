@@ -630,6 +630,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   <div class="log-wrap">
     <div class="log-sidebar" id="logSidebar"></div>
     <div class="log-main">
+        <button class="btn-export" onclick="exportLogToExcel()" style="display:inline-flex!important;visibility:visible!important;opacity:1!important;margin-bottom:.8rem;padding:.6rem 1.2rem;font-size:.85rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,200,100,0.3);z-index:999;position:relative;">📊 匯出 Excel</button>
       <div class="report-filter">
         <span class="filter-label">分店：</span>
         <select class="filter-select" id="logStore" onchange="renderLog()">
