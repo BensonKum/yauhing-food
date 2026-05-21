@@ -1905,10 +1905,10 @@ function setQuickDate(days){
 }
 
 async function applyLogDateRange(){
-  renderLog();
+  await renderLog();
 }
 
-function renderLog(){
+async function renderLog(){
   let txns=[];
   try {
     const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
