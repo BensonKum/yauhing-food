@@ -1572,47 +1572,6 @@ function exportLogToExcel(){
 }
 
 // --- Add Export Buttons Dynamically ---
-function addExportButtons(){
-  // Add to Report tab
-  const repFilter = document.querySelector('#tabContentReport .report-filter');
-  if(repFilter && !document.getElementById('btnExportReport')){
-    const btn = document.createElement('button');
-    btn.id = 'btnExportReport';
-    btn.className = 'btn-export';
-    btn.textContent = ' 匯出 Excel';
-    btn.onclick = exportReportToExcel;
-    repFilter.appendChild(btn);
-  }
-  
-  // Add to Log tab
-  const logFilter = document.querySelector('#tabContentLog .report-filter');
-  if(logFilter && !document.getElementById('btnExportLog')){
-    const btn = document.createElement('button');
-    btn.id = 'btnExportLog';
-    btn.className = 'btn-export';
-    btn.textContent = ' 匯出 Excel';
-    btn.onclick = exportLogToExcel;
-    logFilter.appendChild(btn);
-  }
-}
-
-// Call after page load
-if(document.readyState === 'loading'){
-  document.addEventListener('DOMContentLoaded', addExportButtons);
-} else {
-  addExportButtons();
-}
-
-// Also call when switching to report/log tabs
-const originalSwitchTab = window.switchTab;
-if(originalSwitchTab) {
-  window.switchTab = function(tab) {
-    originalSwitchTab(tab);
-    if(tab === 'report' || tab === 'log') {
-      setTimeout(addExportButtons, 100);
-    }
-  };
-}
 
 // --- Mobile Cart ---
 function toggleMobileCart(){
