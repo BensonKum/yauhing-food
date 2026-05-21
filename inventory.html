@@ -166,6 +166,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-clear{background:transparent;border:1.5px solid var(--bd);color:var(--muted);border-radius:50px;padding:.45rem;font-size:.78rem;cursor:pointer;transition:var(--tr)}
 .btn-clear:hover{border-color:var(--red);color:var(--red)}
 
+/* Export Button */
+.btn-export{padding:.45rem .9rem;border:none;border-radius:50px;font-size:.78rem;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:var(--tr);background:var(--green);color:white;display:flex;align-items:center;gap:.3rem}
+.btn-export:hover{background:#236B3F;transform:scale(1.02)}
+.btn-export::before{content:'📊'}
+
 /* receipt */
 .receipt-modal{
   position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;
@@ -597,6 +602,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <option value="zero">🔴 缺貨</option>
         <option value="discontinued">❌ 停售</option>
       </select>
+      <button class="btn-export" onclick="exportReportToExcel()">📊 匯出 Excel</button>
     </div>
     <div class="report-section">
       <div class="report-section-title">
@@ -706,6 +712,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script>
 // --- Firebase Config ---
 const fb = firebase.initializeApp({
@@ -1492,6 +1499,120 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 window.showToast = toast; // Alias for compatibility
+
+// --- Export to Excel ---
+function exportReportToExcel(){
+  try {
+    const store = document.getElementById('repStore').value;
+    const status = document.getElementById('repStatus').value;
+    const reportData = [];
+    
+    // Add header
+    reportData.push(['祐興食品 - 庫存報表', '', '', '', '']);
+    reportData.push(['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '']);
+    reportData.push(['狀態篩選', status==='all'?'全部':status==='out'?'缺貨':status==='low'?'低庫存':status==='over'?'過剩':'正常', '', '', '']);
+    reportData.push([]);
+    reportData.push(['SKU', '產品名稱', '分店', '庫存量', '狀態']);
+    
+    // Collect data from the report table
+    const rows = document.querySelectorAll('#reportTableBody tr');
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      if(cells.length >= 5) {
+        reportData.push([cells[0]?.textContent||'', cells[1]?.textContent||'', cells[2]?.textContent||'', cells[3]?.textContent||'', cells[4]?.textContent||'']);
+      }
+    });
+    
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(reportData);
+    XLSX.utils.book_append_sheet(wb, ws, '庫存報表');
+    XLSX.writeFile(wb, `庫存報表_${new Date().toISOString().split('T')[0]}.xlsx`);
+    toast('✅ 報表已匯出為 Excel');
+  } catch(e) {
+    console.error('Export report error:', e);
+    toast('❌ 匯出失敗：' + e.message);
+  }
+}
+
+function exportLogToExcel(){
+  try {
+    const store = document.getElementById('logStore').value;
+    const from = document.getElementById('logFromDate').value;
+    const to = document.getElementById('logToDate').value;
+    const logData = [];
+    
+    // Add header
+    logData.push(['祐興食品 - 交易記錄', '', '', '', '', '']);
+    logData.push(['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '', '']);
+    logData.push(['日期範圍', from && to ? `${from} 至 ${to}` : '全部', '', '', '', '']);
+    logData.push([]);
+    logData.push(['時間', '類型', '分店', '產品', '數量', '金額']);
+    
+    // Collect data from the log list
+    const entries = document.querySelectorAll('.log-entry');
+    entries.forEach(entry => {
+      const meta = entry.querySelector('.log-meta')?.textContent || '';
+      const type = entry.querySelector('.log-type')?.textContent || '';
+      const items = entry.querySelector('.log-items')?.textContent || '';
+      const total = entry.querySelector('.log-total')?.textContent || '';
+      logData.push([meta, type, '', items, '', total]);
+    });
+    
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(logData);
+    XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
+    XLSX.writeFile(wb, `交易記錄_${new Date().toISOString().split('T')[0]}.xlsx`);
+    toast('✅ 記錄已匯出為 Excel');
+  } catch(e) {
+    console.error('Export log error:', e);
+    toast('❌ 匯出失敗：' + e.message);
+  }
+}
+
+// --- Add Export Buttons Dynamically ---
+function addExportButtons(){
+  // Add to Report tab
+  const repFilter = document.querySelector('#tabContentReport .report-filter');
+  if(repFilter && !document.getElementById('btnExportReport')){
+    const btn = document.createElement('button');
+    btn.id = 'btnExportReport';
+    btn.className = 'btn-export';
+    btn.textContent = ' 匯出 Excel';
+    btn.onclick = exportReportToExcel;
+    repFilter.appendChild(btn);
+  }
+  
+  // Add to Log tab
+  const logFilter = document.querySelector('#tabContentLog .report-filter');
+  if(logFilter && !document.getElementById('btnExportLog')){
+    const btn = document.createElement('button');
+    btn.id = 'btnExportLog';
+    btn.className = 'btn-export';
+    btn.textContent = ' 匯出 Excel';
+    btn.onclick = exportLogToExcel;
+    logFilter.appendChild(btn);
+  }
+}
+
+// Call after page load
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', addExportButtons);
+} else {
+  addExportButtons();
+}
+
+// Also call when switching to report/log tabs
+const originalSwitchTab = window.switchTab;
+if(originalSwitchTab) {
+  window.switchTab = function(tab) {
+    originalSwitchTab(tab);
+    if(tab === 'report' || tab === 'log') {
+      setTimeout(addExportButtons, 100);
+    }
+  };
+}
 
 // --- Mobile Cart ---
 function toggleMobileCart(){
