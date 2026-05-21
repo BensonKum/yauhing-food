@@ -1944,7 +1944,9 @@ async function renderLog(){
     if(logDateTo){
       return d2Str <= logDateTo;
     }
-    return false; // no date selected
+    // 如果冇填日期，預設顯示今日（符合 fromDate/toDate 的設定）
+    const todayMatch = new Date(todayStr+'T00:00:00') <= d2 && d2 <= new Date(todayStr+'T23:59:59');
+    return todayMatch;
   };
 
   const storeFilter=document.getElementById('logStore').value;
