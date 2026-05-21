@@ -692,5 +692,15 @@
     "image": null,
     "local_img": "product_shrimp_rice_roll.jpg",
     "sku": null
+  },
+  {
+    "cat": "新鮮粉麵",
+    "name": "上海麵(粗)盒裝",
+    "price": "HKD 10",
+    "note": "",
+    "stock": true,
+    "image": null,
+    "local_img": "product_shanghai_thick_noodle.jpg",
+    "sku": null
   }
 ]
