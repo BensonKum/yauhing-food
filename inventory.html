@@ -1920,10 +1920,11 @@ async function renderLog(){
   const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
 
-  // 今日 mode：只顯示今日
-  const logDateFrom = document.getElementById('logFromDate') ? document.getElementById('logFromDate').value : '';
-  const logDateTo = document.getElementById('logToDate') ? document.getElementById('logToDate').value : '';
+  // 讀取篩選列的日期輸入 (logFromDate2/logToDate2)
+  const logDateFrom = document.getElementById('logFromDate2') ? document.getElementById('logFromDate2').value : '';
+  const logDateTo = document.getElementById('logToDate2') ? document.getElementById('logToDate2').value : '';
 
+  // 如果兩個都冇Input，預設顯示今日
   if(!logDateFrom && !logDateTo){
     // 今日 mode
     fromDate = new Date(todayStr+'T00:00:00');
