@@ -602,7 +602,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
         <option value="zero">🔴 缺貨</option>
         <option value="discontinued">❌ 停售</option>
       </select>
-      <button class="btn-export" onclick="exportReportToExcel()">📊 匯出 Excel</button>
+      <button class="btn-export" onclick="exportReportToExcel()" style="display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:999!important;font-size:0.85rem!important;padding:.5rem 1rem!important;">📊 匯出 Excel</button>
     </div>
     <div class="report-section">
       <div class="report-section-title">
@@ -643,7 +643,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
           <option value="sale">銷售</option>
           <option value="purchase">進貨</option>
         </select>
-        <button class="btn-export" onclick="exportLogToExcel()">📊 匯出 Excel</button>
+        <button class="btn-export" onclick="exportLogToExcel()" style="display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:999!important;font-size:0.85rem!important;padding:.5rem 1rem!important;">📊 匯出 Excel</button>
         <span class="filter-label">日期：</span>
         <input type="date" id="logDate" class="filter-select" style="width:140px" onchange="renderLog()">
       </div>
