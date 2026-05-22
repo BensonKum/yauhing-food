@@ -1,0 +1,8 @@
+﻿Before: 66 products
+After: 64 products
+Dumpling products remaining: 3
+  - None: ˮ�Ƥ (���b)
+  - YH509: �ײ��
+  - YH510: �����
+
+Done! Duplicates removed.

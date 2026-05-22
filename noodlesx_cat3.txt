@@ -1,0 +1,56 @@
+﻿{
+  "ok": true,
+  "command": "run",
+  "data": {
+    "browser_command": "batch --bail click @e55 click @e59 wait --load networkidle get text body",
+    "result": [
+      {
+        "command": [
+          "click",
+          "@e55"
+        ],
+        "error": null,
+        "result": {
+          "clicked": "@e55"
+        },
+        "success": true
+      },
+      {
+        "command": [
+          "click",
+          "@e59"
+        ],
+        "error": null,
+        "result": {
+          "clicked": "@e59"
+        },
+        "success": true
+      },
+      {
+        "command": [
+          "wait",
+          "--load",
+          "networkidle"
+        ],
+        "error": null,
+        "result": {
+          "state": "networkidle"
+        },
+        "success": true
+      },
+      {
+        "command": [
+          "get",
+          "text",
+          "body"
+        ],
+        "error": null,
+        "result": {
+          "origin": "https://www.noodlesx.com/zh-hk/shop/?query=%7B%22page%22%3A1%2C%22rowsPerPage%22%3A24%2C%22sortBy%22%3A%5B%22order%22%2C%22date%22%5D%2C%22sortDesc%22%3A%5Bfalse%2Ctrue%5D%2C%22currentFilter%22%3A%7B%22categories.tree._id%22%3A%7B%22%24in%22%3A%5B%22690ca5223d0e9e3a6bcacf90%22%5D%7D%7D%7D",
+          "text": "首頁\n商店\n所有分類\n關於我們\n聯絡我們\n文章\n推介貨品\nkeyboard_arrow_down\n每頁顯示 24 個\nkeyboard_arrow_down\n價錢\nkeyboard_arrow_down\n產品類型\nkeyboard_arrow_down\n產品類型\ncheck_box_outline_blank\n禮盒/套裝\ncheck_box_outline_blank\n特式麵\ncheck_box_outline_blank\n醬料\ncheck_box_outline_blank\n素纖麵\ncheck_box\n蝦籽麵\n更多\n陳皮鴨湯麵禮盒\nHKD 108\n香港手信系列-蝦子麵套裝\nHKD 98\n蝦子麵禮盒裝\nHKD 108\n鮑魚罐頭(四罐優惠)\nHKD 100\n鮑魚罐頭\nHKD 28\n秘製菌王醬\nHKD 40\n鮑魚禮盒\nHKD 168\n低鈉蝦籽麵(粗麵)6個裝\nHKD 60\n低鈉蝦籽麵(幼麵)6個裝\nHKD 60\n全蛋麵(粗麵)6個裝\nHKD 60\n全蛋麵(幼麵)6個裝\nHKD 60\n墨汁龍蝦撈麵(6個裝)\nHKD 70\n超級菠菜雞湯麵(6個裝)\nHKD 70\n魚蓉濃湯麵(6個裝)\nHKD 70\n海鮮麵(6個裝)\nHKD 70\n冬陰功麵(6個裝)\nHKD 70\n鮑魚保溫壺收納套裝\nHKD 88\n素纖麵5個+保溫壺套裝\nHKD 78\n黃金花膠海參蝦籽麵\nHKD 15\n古法大地魚蝦籽麵(粗)\nHKD 15\n古法大地魚蝦籽麵(幼)\nHKD 15\n經典蝦籽麵禮盒\nHKD 88\n蝦籽麵雙重禮盒裝\nHKD 198\n秘製蝦籽\nHKD 50\nchevron_left\n1\n2\n3\nchevron_right\nshopping_cart\n關於祐興粉麵廠\n首頁\n關於我們\n聯絡我們\n文章\n商店\n網站資源\n願望清單\n我的帳號\n購物車\n隱私權政策\n條款及細則\n商店\n手工麵\n蝦籽麵\n素纖麵\n零售裝\n禮盒套裝\n罐頭\n養生麵\n醬汁配料\n特式麵\nCopyright © 2022 Yau hing Food Processing All Right Reserved.\nPowered by BOXS Limited\n條款及細則"
+        },
+        "success": true
+      }
+    ]
+  }
+}

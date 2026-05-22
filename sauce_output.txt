@@ -1,0 +1,10 @@
+﻿python : Traceback (most recent call last):
+At line:1 char:140
++ ... aw\workspace\yauhing-food"; python check_sauce_format.py 2>&1 | Out-F ...
++                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\admin\.qclaw\workspace\yauhing-food\check_sauce_format.py", line 11, in <module>
+    print(f'\u2705 �������u֭���ϡ�at position {idx}')
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2705' in position 0: illegal multibyte sequence

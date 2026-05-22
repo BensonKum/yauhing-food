@@ -1,0 +1,15 @@
+﻿{
+  "ok": true,
+  "command": "run",
+  "data": {
+    "browser_command": "get text body",
+    "result": {
+      "success": true,
+      "data": {
+        "origin": "https://www.noodlesx.com/zh-hk/shop/?query=%7B%22currentFilter%22%3A%7B%22categories.tree._id%22%3A%7B%22%24in%22%3A%22691f47603d0e9e3a6bcbf525%22%7D%7D%7D",
+        "text": "首頁\n商店\n所有分類\n關於我們\n聯絡我們\n文章\n蝦籽麵\n素纖麵\n醬料\n禮盒/套裝\n特式麵\n手工麵\n零售裝\n推介貨品\nkeyboard_arrow_down\n每頁顯示 24 個\nkeyboard_arrow_down\n價錢\nkeyboard_arrow_down\n產品類型\nkeyboard_arrow_down\n陳皮鴨湯麵禮盒\nHKD 108\n香港手信系列-蝦子麵套裝\nHKD 98\n蝦子麵禮盒裝\nHKD 108\n鮑魚禮盒\nHKD 168\n鮑魚保溫壺收納套裝\nHKD 88\n素纖麵5個+保溫壺套裝\nHKD 78\n經典蝦籽麵禮盒\nHKD 88\n蝦籽麵雙重禮盒裝\nHKD 198\n蝦籽麵+素纖麵(套裝)\nHKD 68\nchevron_left\n1\nchevron_right\nshopping_cart\n關於祐興粉麵廠\n首頁\n關於我們\n聯絡我們\n文章\n商店\n網站資源\n願望清單\n我的帳號\n購物車\n隱私權政策\n條款及細則\n商店\n手工麵\n蝦籽麵\n素纖麵\n零售裝\n禮盒套裝\n罐頭\n養生麵\n醬汁配料\n特式麵\nCopyright © 2022 Yau hing Food Processing All Right Reserved.\nPowered by BOXS Limited\n條款及細則"
+      },
+      "error": null
+    }
+  }
+}

@@ -1,0 +1,12 @@
+﻿��ǰ��Ʒ����: 62
+���� SKU ��̖: YH508
+python : Traceback (most recent call last):
+At line:1 char:140
++ ... claw\workspace\yauhing-food"; python add_dumplings_v2.py 2>&1 | Out-F ...
++                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\admin\.qclaw\workspace\yauhing-food\add_dumplings_v2.py", line 55, in <module>
+    print('\n\u2705 ������ 2 ����ӮaƷ')
+UnicodeEncodeError: 'gbk' codec can't encode character '\u2705' in position 2: illegal multibyte sequence

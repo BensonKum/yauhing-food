@@ -1,0 +1,45 @@
+﻿{
+  "ok": true,
+  "command": "run",
+  "data": {
+    "browser_command": "batch --bail click @e58 wait --load networkidle get text body",
+    "result": [
+      {
+        "command": [
+          "click",
+          "@e58"
+        ],
+        "error": null,
+        "result": {
+          "clicked": "@e58"
+        },
+        "success": true
+      },
+      {
+        "command": [
+          "wait",
+          "--load",
+          "networkidle"
+        ],
+        "error": null,
+        "result": {
+          "state": "networkidle"
+        },
+        "success": true
+      },
+      {
+        "command": [
+          "get",
+          "text",
+          "body"
+        ],
+        "error": null,
+        "result": {
+          "origin": "https://www.noodlesx.com/zh-hk/shop/?query=%7B%22page%22%3A1%2C%22rowsPerPage%22%3A24%2C%22sortBy%22%3A%5B%22order%22%2C%22date%22%5D%2C%22sortDesc%22%3A%5Bfalse%2Ctrue%5D%2C%22currentFilter%22%3A%7B%22categories.tree._id%22%3A%7B%22%24in%22%3A%5B%22690ca5223d0e9e3a6bcacf90%22%2C%22690ca52b3d0e9e3a6bcacfa6%22%5D%7D%7D%7D",
+          "text": "首頁\n商店\n所有分類\n關於我們\n聯絡我們\n文章\n推介貨品\nkeyboard_arrow_down\n每頁顯示 24 個\nkeyboard_arrow_down\n價錢\nkeyboard_arrow_down\n產品類型\nkeyboard_arrow_down\n產品類型\ncheck_box_outline_blank\n禮盒/套裝\ncheck_box_outline_blank\n特式麵\ncheck_box_outline_blank\n醬料\ncheck_box\n素纖麵\ncheck_box\n蝦籽麵\n更多\n低鈉蝦籽麵(粗麵)6個裝\nHKD 60\n低鈉蝦籽麵(幼麵)6個裝\nHKD 60\n黃金花膠海參蝦籽麵\nHKD 15\n古法大地魚蝦籽麵(粗)\nHKD 15\n古法大地魚蝦籽麵(幼)\nHKD 15\n豆乳麵\nHKD 12\n菠菜麵\nHKD 12\n蕃茄麵\nHKD 12\n南瓜麵\nHKD 12\n紫薯麵\nHKD 12\n鮑魚蝦籽麵(粗)\nHKD 15\n鮑魚蝦籽麵(幼)\nHKD 15\n瑤柱蝦籽麵 (幼)\nHKD 15\n瑤柱蝦籽麵 (粗)\nHKD 15\n十年陳皮鴨湯麵\nHKD 15\n五色素纖麵 5個裝\nHKD 50\n缺貨中\n低鈉蝦籽麵\nHKD 80\nchevron_left\n1\nchevron_right\nshopping_cart\n關於祐興粉麵廠\n首頁\n關於我們\n聯絡我們\n文章\n商店\n網站資源\n願望清單\n我的帳號\n購物車\n隱私權政策\n條款及細則\n商店\n手工麵\n蝦籽麵\n素纖麵\n零售裝\n禮盒套裝\n罐頭\n養生麵\n醬汁配料\n特式麵\nCopyright © 2022 Yau hing Food Processing All Right Reserved.\nPowered by BOXS Limited\n條款及細則"
+        },
+        "success": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+Total lines: 1448
+=== Searching for 禮盒套裝 ===
+Found at line 275: <nav id="nav"><div class="ni"><a href="#" class="logo">祐興<span>食品</span></a><ul class="nl"><li><a hr
+
+=== Searching for products section end ===
+
+=== All categories (data-cat) ===
+  - 全部
+  - 手工麵
+  - 新鮮粉麵
+  - 特色麵
+  - 禮盒套裝
+  - 素纖麵
+  - 罐頭/零售裝
+  - 蝦籽麵
+  - 醬汁配料
+  - 餃子系列
