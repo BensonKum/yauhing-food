@@ -722,25 +722,5 @@
     "image": null,
     "local_img": "product_spicy_dumpling.jpg",
     "sku": "YH510"
-  },
-  {
-    "cat": "餃子系列",
-    "name": "白菜餃",
-    "price": "HKD 25",
-    "note": "",
-    "stock": true,
-    "image": null,
-    "local_img": "product_cabbage_dumpling.jpg",
-    "sku": "YH511"
-  },
-  {
-    "cat": "餃子系列",
-    "name": "麻辣餃",
-    "price": "HKD 25",
-    "note": "",
-    "stock": true,
-    "image": null,
-    "local_img": "product_spicy_dumpling.jpg",
-    "sku": "YH512"
   }
 ]
