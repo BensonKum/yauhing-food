@@ -1899,9 +1899,17 @@ async function renderLog(){
   const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
 
-  // 預設顯示今日
-  fromDate = new Date(todayStr+'T00:00:00');
-  toDate = new Date(todayStr+'T23:59:59');
+  // 讀取日期輸入框
+  const fromVal = document.getElementById('logFromDate')?.value;
+  const toVal = document.getElementById('logToDate')?.value;
+  if(fromVal && toVal){
+    fromDate = new Date(fromVal+'T00:00:00');
+    toDate = new Date(toVal+'T23:59:59');
+  } else {
+    // 預設顯示今日
+    fromDate = new Date(todayStr+'T00:00:00');
+    toDate = new Date(todayStr+'T23:59:59');
+  }
 
   const inDateRange = (t) => {
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
