@@ -1568,13 +1568,12 @@ function exportLogToExcel(){
     // Create workbook
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(logData);
-    // Apply HK$ number format to Amount column (F) for all data rows
-    const numRows = logData.length;
-    for(let r = 6; r <= numRows; r++){ // rows 1-indexed; row 6 is first data row
-      const cellRef = 'F' + r;
-      if(ws[cellRef]){
-        ws[cellRef].t = 'n'; // number type
-        ws[cellRef].z = 'HK$#,##0'; // HK$ format with thousands separator
+    // Apply HK$ number format directly to each F cell to prevent date serial interpretation
+    for(let r = 6; r <= logData.length; r++){
+      const cellAddr = 'F' + r;
+      if(ws[cellAddr] !== undefined){
+        const v = ws[cellAddr].v;
+        ws[cellAddr] = { t:'n', v: v, z: 'HK$#,##0' };
       }
     }
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
