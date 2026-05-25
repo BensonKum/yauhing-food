@@ -1554,27 +1554,27 @@ function exportLogToExcel(){
     logData.push([]);
     logData.push(['時間', '類型', '分店', '產品', '數量', '金額']);
     
-    // Collect data from the log list
+    // Collect data — build aoa without the F column amount, then write F cells directly as numbers
     const entries = document.querySelectorAll('.log-entry');
+    const amountRows = []; // {meta, type, items, amount}
     entries.forEach(entry => {
       const meta = entry.querySelector('.log-meta')?.textContent || '';
       const type = entry.querySelector('.log-type')?.textContent || '';
       const items = entry.querySelector('.log-items')?.textContent || '';
       const totalText = entry.querySelector('.log-total')?.textContent || '';
       const totalNum = parseFloat(totalText.replace(/[^\d.]/g, '')) || 0;
-      logData.push([meta, type, '', items, '', totalNum]);
+      logData.push([meta, type, '', items, '', null]);
+      amountRows.push(totalNum);
     });
     
-    // Create workbook
+    // Create workbook — build sheet without amount column, then add F cells as true numbers
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(logData);
-    // Apply HK$ number format directly to each F cell to prevent date serial interpretation
-    for(let r = 6; r <= logData.length; r++){
-      const cellAddr = 'F' + r;
-      if(ws[cellAddr] !== undefined){
-        const v = ws[cellAddr].v;
-        ws[cellAddr] = { t:'n', v: v, z: 'HK$#,##0' };
-      }
+    // Write F column (col index 5, 1-based = 6th column) as true numbers with HK$ format
+    for(let i = 0; i < amountRows.length; i++){
+      const rowNum = 6 + i; // data starts at row 6
+      const cellAddr = 'F' + rowNum;
+      ws[cellAddr] = { t:'n', v: amountRows[i], z: 'HK$#,##0' };
     }
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
     XLSX.writeFile(wb, `交易記錄_${new Date().toISOString().split('T')[0]}.xlsx`);
