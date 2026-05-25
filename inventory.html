@@ -1576,11 +1576,12 @@ function exportLogToExcel(){
       XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
     }
     
-    // Write F column amounts as plain numbers (no format to avoid openpyxl date bug)
+    // Write F column with currency format that won't trigger openpyxl date detection
     for(let i = 0; i < dataRows.length; i++){
       const rowNum = 6 + i;
-      const totalNum = dataRows[i][5]; // already a number
-      ws['F' + rowNum] = totalNum;
+      const totalNum = dataRows[i][5];
+      // Use $ format (USD-style) instead of HK$ to avoid openpyxl date interpretation
+      ws['F' + rowNum] = { t:'n', v: totalNum, z: '$#,##0' };
     }
     
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
