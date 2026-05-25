@@ -1577,11 +1577,19 @@ function exportLogToExcel(){
     }
     
     // Write F column with currency format that won't trigger openpyxl date detection
-    for(let i = 0; i < dataRows.length; i++){
-      const rowNum = 6 + i;
-      const totalNum = dataRows[i][5];
-      // Use $ format (USD-style) instead of HK$ to avoid openpyxl date interpretation
-      ws['F' + rowNum] = { t:'n', v: totalNum, z: '$#,##0' };
+    // Clear any cells beyond data rows to avoid stray values
+    const lastDataRow = 5 + dataRows.length; // header(5) + data
+    for(let r = 6; r <= 100; r++){
+      if(r <= lastDataRow){
+        // Within data range - set format
+        const idx = r - 6;
+        if(idx < dataRows.length){
+          ws['F' + r] = { t:'n', v: dataRows[idx][5], z: '$#,##0' };
+        }
+      } else {
+        // Beyond data - clear cell
+        delete ws['F' + r];
+      }
     }
     
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
