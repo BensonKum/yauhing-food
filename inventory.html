@@ -1557,8 +1557,7 @@ function exportLogToExcel(){
     
     const entries = document.querySelectorAll('.log-entry');
     
-    // Build data rows with raw numeric amounts (F column = plain number)
-    // We write F as a raw number so it won't be misread as date serial
+    // Build data rows with numeric amounts
     const dataRows = [];
     entries.forEach(entry => {
       const meta = entry.querySelector('.log-meta')?.textContent || '';
@@ -1572,19 +1571,24 @@ function exportLogToExcel(){
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(header);
     
-    // Append data rows (F column = raw number, no format in aoa)
+    // Append data rows (F column = raw number)
     if(dataRows.length > 0){
       XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
     }
     
-    // Now apply HK$ format to F column cells — this sets s=style without changing t=n
-    const fmtCell = { t:'n', z: 'HK$#,##0' };
+    // Write F column amounts as explicit Cell objects with t='n' to prevent date interpretation
     for(let i = 0; i < dataRows.length; i++){
       const rowNum = 6 + i;
-      const addr = 'F' + rowNum;
-      // Merge: keep existing v (number), set format
-      const existing = ws[addr];
-      ws[addr] = { t:'n', v: existing ? existing.v : 0, z: 'HK$#,##0' };
+      const totalNum = dataRows[i][5]; // numeric amount already in dataRows
+      // Direct property write — XLSX serializes plain number with t='n' automatically
+      ws['F' + rowNum] = totalNum;
+      // Set format by creating proper cell object (preserves numeric type)
+      const cell = ws['F' + rowNum];
+      if(typeof cell === 'object'){
+        ws['F' + rowNum] = {t:'n', v: totalNum, z:'HK$#,##0'};
+      } else {
+        ws['F' + rowNum] = {t:'n', v: cell, z:'HK$#,##0'};
+      }
     }
     
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
