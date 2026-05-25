@@ -1576,19 +1576,11 @@ function exportLogToExcel(){
       XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
     }
     
-    // Write F column amounts as explicit Cell objects with t='n' to prevent date interpretation
+    // Write F column amounts as plain numbers (no format to avoid openpyxl date bug)
     for(let i = 0; i < dataRows.length; i++){
       const rowNum = 6 + i;
-      const totalNum = dataRows[i][5]; // numeric amount already in dataRows
-      // Direct property write — XLSX serializes plain number with t='n' automatically
+      const totalNum = dataRows[i][5]; // already a number
       ws['F' + rowNum] = totalNum;
-      // Set format by creating proper cell object (preserves numeric type)
-      const cell = ws['F' + rowNum];
-      if(typeof cell === 'object'){
-        ws['F' + rowNum] = {t:'n', v: totalNum, z:'HK$#,##0'};
-      } else {
-        ws['F' + rowNum] = {t:'n', v: cell, z:'HK$#,##0'};
-      }
     }
     
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
