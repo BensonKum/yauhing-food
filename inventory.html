@@ -810,6 +810,18 @@ function showPinLogin(){
           pinLogin();
         }
       });
+      // Mobile: handle input event for auto-jump
+      d.addEventListener('input', function(e){
+        if(this.value.length === 1 && /[0-9]/.test(this.value)){
+          if(i < 3) digits[i+1].focus();
+          else {
+            this.blur();
+            setTimeout(()=>pinLogin(), 150);
+          }
+        } else if(this.value.length === 0 && e.inputType === 'deleteContentBackward'){
+          if(i > 0) digits[i-1].focus();
+        }
+      });
     }
   });
   digits[0].focus();
