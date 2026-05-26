@@ -1179,9 +1179,17 @@ async function renderLog(){
   const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
 
-  // 預設顯示今日
-  fromDate = new Date(todayStr+'T00:00:00');
-  toDate = new Date(todayStr+'T23:59:59');
+  // 讀取日期輸入框
+  const fromVal = document.getElementById('logFromDate')?.value;
+  const toVal = document.getElementById('logToDate')?.value;
+  if(fromVal && toVal){
+    fromDate = new Date(fromVal+'T00:00:00');
+    toDate = new Date(toVal+'T23:59:59');
+  } else {
+    // 預設顯示今日
+    fromDate = new Date(todayStr+'T00:00:00');
+    toDate = new Date(todayStr+'T23:59:59');
+  }
 
   const inDateRange = (t) => {
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
@@ -1208,7 +1216,7 @@ async function renderLog(){
     '<div style="height:70px;flex-shrink:0"></div>' +
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
-    '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
+    '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>';
     
 
   // Right side: summary + list
