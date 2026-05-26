@@ -243,6 +243,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .pin-inputs{display:flex;justify-content:center;gap:.5rem;margin-bottom:.6rem}
 .pin-digit{width:48px;height:54px;border:2px solid var(--bd);border-radius:10px;font-size:1.4rem;font-weight:700;text-align:center;outline:none;transition:var(--tr);font-family:'Courier New',monospace;background:#FAFAFA}
 .pin-digit:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(45,106,79,.12)}
+.pin-single{width:200px;height:54px;font-size:2rem;font-family:'Courier New',monospace;font-weight:700;letter-spacing:2rem;padding-left:20px;text-align:left;border:2px solid var(--bd);border-radius:10px;outline:none;background:#FAFAFA;box-sizing:border-box;transition:var(--tr)}
+.pin-single:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(45,106,79,.12)}
 .pin-hint{font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:.8rem}
 .pin-btn{width:100%;padding:.65rem;border:none;border-radius:50px;background:var(--green);color:white;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr)}
 .pin-btn:hover{background:#236B3F}
@@ -521,10 +523,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
       <div class="auth-title">📱 PIN 快速登入</div>
       <div class="auth-sub">輸入手機號碼最後 4 位數字</div>
       <div class="pin-inputs" id="pinInputs">
-        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="0">
-        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1">
-        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2">
-        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3">
+        <input class="pin-single" type="text" maxlength="4" inputmode="numeric" id="pinInput" placeholder="····" autocomplete="one-time-code">
       </div>
       <div class="pin-hint">輸入 4 位數字後自動登入</div>
       <button class="pin-btn" id="pinLoginBtn" onclick="pinLogin()">確認登入</button>
@@ -787,48 +786,23 @@ function showPinLogin(){
   document.getElementById('pinLoginForm').style.display='block';
   // Check if locked
   checkPinLock();
-  // Setup PIN input (only bind listeners ONCE)
-  const digits = document.querySelectorAll('.pin-digit');
-  digits.forEach((d, i) => {
-    d.value = '';
-    if(!d.dataset.pinBound){
-      d.dataset.pinBound = '1';
-      // keydown: desktop Backspace + Enter only
-      d.addEventListener('keydown', function(e){
-        if(e.key === 'Backspace' && !this.value){
-          e.preventDefault();
-          if(i > 0) setTimeout(()=>digits[i-1].focus(), 0);
-        } else if(e.key === 'Enter'){
-          pinLogin();
-        }
-      });
-      // input: handles BOTH desktop + mobile digit input
-      d.addEventListener('input', function(e){
-        const prev = this.dataset._pv || '';
-        this.dataset._pv = this.value;
-        // keep only last digit
-        this.value = this.value.replace(/[^0-9]/g, '');
-        if(this.value.length > 1) this.value = this.value.slice(-1);
-        if(this.value.length === 1 && prev.length === 0){
-          // new digit entered → jump forward (rAF for mobile Safari)
-          const next = digits[i+1];
-          if(i < 3){
-            requestAnimationFrame(()=>{ next.focus(); next.select(); });
-            setTimeout(()=>{ if(document.activeElement !== next) next.focus(); }, 80);
-          } else {
-            this.blur(); setTimeout(pinLogin, 150);
-          }
-        } else if(this.value.length === 0 && prev.length > 0){
-          // digit deleted → jump back
-          if(i > 0){
-            requestAnimationFrame(()=> digits[i-1].focus());
-            setTimeout(()=>{ if(document.activeElement !== digits[i-1]) digits[i-1].focus(); }, 80);
-          }
-        }
-      });
-    }
-  });
-  digits[0].focus();
+  // Setup single PIN input (only bind once)
+  const pinInput = document.getElementById('pinInput');
+  pinInput.value = '';
+  if(!pinInput.dataset.pinBound){
+    pinInput.dataset.pinBound = '1';
+    pinInput.addEventListener('input', function(e){
+      this.value = this.value.replace(/[^0-9]/g, '');
+      if(this.value.length === 4){
+        this.blur();
+        setTimeout(pinLogin, 150);
+      }
+    });
+    pinInput.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') pinLogin();
+    });
+  }
+  pinInput.focus();
 }
 
 function showEmailLogin(){
@@ -868,9 +842,7 @@ function checkPinLock(){
 }
 
 async function pinLogin(){
-  const digits = document.querySelectorAll('.pin-digit');
-  let pin = '';
-  digits.forEach(d => { pin += d.value; });
+  const pin = document.getElementById('pinInput').value;
   
   if(pin.length !== 4){
     document.getElementById('authError').textContent = '請輸入完整 4 位 PIN';
