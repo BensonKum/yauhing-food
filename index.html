@@ -1012,7 +1012,8 @@ if(firebaseReady&&auth&&db){
     authSuccess.textContent='';
     var email=authEmail.value.trim();
     var pwd=authPassword.value;
-    if(!email||!pwd){authError.textContent='請填寫電郵和密碼';return;}
+    if(!email){authError.textContent='請填寫電郵';return;}
+    if(!isResetMode && !pwd){authError.textContent='請填寫密碼';return;}
     if(isLoginMode){
       if(isResetMode){
         authSubmit.disabled=true;authSubmit.textContent='發送中...';
