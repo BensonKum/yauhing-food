@@ -793,21 +793,29 @@ function showPinLogin(){
     d.value = '';
     if(!d.dataset.pinBound){
       d.dataset.pinBound = '1';
-      // keydown: only handle Backspace + Enter (mobile-safe)
+      // keydown: desktop Backspace + Enter only
       d.addEventListener('keydown', function(e){
-        if(e.key === 'Backspace'){
-          // let browser handle delete, then jump in input event
+        if(e.key === 'Backspace' && !this.value){
+          e.preventDefault();
+          if(i > 0) setTimeout(()=>digits[i-1].focus(), 0);
         } else if(e.key === 'Enter'){
           pinLogin();
         }
       });
-      // input event: handles both desktop + mobile digit input
+      // input: handles BOTH desktop + mobile digit input
       d.addEventListener('input', function(e){
-        // sanitize: only keep digits
+        const prev = this.dataset._pv || '';
+        this.dataset._pv = this.value;
+        // keep only last digit
         this.value = this.value.replace(/[^0-9]/g, '');
-        if(this.value.length === 1){
-          if(i < 3) digits[i+1].focus();
-          else { this.blur(); setTimeout(()=>pinLogin(), 150); }
+        if(this.value.length > 1) this.value = this.value.slice(-1);
+        if(this.value.length === 1 && prev.length === 0){
+          // new digit entered → jump forward
+          if(i < 3) setTimeout(()=>{ digits[i+1].focus(); digits[i+1].select(); }, 0);
+          else { this.blur(); setTimeout(pinLogin, 150); }
+        } else if(this.value.length === 0 && prev.length > 0){
+          // digit deleted → jump back
+          if(i > 0) setTimeout(()=>digits[i-1].focus(), 0);
         }
       });
     }
