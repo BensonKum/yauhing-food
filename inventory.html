@@ -793,33 +793,21 @@ function showPinLogin(){
     d.value = '';
     if(!d.dataset.pinBound){
       d.dataset.pinBound = '1';
+      // keydown: only handle Backspace + Enter (mobile-safe)
       d.addEventListener('keydown', function(e){
-        if(e.key >= '0' && e.key <= '9'){
-          e.preventDefault(); // prevent default to avoid double-input on some browsers
-          this.value = e.key;
-          if(i < 3) digits[i+1].focus();
-          else {
-            this.blur();
-            // Auto-submit when 4th digit entered
-            setTimeout(()=>pinLogin(), 150);
-          }
-        } else if(e.key === 'Backspace'){
-          this.value = '';
-          if(i > 0) digits[i-1].focus();
+        if(e.key === 'Backspace'){
+          // let browser handle delete, then jump in input event
         } else if(e.key === 'Enter'){
           pinLogin();
         }
       });
-      // Mobile: handle input event for auto-jump
+      // input event: handles both desktop + mobile digit input
       d.addEventListener('input', function(e){
-        if(this.value.length === 1 && /[0-9]/.test(this.value)){
+        // sanitize: only keep digits
+        this.value = this.value.replace(/[^0-9]/g, '');
+        if(this.value.length === 1){
           if(i < 3) digits[i+1].focus();
-          else {
-            this.blur();
-            setTimeout(()=>pinLogin(), 150);
-          }
-        } else if(this.value.length === 0 && e.inputType === 'deleteContentBackward'){
-          if(i > 0) digits[i-1].focus();
+          else { this.blur(); setTimeout(()=>pinLogin(), 150); }
         }
       });
     }
