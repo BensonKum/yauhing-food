@@ -810,12 +810,20 @@ function showPinLogin(){
         this.value = this.value.replace(/[^0-9]/g, '');
         if(this.value.length > 1) this.value = this.value.slice(-1);
         if(this.value.length === 1 && prev.length === 0){
-          // new digit entered → jump forward
-          if(i < 3) setTimeout(()=>{ digits[i+1].focus(); digits[i+1].select(); }, 0);
-          else { this.blur(); setTimeout(pinLogin, 150); }
+          // new digit entered → jump forward (rAF for mobile Safari)
+          const next = digits[i+1];
+          if(i < 3){
+            requestAnimationFrame(()=>{ next.focus(); next.select(); });
+            setTimeout(()=>{ if(document.activeElement !== next) next.focus(); }, 80);
+          } else {
+            this.blur(); setTimeout(pinLogin, 150);
+          }
         } else if(this.value.length === 0 && prev.length > 0){
           // digit deleted → jump back
-          if(i > 0) setTimeout(()=>digits[i-1].focus(), 0);
+          if(i > 0){
+            requestAnimationFrame(()=> digits[i-1].focus());
+            setTimeout(()=>{ if(document.activeElement !== digits[i-1]) digits[i-1].focus(); }, 80);
+          }
         }
       });
     }
