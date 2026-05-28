@@ -1,4 +1,3 @@
-
 // --- Firebase Config ---
 const fb = firebase.initializeApp({
   apiKey: "AIzaSyAeRezKIwd93M1CHc-JtKFKIYtGAW9mVFk",
@@ -1157,6 +1156,8 @@ async function renderReport(){
 let quickDays = 30;
 function setQuickDate(days){
   quickDays = days;
+  const fromInput = document.getElementById('logFromDate2');
+  const toInput = document.getElementById('logToDate2');
   document.querySelectorAll('#tabContentLog .report-filter button').forEach(b=>{
     b.style.background='white'; b.style.color='var(--txt)';
   });
@@ -1164,7 +1165,26 @@ function setQuickDate(days){
     event.target.style.background='var(--red)';
     event.target.style.color='white';
   }
+  function fmt(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  if(days === 0){
+    const t = new Date();
+    const s = fmt(t);
+    fromInput.value = s;
+    toInput.value = s;
+  } else if(days === 1){
+    const t = new Date(); t.setDate(t.getDate()-1);
+    const s = fmt(t);
+    fromInput.value = s;
+    toInput.value = s;
+  } else {
+    fromInput.value = '';
+    toInput.value = '';
+  }
   renderLog();
+}
+
+async function applyLogDateRange(){
+  await renderLog();
 }
 
 async function renderLog(){
@@ -1179,13 +1199,32 @@ async function renderLog(){
   const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
 
-  // 預設顯示今日
-  fromDate = new Date(todayStr+'T00:00:00');
-  toDate = new Date(todayStr+'T23:59:59');
+  // 讀取篩選列的日期輸入 (logFromDate2/logToDate2)
+  const logDateFrom = document.getElementById('logFromDate2') ? document.getElementById('logFromDate2').value : '';
+  const logDateTo = document.getElementById('logToDate2') ? document.getElementById('logToDate2').value : '';
 
+  // 如果兩個都冇Input，預設顯示今日
+  if(!logDateFrom && !logDateTo){
+    // 今日 mode
+    fromDate = new Date(todayStr+'T00:00:00');
+    toDate = new Date(todayStr+'T23:59:59');
+  }
+  // inDateRange 會用 logDateFrom / logDateTo 做細節過濾
   const inDateRange = (t) => {
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
-    const todayMatch = fromDate <= d2 && d2 <= toDate;
+    // Normalize both to local date string for comparison (avoids timezone issues)
+    const d2Str = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0');
+    if(logDateFrom && logDateTo){
+      return d2Str >= logDateFrom && d2Str <= logDateTo;
+    }
+    if(logDateFrom){
+      return d2Str >= logDateFrom;
+    }
+    if(logDateTo){
+      return d2Str <= logDateTo;
+    }
+    // 如果冇填日期，預設顯示今日（符合 fromDate/toDate 的設定）
+    const todayMatch = new Date(todayStr+'T00:00:00') <= d2 && d2 <= new Date(todayStr+'T23:59:59');
     return todayMatch;
   };
 
@@ -1209,7 +1248,20 @@ async function renderLog(){
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
-    
+    '<div class="log-card date-btn" onclick="setDateRange(&#39;today&#39;)">' +
+      '<div class="num" style="font-size:1.1rem">今日</div>' +
+      '<div class="label">快速按鈕</div>' +
+    '</div>' +
+    '<div class="log-card" style="background:#fff;border:1px solid #e0e0e0">' +
+      '<div class="label" style="margin-bottom:.2rem;font-size:.7rem;color:#999">自訂日期範圍</div>' +
+      '<div style="display:flex;flex-direction:column;gap:.15rem">' +
+        '<label style="font-size:.65rem;color:#888">由</label>' +
+        '<input type="date" id="logFromDate">' +
+        '<label style="font-size:.65rem;color:#888">至</label>' +
+        '<input type="date" id="logToDate">' +
+        '<button id="logDateConfirmBtn" style="margin-top:.2rem;padding:.35rem;background:#2196f3;color:#fff;border:none;border-radius:4px;font-size:.8rem;cursor:pointer">確定</button>' +
+      '</div>' +
+    '</div>';
 
   // Right side: summary + list
   document.getElementById('logSummary').innerHTML = '';
@@ -1334,4 +1386,3 @@ window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore
 window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switchTab=switchTab;
 window.doLogout=doLogout;
 window.renderReport=renderReport;window.renderLog=renderLog;
-

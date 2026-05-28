@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "cat": "手工麵",
     "name": "半熟幼麵 (乾)",
@@ -722,5 +722,25 @@
     "image": null,
     "local_img": "product_spicy_dumpling.jpg",
     "sku": "YH510"
+  },
+  {
+    "cat": "贈品",
+    "name": "贈品(麵)",
+    "price": "0",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "",
+    "sku": "YHF01"
+  },
+  {
+    "cat": "贈品",
+    "name": "贈品(麵)",
+    "price": "0",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "",
+    "sku": "YHF01"
   }
 ]

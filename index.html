@@ -201,8 +201,6 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 .auth-success{color:var(--a3);font-size:.8rem;margin-top:.5rem;min-height:1.2rem}
 .auth-switch{font-size:.82rem;color:var(--muted);text-align:center;margin-top:1rem}
 .auth-switch a{color:var(--a);cursor:pointer;text-decoration:underline;font-weight:500}
-.auth-forgot{font-size:.78rem;text-align:center;margin-top:.5rem}
-.auth-forgot a{color:var(--muted);cursor:pointer;text-decoration:underline}
 /* Delivery Modal */
 .delivery-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:2000}
 .delivery-modal.open{display:flex}
@@ -405,8 +403,8 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <div class="auth-box">
 <button class="auth-close" id="authClose">×</button>
 <h3 id="authTitle">會員登入</h3>
-<p class="auth-subtitle" id="authSubtitle">登入享有會員專屬優惠</p>
-<div class="auth-tab" id="authTabRow"><button class="active" id="tabLogin">登入</button><button id="tabRegister">註冊</button></div>
+<p class="auth-subtitle">登入享有會員專屬優惠</p>
+<div class="auth-tab"><button class="active" id="tabLogin">登入</button><button id="tabRegister">註冊</button></div>
 <form id="authForm">
 <div class="auth-field"><label>電郵</label><input type="email" id="authEmail" placeholder="you@example.com" required></div>
 <div class="auth-field"><label>密碼</label><input type="password" id="authPassword" placeholder="至少6位密碼" required minlength="6"></div>
@@ -417,7 +415,6 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <button type="submit" class="auth-submit" id="authSubmit">登入</button>
 </form>
 <div class="auth-switch" id="authSwitch">還未是會員？<a id="switchLink">立即註冊</a></div>
-<div class="auth-forgot"><a href="#" id="forgotLink">忘記密碼？</a></div>
 </div>
 </div>
 <div class="delivery-modal" id="deliveryModal">
@@ -956,7 +953,6 @@ if(firebaseReady&&auth&&db){
   var nameField=document.getElementById('nameField');
   var phoneField=document.getElementById('phoneField');
   var authSwitch=document.getElementById('authSwitch');
-  var isResetMode=false;
   function switchMode(login){
     isLoginMode=login;
     tabLogin.classList.toggle('active',login);
@@ -970,29 +966,6 @@ if(firebaseReady&&auth&&db){
     authError.textContent='';
     authSuccess.textContent='';
   }
-  function switchResetMode(){
-    isResetMode=true;
-    authTitle.textContent='重設密碼';
-    document.getElementById('authSubtitle').style.display='none';
-    document.getElementById('authTabRow').style.display='none';
-    authEmail.value='';authPassword.value='';
-    nameField.style.display='none';phoneField.style.display='none';
-    authPassword.parentElement.style.display='none';
-    authSubmit.textContent='發送重設電郵';
-    authSwitch.innerHTML='想起密碼了？<a href="#" id="switchLink">返回登入</a>';
-    document.getElementById('switchLink').onclick=function(e){e.preventDefault();exitResetMode();};
-    document.querySelector('.auth-forgot').style.display='none';
-    authError.textContent='';authSuccess.textContent='';
-  }
-  function exitResetMode(){
-    isResetMode=false;
-    switchMode(true);
-    document.getElementById('authSubtitle').style.display='';
-    document.getElementById('authTabRow').style.display='';
-    authPassword.parentElement.style.display='';
-    document.querySelector('.auth-forgot').style.display='';
-  }
-  document.getElementById('forgotLink').onclick=function(e){e.preventDefault();switchResetMode();};
   tabLogin.onclick=function(){switchMode(true);};
   tabRegister.onclick=function(){switchMode(false);};
   document.getElementById('userBtn').onclick=function(){
@@ -1000,8 +973,8 @@ if(firebaseReady&&auth&&db){
     if(user){document.getElementById('userMenu').classList.toggle('open');}
     else{authModal.classList.add('open');switchMode(true);}
   };
-  document.getElementById('authClose').onclick=function(){authModal.classList.remove('open');exitResetMode();};
-  authModal.onclick=function(e){if(e.target===authModal){authModal.classList.remove('open');exitResetMode();}};
+  document.getElementById('authClose').onclick=function(){authModal.classList.remove('open');};
+  authModal.onclick=function(e){if(e.target===authModal)authModal.classList.remove('open');};
   document.addEventListener('click',function(e){
     var um=document.getElementById('userMenu');
     if(!e.target.closest('.nav-user'))um.classList.remove('open');
@@ -1012,23 +985,8 @@ if(firebaseReady&&auth&&db){
     authSuccess.textContent='';
     var email=authEmail.value.trim();
     var pwd=authPassword.value;
-    if(!email){authError.textContent='請填寫電郵';return;}
-    if(!isResetMode && !pwd){authError.textContent='請填寫密碼';return;}
+    if(!email||!pwd){authError.textContent='請填寫電郵和密碼';return;}
     if(isLoginMode){
-      if(isResetMode){
-        authSubmit.disabled=true;authSubmit.textContent='發送中...';
-        auth.sendPasswordResetEmail(email).then(function(){
-          authSubmit.disabled=false;authSubmit.textContent='已發送！';
-          authSuccess.textContent='重設連結已發到你的電郵，請查收。';
-          authError.textContent='';
-        }).catch(function(err){
-          authSubmit.disabled=false;authSubmit.textContent='發送重設電郵';
-          var msg={'auth/user-not-found':'此電郵未註冊','auth/invalid-email':'電郵格式不正確'};
-          authError.textContent=msg[err.code]||'發送失敗：'+err.message;
-          authSuccess.textContent='';
-        });
-        return;
-      }
       authSubmit.disabled=true;authSubmit.textContent='登入中...';
       auth.signInWithEmailAndPassword(email,pwd).then(function(){
         authModal.classList.remove('open');
