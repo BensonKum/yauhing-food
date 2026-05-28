@@ -732,5 +732,15 @@
     "image": null,
     "local_img": "",
     "sku": "YHF01"
+  },
+  {
+    "cat": "贈品",
+    "name": "贈品(環保袋)",
+    "price": "0",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "",
+    "sku": "YHF02"
   }
 ]
