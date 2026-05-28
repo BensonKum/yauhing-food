@@ -18,3 +18,10 @@ excel_analysis.txt
 excel_detail.json
 excel_structure.json
 __pycache__/
+
+# Firebase Admin SDK files (secrets)
+firebase-service-account.json
+change_jimmy_password.js
+create_yung_account.js
+remove_admin_pins.js
+temp_backup_*/

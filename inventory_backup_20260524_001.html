@@ -237,14 +237,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 /* PIN Login */
 .pin-login-divider{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0 .8rem;color:var(--muted)}
 .pin-login-divider::before,.pin-login-divider::after{content:'';flex:1;height:1px;background:var(--bd)}
-.auth-forgot-link{text-align:center;margin-top:.8rem;font-size:.8rem}
-.auth-forgot-link a{color:var(--muted);text-decoration:underline}
 .pin-login-label{font-size:.75rem;white-space:nowrap;font-weight:500}
 .pin-inputs{display:flex;justify-content:center;gap:.5rem;margin-bottom:.6rem}
 .pin-digit{width:48px;height:54px;border:2px solid var(--bd);border-radius:10px;font-size:1.4rem;font-weight:700;text-align:center;outline:none;transition:var(--tr);font-family:'Courier New',monospace;background:#FAFAFA}
 .pin-digit:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(45,106,79,.12)}
-.pin-single{width:200px;height:54px;font-size:2rem;font-family:'Courier New',monospace;font-weight:700;letter-spacing:2rem;padding-left:20px;text-align:left;border:2px solid var(--bd);border-radius:10px;outline:none;background:#FAFAFA;box-sizing:border-box;transition:var(--tr)}
-.pin-single:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(45,106,79,.12)}
 .pin-hint{font-size:.7rem;color:var(--muted);text-align:center;margin-bottom:.8rem}
 .pin-btn{width:100%;padding:.65rem;border:none;border-radius:50px;background:var(--green);color:white;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr)}
 .pin-btn:hover{background:#236B3F}
@@ -502,28 +498,19 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
       </div>
       <button class="auth-btn" onclick="authLogin()">登入</button>
       <div class="auth-error" id="authError"></div>
-      <div class="auth-error" id="authSuccess" style="color:var(--green);display:none"></div>
-      <div class="auth-forgot-link"><a href="#" onclick="showResetForm();return false">忘記密碼？</a></div>
       <div class="pin-login-divider"><span class="pin-login-label">或使用快速登入</span></div>
       <button class="pin-btn" onclick="showPinLogin()" style="background:none;color:var(--green);border:2px solid var(--green);margin-top:0">📱 PIN 快速登入</button>
     </div>
     
     <!-- PIN Login -->
-    <div id="resetForm" style="display:none">
-      <div class="auth-title">重設密碼</div>
-      <div class="auth-sub">輸入你的電郵，我們會發送重設連結</div>
-      <div class="auth-field">
-        <label class="auth-label">電郵地址</label>
-        <input class="auth-input" type="email" id="resetEmail" placeholder="例：central@yauhing.hk">
-      </div>
-      <button class="auth-btn" onclick="sendResetEmail()" id="resetBtn">發送重設電郵</button>
-      <div class="auth-error" id="resetError"></div>
-      <button onclick="showEmailLogin();return false" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.8rem;text-decoration:underline;margin-top:.8rem;display:block">← 返回登入</button>
-    </div>
+    <div id="pinLoginForm" style="display:none">
       <div class="auth-title">📱 PIN 快速登入</div>
       <div class="auth-sub">輸入手機號碼最後 4 位數字</div>
       <div class="pin-inputs" id="pinInputs">
-        <input class="pin-single" type="text" maxlength="4" inputmode="numeric" id="pinInput" placeholder="····" autocomplete="one-time-code">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="0">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="1">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="2">
+        <input class="pin-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" data-idx="3">
       </div>
       <div class="pin-hint">輸入 4 位數字後自動登入</div>
       <button class="pin-btn" id="pinLoginBtn" onclick="pinLogin()">確認登入</button>
@@ -657,12 +644,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
           <option value="sale">銷售</option>
           <option value="purchase">進貨</option>
         </select>
-        <input type="date" id="logFromDate" class="filter-select" style="width:130px" onchange="renderLog()">
-        <span class="filter-label">至</span>
-        <input type="date" id="logToDate" class="filter-select" style="width:130px" onchange="renderLog()">
-
         <button class="btn-export" onclick="exportLogToExcel()" style="display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:999!important;font-size:0.85rem!important;padding:.5rem 1rem!important;">📊 匯出 Excel</button>
-
+        <span class="filter-label">由：</span>
+        <input type="date" id="logFromDate2" class="filter-select" style="width:130px">
+        <span class="filter-label">至：</span>
+        <input type="date" id="logToDate2" class="filter-select" style="width:130px">
+        <button onclick="applyLogDateRange()" style="padding:.35rem .7rem;background:#2196f3;color:#fff;border:none;border-radius:6px;font-size:.75rem;cursor:pointer;white-space:nowrap">確定</button>
       </div>
       <div id="logSummary"></div>
       <div id="logList"></div>
@@ -786,23 +773,32 @@ function showPinLogin(){
   document.getElementById('pinLoginForm').style.display='block';
   // Check if locked
   checkPinLock();
-  // Setup single PIN input (only bind once)
-  const pinInput = document.getElementById('pinInput');
-  pinInput.value = '';
-  if(!pinInput.dataset.pinBound){
-    pinInput.dataset.pinBound = '1';
-    pinInput.addEventListener('input', function(e){
-      this.value = this.value.replace(/[^0-9]/g, '');
-      if(this.value.length === 4){
-        this.blur();
-        setTimeout(pinLogin, 150);
-      }
-    });
-    pinInput.addEventListener('keydown', function(e){
-      if(e.key === 'Enter') pinLogin();
-    });
-  }
-  pinInput.focus();
+  // Setup PIN input (only bind listeners ONCE)
+  const digits = document.querySelectorAll('.pin-digit');
+  digits.forEach((d, i) => {
+    d.value = '';
+    if(!d.dataset.pinBound){
+      d.dataset.pinBound = '1';
+      d.addEventListener('keydown', function(e){
+        if(e.key >= '0' && e.key <= '9'){
+          e.preventDefault(); // prevent default to avoid double-input on some browsers
+          this.value = e.key;
+          if(i < 3) digits[i+1].focus();
+          else {
+            this.blur();
+            // Auto-submit when 4th digit entered
+            setTimeout(()=>pinLogin(), 150);
+          }
+        } else if(e.key === 'Backspace'){
+          this.value = '';
+          if(i > 0) digits[i-1].focus();
+        } else if(e.key === 'Enter'){
+          pinLogin();
+        }
+      });
+    }
+  });
+  digits[0].focus();
 }
 
 function showEmailLogin(){
@@ -842,7 +838,9 @@ function checkPinLock(){
 }
 
 async function pinLogin(){
-  const pin = document.getElementById('pinInput').value;
+  const digits = document.querySelectorAll('.pin-digit');
+  let pin = '';
+  digits.forEach(d => { pin += d.value; });
   
   if(pin.length !== 4){
     document.getElementById('authError').textContent = '請輸入完整 4 位 PIN';
@@ -966,52 +964,15 @@ function authLogin(){
       } else {document.getElementById('authError').textContent=e.message;}
     });
 }
-function showResetForm(){
-  document.getElementById('emailLoginForm').style.display='none';
-  document.getElementById('pinLoginForm').style.display='none';
-  document.getElementById('resetForm').style.display='block';
-  document.getElementById('resetEmail').value='';
-  document.getElementById('resetError').textContent='';
-}
-function showEmailLogin(){
-  document.getElementById('emailLoginForm').style.display='block';
-  document.getElementById('pinLoginForm').style.display='none';
-  document.getElementById('resetForm').style.display='none';
-}
-function sendResetEmail(){
-  const email=document.getElementById('resetEmail').value.trim();
-  if(!email){document.getElementById('resetError').textContent='請輸入電郵';return;}
-  const btn=document.getElementById('resetBtn');
-  btn.disabled=true;btn.textContent='發送中...';
-  auth.sendPasswordResetEmail(email).then(function(){
-    btn.textContent='已發送！';
-    document.getElementById('resetError').style.display='none';
-    document.getElementById('resetEmail').disabled=true;
-    btn.style.display='none';
-    document.getElementById('resetForm').querySelector('button[onclick^="showEmailLogin"]').style.display='none';
-    var msg=document.createElement('div');
-    msg.style.cssText='color:var(--green);font-size:.8rem;text-align:center;margin-top:.8rem';
-    msg.textContent='重設連結已發到你的電郵，請查收。';
-    document.getElementById('resetForm').appendChild(msg);
-  }).catch(function(err){
-    btn.disabled=false;btn.textContent='發送重設電郵';
-    var msgs={'auth/user-not-found':'此電郵未註冊','auth/invalid-email':'電郵格式不正確'};
-    document.getElementById('resetError').textContent=msgs[err.code]||'發送失敗：'+err.message;
-  });
-}
 
 async function showApp(){
   document.getElementById('authOverlay').style.display='none';
   document.getElementById('userInfo').textContent=currentUser.email;
   // Auto-detect store from email IMMEDIATELY (no Firestore dependency)
   const email = currentUser ? currentUser.email.toLowerCase() : '';
-  // Admin emails: Jimmy and 容
-  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk'){
-    isAdminUser = true;
-    isSMUser = false;
-    showEmployeeTab();
+  if(email === 'admin@yauhing.hk'){
+    // Admin: show store selection dialog
     showStoreSelect();
-    return;
   } else if(email.includes('central')){
     selectStore('central');
   } else if(email.includes('pioneer')){
@@ -1027,12 +988,23 @@ async function showStoreSelect(){
   const email = currentUser ? currentUser.email.toLowerCase() : '';
 
   // Step 1: Admin & SM -> show dialog so they can pick any store
-  // Step 1: Admin & SM -> show dialog so they can pick any store
-  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk'){
+  if(email === 'admin@yauhing.hk'){
     isAdminUser = true;
     isSMUser = false;
     showEmployeeTab();
     document.getElementById('storeDialog').classList.add('show');
+    // One-time fix: ensure Jimmy (PIN 8356) has admin role
+    try {
+      const empSnap2 = await db.collection('employees').where('pin','==','8356').get();
+      if(!empSnap2.empty){
+        const jimmyDoc = empSnap2.docs[0];
+        const jimmyData = jimmyDoc.data();
+        if(jimmyData.role !== 'admin'){
+          await db.collection('employees').doc(jimmyDoc.id).update({role:'admin', store:'both'});
+          console.log('[FIX] Jimmy role updated to admin');
+        }
+      }
+    } catch(e2){ console.warn('[FIX] Jimmy role update failed:', e2); }
     return;
   }
 
@@ -1573,55 +1545,30 @@ function exportLogToExcel(){
     const store = document.getElementById('logStore').value;
     const from = document.getElementById('logFromDate').value;
     const to = document.getElementById('logToDate').value;
+    const logData = [];
     
-    // Header rows (no amount)
-    const header = [
-      ['祐興食品 - 交易記錄', '', '', '', '', ''],
-      ['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '', ''],
-      ['日期範圍', from && to ? from + ' 至 ' + to : '全部', '', '', '', ''],
-      [],
-      ['時間', '類型', '分店', '產品', '數量', '金額']
-    ];
+    // Add header
+    logData.push(['祐興食品 - 交易記錄', '', '', '', '', '']);
+    logData.push(['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '', '']);
+    logData.push(['日期範圍', from && to ? `${from} 至 ${to}` : '全部', '', '', '', '']);
+    logData.push([]);
+    logData.push(['時間', '類型', '分店', '產品', '數量', '金額']);
     
+    // Collect data from the log list
     const entries = document.querySelectorAll('.log-entry');
-    
-    // Build data rows with numeric amounts
-    const dataRows = [];
     entries.forEach(entry => {
       const meta = entry.querySelector('.log-meta')?.textContent || '';
       const type = entry.querySelector('.log-type')?.textContent || '';
       const items = entry.querySelector('.log-items')?.textContent || '';
-      const totalText = entry.querySelector('.log-total')?.textContent || '';
-      const totalNum = parseFloat(totalText.replace(/[^\d.]/g, '')) || 0;
-      dataRows.push([meta, type, '', items, '', totalNum]);
+      const total = entry.querySelector('.log-total')?.textContent || '';
+      logData.push([meta, type, '', items, '', total]);
     });
     
+    // Create workbook
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(header);
-    
-    // Append data rows (F column = raw number)
-    if(dataRows.length > 0){
-      XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
-    }
-    
-    // Write F column with currency format that won't trigger openpyxl date detection
-    // Clear any cells beyond data rows to avoid stray values
-    const lastDataRow = 5 + dataRows.length; // header(5) + data
-    for(let r = 6; r <= 100; r++){
-      if(r <= lastDataRow){
-        // Within data range - set format
-        const idx = r - 6;
-        if(idx < dataRows.length){
-          ws['F' + r] = { t:'n', v: dataRows[idx][5], z: '$#,##0' };
-        }
-      } else {
-        // Beyond data - clear cell
-        delete ws['F' + r];
-      }
-    }
-    
+    const ws = XLSX.utils.aoa_to_sheet(logData);
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
-    XLSX.writeFile(wb, '交易記錄_' + new Date().toISOString().split('T')[0] + '.xlsx');
+    XLSX.writeFile(wb, `交易記錄_${new Date().toISOString().split('T')[0]}.xlsx`);
     toast('✅ 記錄已匯出為 Excel');
   } catch(e) {
     console.error('Export log error:', e);
@@ -1930,6 +1877,8 @@ async function renderReport(){
 let quickDays = 30;
 function setQuickDate(days){
   quickDays = days;
+  const fromInput = document.getElementById('logFromDate2');
+  const toInput = document.getElementById('logToDate2');
   document.querySelectorAll('#tabContentLog .report-filter button').forEach(b=>{
     b.style.background='white'; b.style.color='var(--txt)';
   });
@@ -1937,7 +1886,26 @@ function setQuickDate(days){
     event.target.style.background='var(--red)';
     event.target.style.color='white';
   }
+  function fmt(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  if(days === 0){
+    const t = new Date();
+    const s = fmt(t);
+    fromInput.value = s;
+    toInput.value = s;
+  } else if(days === 1){
+    const t = new Date(); t.setDate(t.getDate()-1);
+    const s = fmt(t);
+    fromInput.value = s;
+    toInput.value = s;
+  } else {
+    fromInput.value = '';
+    toInput.value = '';
+  }
   renderLog();
+}
+
+async function applyLogDateRange(){
+  await renderLog();
 }
 
 async function renderLog(){
@@ -1952,21 +1920,32 @@ async function renderLog(){
   const todayStr = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
   let fromDate=null, toDate=null;
 
-  // 讀取日期輸入框
-  const fromVal = document.getElementById('logFromDate')?.value;
-  const toVal = document.getElementById('logToDate')?.value;
-  if(fromVal && toVal){
-    fromDate = new Date(fromVal+'T00:00:00');
-    toDate = new Date(toVal+'T23:59:59');
-  } else {
-    // 預設顯示今日
+  // 讀取篩選列的日期輸入 (logFromDate2/logToDate2)
+  const logDateFrom = document.getElementById('logFromDate2') ? document.getElementById('logFromDate2').value : '';
+  const logDateTo = document.getElementById('logToDate2') ? document.getElementById('logToDate2').value : '';
+
+  // 如果兩個都冇Input，預設顯示今日
+  if(!logDateFrom && !logDateTo){
+    // 今日 mode
     fromDate = new Date(todayStr+'T00:00:00');
     toDate = new Date(todayStr+'T23:59:59');
   }
-
+  // inDateRange 會用 logDateFrom / logDateTo 做細節過濾
   const inDateRange = (t) => {
     const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
-    const todayMatch = fromDate <= d2 && d2 <= toDate;
+    // Normalize both to local date string for comparison (avoids timezone issues)
+    const d2Str = d2.getFullYear()+'-'+String(d2.getMonth()+1).padStart(2,'0')+'-'+String(d2.getDate()).padStart(2,'0');
+    if(logDateFrom && logDateTo){
+      return d2Str >= logDateFrom && d2Str <= logDateTo;
+    }
+    if(logDateFrom){
+      return d2Str >= logDateFrom;
+    }
+    if(logDateTo){
+      return d2Str <= logDateTo;
+    }
+    // 如果冇填日期，預設顯示今日（符合 fromDate/toDate 的設定）
+    const todayMatch = new Date(todayStr+'T00:00:00') <= d2 && d2 <= new Date(todayStr+'T23:59:59');
     return todayMatch;
   };
 
@@ -1989,8 +1968,21 @@ async function renderLog(){
     '<div style="height:70px;flex-shrink:0"></div>' +
     '<div class="log-card" style="background:#e8f5e9;border-left:4px solid #4caf50"><div class="label">銷售</div><div class="num" style="color:#2e7d32;font-weight:700">HK$'+sales.toLocaleString()+'</div></div>' +
     '<div class="log-card" style="background:#fff3e0;border-left:4px solid #ff9800"><div class="label">進貨</div><div class="num" style="color:#e65100;font-weight:700">HK$'+purchase.toLocaleString()+'</div></div>' +
-    '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>';
-    
+    '<div class="log-card" style="background:#e3f2fd;border-left:4px solid #2196f3"><div class="label">淨額</div><div class="num" style="color:#1565c0;font-weight:700">'+(net>=0?'+':'')+'HK$'+net.toLocaleString()+'</div></div>' +
+    '<div class="log-card date-btn" onclick="setDateRange(&#39;today&#39;)">' +
+      '<div class="num" style="font-size:1.1rem">今日</div>' +
+      '<div class="label">快速按鈕</div>' +
+    '</div>' +
+    '<div class="log-card" style="background:#fff;border:1px solid #e0e0e0">' +
+      '<div class="label" style="margin-bottom:.2rem;font-size:.7rem;color:#999">自訂日期範圍</div>' +
+      '<div style="display:flex;flex-direction:column;gap:.15rem">' +
+        '<label style="font-size:.65rem;color:#888">由</label>' +
+        '<input type="date" id="logFromDate">' +
+        '<label style="font-size:.65rem;color:#888">至</label>' +
+        '<input type="date" id="logToDate">' +
+        '<button id="logDateConfirmBtn" style="margin-top:.2rem;padding:.35rem;background:#2196f3;color:#fff;border:none;border-radius:4px;font-size:.8rem;cursor:pointer">確定</button>' +
+      '</div>' +
+    '</div>';
 
   // Right side: summary + list
   document.getElementById('logSummary').innerHTML = '';
