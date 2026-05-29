@@ -745,16 +745,6 @@
   },
   {
     "cat": "雜項",
-    "name": "雜項",
-    "price": "HKD 5",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": null,
-    "sku": "YHF03"
-  },
-  {
-    "cat": "雜項",
     "name": "現金",
     "price": "HKD 5",
     "note": "",
