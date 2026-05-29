@@ -1400,7 +1400,7 @@ function changeQty(cartKey,delta,p,selPack){
   if(!cart[cartKey]){
     cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack};
     // Manual price for YHM01 (現金收入) and YHM02 (外購)
-    if(String(p.name||'').includes('YHM01')||String(p.name||'').includes('YHM02')){
+    if(String(p.name||'').includes('現金')||String(p.name||'').includes('外購')){
       const mp=prompt('請輸入實際金額（'+p.name+'）\n（預設：'+cart[cartKey].price+'）','');
       if(mp!==null&&mp!==''){
         const mv=parseFloat(mp);
