@@ -1399,6 +1399,14 @@ function changeQty(cartKey,delta,p,selPack){
   }
   if(!cart[cartKey]){
     cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack};
+    // Manual price for YHM01 (現金收入) and YHM02 (外購)
+    if(String(p.name||'').includes('YHM01')||String(p.name||'').includes('YHM02')){
+      const mp=prompt('請輸入實際金額（'+p.name+'）\n（預設：'+cart[cartKey].price+'）','');
+      if(mp!==null&&mp!==''){
+        const mv=parseFloat(mp);
+        if(!isNaN(mv)&&mv>0){cart[cartKey].manualPrice=mv;}
+      }
+    }
   }
   cart[cartKey].qty+=delta;
   if(cart[cartKey].qty<=0){delete cart[cartKey];}
@@ -1418,11 +1426,11 @@ function renderCart(){
   let total=0;let html='';let count=0;
   keys.forEach(cartKey=>{
     const item=cart[cartKey];
-    const lineTotal=item.qty*item.price;
+    const lineTotal=item.qty*(item.manualPrice||item.price);
     total+=lineTotal;count+=item.qty;
     const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
     html+=`<div class="cart-item">
-      <div class="ci-info"><div class="ci-name">${displayName}</div><div class="ci-price">HK$${item.price}/件</div></div>
+      <div class="ci-info"><div class="ci-name">${displayName}</div><div class="ci-price">HK$${(item.manualPrice||item.price)}/件</div></div>
       <div class="ci-qty">×${item.qty}</div>
       <div class="ci-total">HK$${lineTotal}</div>
       <button class="ci-remove" onclick="removeItem('${cartKey.replace(/'/g,"\\'")}')">✕</button>
@@ -1446,9 +1454,9 @@ function confirmTransaction(){
   if(Object.keys(cart).length===0){toast('請先加入產品');return;}
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
   const items=Object.entries(cart).map(([name,d])=>
-    `${name} × ${d.qty} = HK$${d.qty*d.price}`
+    `${name} × ${d.qty} = HK$${d.qty*(d.manualPrice||d.price)}`
   ).join('\n');
-  const total=Object.values(cart).reduce((s,i)=>s+i.qty*i.price,0);
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty*(i.manualPrice||i.price),0);
   document.getElementById('confirmTitle').textContent=
     currentMode==='sale'?'📤 確認銷售交易？':'📥 確認進貨記錄？';
   document.getElementById('confirmMsg').innerHTML=
@@ -1464,7 +1472,7 @@ async function doConfirm(){
   closeConfirm();
   const storeField=currentStore;
   const delta=currentMode==='sale'?-1:1;
-  const total=Object.values(cart).reduce((s,i)=>s+i.qty*i.price,0);
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty*(i.manualPrice||i.price),0);
   const timestamp=Date.now();
   const txId='TX'+(''+timestamp).slice(-10);
 
@@ -1473,7 +1481,7 @@ async function doConfirm(){
     await db.collection('inventory_transactions').add({
       txId, type:currentMode, store:storeField,
       items:Object.entries(cart).map(([cartKey,d])=>({
-        name:d.name, pack:d.pack||null, qty:d.qty, price:d.price, lineTotal:d.qty*d.price
+        name:d.name, pack:d.pack||null, qty:d.qty, price:(d.manualPrice||d.price), lineTotal:d.qty*(d.manualPrice||d.price)
       })),
       total, user:currentUser.email,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
