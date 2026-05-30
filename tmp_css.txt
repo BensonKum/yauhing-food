@@ -1,4 +1,0 @@
-.report-wrap{display:flex;gap:1.2rem;padding:1.2rem;height:calc(100vh - 68px);overflow:hidden}
-.log-sidebar{width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:.6rem}
-.log-card{background:white;border-radius:12px;padding:.9rem;border:1px solid var(--bd);text-align:center}
-.log-card .num

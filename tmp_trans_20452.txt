@@ -1,3 +1,0 @@
-e:1.1rem;margin:0}
-.edit-modal-close{border:none;background:transparent;font-size:1.2rem;cursor:pointer;color:var(--muted)}
-.edit-modal-clos

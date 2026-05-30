@@ -1,2 +1,0 @@
-og;
-window.openEditModal=openEditModal;window.closeEditModal=closeEditModal;window.buildEditItemRow=buildEditItemRow;window.addEditItemRow=addEditItemRow;window.saveEditTransaction=saveEditTransaction;

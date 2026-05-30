@@ -1,9 +1,0 @@
-﻿=== Checking for duplicate dumpling products ===
-57: None | ˮ�Ƥ (���b) | ���r���I | product_dumpling_skin.jpg
-62: YH509 | �ײ�� | ���ϵ�� | product_cabbage_dumpling.jpg
-63: YH510 | ����� | ���ϵ�� | product_spicy_dumpling.jpg
-64: YH511 | �ײ�� | ���ϵ�� | product_cabbage_dumpling.jpg
-65: YH512 | ����� | ���ϵ�� | product_spicy_dumpling.jpg
-
-Total dumpling entries: 5
-DUPLICATE NAMES FOUND: {'�ײ��': 2, '�����': 2}

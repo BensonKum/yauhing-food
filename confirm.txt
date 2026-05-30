@@ -1,4 +1,0 @@
-上海麵 card at grad-ch pos 58916:
-  name: 上海麵 (幼) 盒裝
-  cat: 新鮮粉麵
-  cls: NOT FOUND

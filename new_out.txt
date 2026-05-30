@@ -1,9 +1,0 @@
-Searching for: e4b88ae6b5b7e9bab5 = "上海麵"
-File size: 124497 bytes
-Found 4 times
-  33217: cls=? cat=? grad=?
-  33329: cls=b'has-image' cat=手工麵 grad=?
-  58925: cls=? cat=? grad=上海麵 (幼) 盒裝
-  59042: cls=b'no-image' cat=新鮮粉麵 grad=?
-p-name #1: 上海麵 盒裝
-p-name #51: 上海麵 (幼) 盒裝

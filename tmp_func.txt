@@ -1,6 +1,0 @@
-sole.error(e);
-        alert('保存失敗: ' + e.message);
-    }
-}
-
-// -

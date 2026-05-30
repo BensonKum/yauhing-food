@@ -1,8 +1,0 @@
-ck="editTransaction("' + t.id + '")">✏️</button><button class="lo
-=== SEPARATOR ===
-ng
-window.editTransaction = async function(id) {
-  openEditModal(id);
-};
-
-

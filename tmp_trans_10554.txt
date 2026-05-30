@@ -1,5 +1,0 @@
-;border:1.5px solid var(--bd);border-radius:50px;background:transparent;color:var(--muted);cursor:pointer}
-
-/* toast */
-.toast{
-  position:f

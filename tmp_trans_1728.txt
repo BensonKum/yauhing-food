@@ -1,3 +1,0 @@
-:pointer;transition:var(--tr);color:var(--muted);background:transparent;
-}
-.tab-btn.active{background:white;color:var(--txt);font-weight:600

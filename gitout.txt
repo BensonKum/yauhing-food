@@ -1,8 +1,0 @@
-add: 0 warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
-
-commit: 0 [master 64c76bc] Add 12 fresh noodle product cards (name-only, photo TBD)
- 1 file changed, 13 insertions(+), 1 deletion(-)
- 
-push: 0 To https://github.com/BensonKum/yauhing-food.git
-   562d835..64c76bc  master -> master
-
