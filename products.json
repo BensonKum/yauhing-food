@@ -71,6 +71,16 @@
   },
   {
     "cat": "特色麵",
+    "name": "冬陰功麵 (6個裝)",
+    "price": "HKD 70",
+    "note": "",
+    "stock": 0,
+    "image": "E:\\Lum\\特色麵\\冬陰功麵6個裝.jpg",
+    "local_img": "product_16.jpg",
+    "sku": "YH017"
+  },
+  {
+    "cat": "特色麵",
     "name": "墨魚汁龍蝦撈麵 (6個裝)",
     "price": "HKD 70",
     "note": "",
@@ -189,23 +199,17 @@
   },
   {
     "cat": "禮盒套裝",
-    "name": "香港手信系列-蝦子麵套裝 (6個麵)",
-    "price": "HKD 98",
-    "note": "",
+    "name": "香港手信系列-蝦子麵套裝",
+    "price": "HKD 98 (醬油配蝦籽麵禮盒) / HKD 98 (蝦籽麵禮盒六個裝)",
+    "note": "醬油 / 六個裝",
     "stock": 0,
     "image": "E:\\Lum\\禮盒_套裝\\香港手信系列-蝦子麵套裝-蝦籽麵禮盒六個裝.jpg",
+    "img1": "香港手信系列-蝦子麵套裝-醬油配蝦籽麵禮盒.jpg",
+    "img2": "香港手信系列-蝦子麵套裝-蝦籽麵禮盒六個裝.jpg",
+    "label1": "醬油配蝦籽麵禮盒",
+    "label2": "蝦籽麵禮盒六個裝",
     "local_img": "香港手信系列-蝦子麵套裝-蝦籽麵禮盒六個裝.jpg",
-    "sku": "YH308"
-  },
-  {
-    "cat": "禮盒套裝",
-    "name": "香港手信系列-蝦子麵套裝 (醬油配)",
-    "price": "HKD 98",
-    "note": "",
-    "stock": 0,
-    "image": "E:\\Lum\\禮盒_套裝\\香港手信系列-蝦子麵套裝-醬油配蝦籽麵禮盒.jpg",
-    "local_img": "香港手信系列-蝦子麵套裝-醬油配蝦籽麵禮盒.jpg",
-    "sku": "YH308A"
+    "sku": "YH309"
   },
   {
     "cat": "禮盒套裝",
@@ -758,205 +762,5 @@
     "image": null,
     "local_img": null,
     "sku": "YHM02"
-  },
-  {
-    "cat": "特色麵",
-    "name": "意大利墨魚汁麵 (6個裝)",
-    "price": "HKD 60",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "意大利墨魚汁麵(6個裝).jpg",
-    "sku": "YH201A"
-  },
-  {
-    "cat": "禮盒套裝",
-    "name": "經典蝦籽麵禮盒 (6個麵)",
-    "price": "HKD 88",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "經典蝦籽麵禮盒(6個麵).jpg",
-    "sku": "YH302A"
-  },
-  {
-    "cat": "禮盒套裝",
-    "name": "蝦籽麵+素纖麵(+保溫壺) (套裝)",
-    "price": "HKD 78",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "蝦籽麵+素纖麵(套裝).jpg",
-    "sku": "YH304A"
-  },
-  {
-    "cat": "素纖麵",
-    "name": "南瓜麵 5個裝",
-    "price": "HKD 50",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "南瓜麵 5個裝.jpg",
-    "sku": "YH402"
-  },
-  {
-    "cat": "素纖麵",
-    "name": "菠菜麵 5個裝",
-    "price": "HKD 50",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "菠菜麵 5個裝.jpg",
-    "sku": "YH403"
-  },
-  {
-    "cat": "素纖麵",
-    "name": "蕃茄麵 5個裝",
-    "price": "HKD 50",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "蕃茄麵 5個裝.jpg",
-    "sku": "YH404"
-  },
-  {
-    "cat": "素纖麵",
-    "name": "紫薯麵 5個裝",
-    "price": "HKD 50",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "紫薯麵 5個裝.jpg",
-    "sku": "YH405"
-  },
-  {
-    "cat": "素纖麵",
-    "name": "豆乳麵 5個裝",
-    "price": "HKD 50",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "豆乳麵 5個裝.jpg",
-    "sku": "YH406"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭 (大罐)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "鮑魚罐頭(大罐).jpg",
-    "sku": "YH502"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭 (大罐)(四罐優惠)",
-    "price": "HKD 300",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "鮑魚罐頭(四罐優惠).jpg",
-    "sku": "YH502A"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "十年陳皮鴨湯麵 (6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "十年陳皮鴨湯麵(6個裝).jpg",
-    "sku": "YH602"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "古法大地魚蝦籽麵 (幼)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "古法大地魚蝦籽麵(幼)6個裝.jpg",
-    "sku": "YH603"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "古法大地魚蝦籽麵 (粗)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "古法大地魚蝦籽麵(粗)6個裝.jpg",
-    "sku": "YH604"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "瑤柱蝦籽麵 (幼)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "瑤柱蝦籽麵 (幼)6個裝.jpg",
-    "sku": "YH605"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "瑤柱蝦籽麵 (粗)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "瑤柱蝦籽麵(粗)6個裝.jpg",
-    "sku": "YH606"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "鮑魚蝦籽麵 (幼)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "鮑魚蝦籽麵(幼)6個裝.jpg",
-    "sku": "YH607"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "鮑魚蝦籽麵 (粗)(6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "鮑魚蝦籽麵(粗)6個裝.jpg",
-    "sku": "YH608"
-  },
-  {
-    "cat": "蝦籽麵",
-    "name": "黃金花膠海參蝦籽麵 (6個裝)",
-    "price": "HKD 80",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "黃金花膠海參蝦籽麵(6個裝).jpg",
-    "sku": "YH609"
-  },
-  {
-    "cat": "醬汁配料",
-    "name": "秘製紅蔥油 (細樽裝)",
-    "price": "HKD 25",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "秘製紅蔥油 細樽裝.jpg",
-    "sku": "YH701"
-  },
-  {
-    "cat": "醬汁配料",
-    "name": "秘製麻辣醬 (細樽裝)",
-    "price": "HKD 25",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "秘製麻辣醬 細樽裝.jpg",
-    "sku": "YH703"
   }
 ]
