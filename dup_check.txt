@@ -1,0 +1,10 @@
+﻿python :   File "<string>", line 7
+At line:1 char:140
++ ... :UTF8; cd "C:\Users\admin\.qclaw\workspace\yauhing-food"; python -c "
++                                                               ~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  File "<string>", line 7:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    print(f'{i}: {p[" sku\]}
+                    ^
+SyntaxError: unterminated string literal (detected at line 7)

@@ -1,0 +1,70 @@
+Wrong char (e7ba96): 7
+Correct char (e7b4ab): 0
+
+=== All 7 素纖麵 cards (with correct UTF-8 check) ===
+
+--- Card 1 at byte 32149 ---
+Name: ? | p-name: ?
+Card bytes: 32149 to 32978 (len=829)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="ct"><button class="t-btn" data-cat="全部">全部</button><button class="t-btn active" data-cat="蝦籽麵">蝦籽麵</button><button class="t-btn" data-cat="特色麵">特色麵</button><button class="t-btn" data-cat="禮盒套裝">禮盒套裝</button><button class="t-btn" data-cat="�
+
+--- Card 2 at byte 53247 ---
+Name: ? | p-name: ?
+Card bytes: 53247 to 53512 (len=265)
+<div count: 4, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><img src="images/product_46.jpg" alt="五色素纖麵 5個裝" loading="lazy"></div><div class="p-info"><div class="p-cat">素纖麵</div>
+
+--- Card 3 at byte 54336 ---
+Name: ? | p-name: ?
+Card bytes: 54336 to 54769 (len=433)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image multi-pack" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/南瓜麵.jp
+
+--- Card 4 at byte 56064 ---
+Name: ? | p-name: ?
+Card bytes: 56064 to 56497 (len=433)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image multi-pack" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/紫薯麵.jp
+
+--- Card 5 at byte 56721 ---
+Name: ? | p-name: ?
+Card bytes: 56721 to 57154 (len=433)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image multi-pack" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/菠菜麵.jp
+
+--- Card 6 at byte 57378 ---
+Name: ? | p-name: ?
+Card bytes: 57378 to 57811 (len=433)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image multi-pack" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/蕃茄麵.jp
+
+--- Card 7 at byte 58035 ---
+Name: ? | p-name: ?
+Card bytes: 58035 to 58468 (len=433)
+<div count: 3, </div> count: 2
+Status: MISMATCH
+Raw HTML (first 300 bytes):
+<div class="p-card has-image multi-pack" data-cat="素纖麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">5個裝</button></div><img src="images/豆乳麵.jp
+
+=== Gap analysis (last suxian to fresh powder) ===
+Last suxian ends at byte 58468
+First fresh powder at byte 58689
+Gap: 221 bytes
+Content: <div class="p-info"><div class="p-cat">素纖麵</div><h3 class="p-name">豆乳麵</h3><div class="p-note">單包 HKD 12 / 5個裝 HKD 50</div><div class="p-price multi">HKD 12 (單包) / HKD 50 (5個裝)</div></div></div
+Gap <div>: 4, </div>: 4, balance: OK
+
+=== Check for orphan divs near suxian ===
+Area 53000-59000: <div>=71 </div>=69 balance=MISMATCH

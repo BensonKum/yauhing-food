@@ -1,0 +1,32 @@
+Found 14 p-card no-image divs
+  #1 at byte 34438: ¼t²Ë
+    closes at 34837 (span: 399 bytes)
+  #2 at byte 35960: Ş¬ÇÑ
+    closes at 36356 (span: 396 bytes)
+  #3 at byte 58689: ÉÏº£üI (Ó×) ºĞÑb
+    closes at 59111 (span: 422 bytes)
+  #4 at byte 59115: ºÓ·Û ºĞÑb
+    closes at 59519 (span: 404 bytes)
+  #5 at byte 59523: ÓÍüI ºĞÑb
+    closes at 59927 (span: 404 bytes)
+  #6 at byte 59931: ÉúÓ×üI ºĞÑb
+    closes at 60341 (span: 410 bytes)
+  #7 at byte 60345: Éú´ÖüI ºĞÑb
+    closes at 60755 (span: 410 bytes)
+  #8 at byte 60759: ¶¹²· ºĞÑb
+    closes at 61163 (span: 404 bytes)
+  #9 at byte 61167: |·Û ºĞÑb
+    closes at 61571 (span: 404 bytes)
+  #10 at byte 61575: ãyá˜·Û ºĞÑb
+    closes at 61985 (span: 410 bytes)
+  #11 at byte 61989: Ë®ïœÆ¤ ºĞÑb
+    closes at 62399 (span: 410 bytes)
+  #12 at byte 62403: ë…ÍÌÆ¤ ºĞÑb
+    closes at 62813 (span: 410 bytes)
+  #13 at byte 62817: ıSÄc·Û ºĞÑb
+    closes at 63227 (span: 410 bytes)
+  #14 at byte 63231: ÎrÃ×Äc·Û ºĞÑb
+    closes at 63647 (span: 416 bytes)
+
+"ÉÏº£" appears in:
+  #3 (ÉÏº£üI (Ó×) ºĞÑb) at 58689

@@ -1,0 +1,4 @@
+C:\Users\admin\.qclaw\workspace\yauhing-food\check_filter.py:6: SyntaxWarning: invalid escape sequence '\.'
+  filter_code = re.search(b'filterBtns\.(.+?)addy', data)
+C:\Users\admin\.qclaw\workspace\yauhing-food\check_filter.py:11: SyntaxWarning: invalid escape sequence '\('
+  filter_func = re.search(b'function filterProducts\((.+?)\{(.+?)\n\s*\}', data)

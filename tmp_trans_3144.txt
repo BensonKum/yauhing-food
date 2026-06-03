@@ -1,0 +1,3 @@
+ding:.55rem .8rem;text-align:left;
+  border:none;background:transparent;border-radius:var(--r);font-size:.85rem;
+  font-family:'Noto Sans TC

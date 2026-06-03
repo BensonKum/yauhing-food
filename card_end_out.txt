@@ -1,0 +1,8 @@
+div close at 53227: ...</div></div></div>
+<div class="p-card has-image" ...
+div close at 53233: ...</div></div>
+<div class="p-card has-image" data-c...
+Traceback (most recent call last):
+  File "C:\Users\admin\.qclaw\workspace\yauhing-food\find_last_card_end.py", line 26, in <module>
+    print(f'div close at {next_d}: ...{context.decode("utf-8", errors="replace")[:50]}...')
+UnicodeEncodeError: 'gbk' codec can't encode character '\ufffd' in position 72: illegal multibyte sequence

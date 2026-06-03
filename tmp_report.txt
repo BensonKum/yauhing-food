@@ -1,0 +1,20 @@
+id="tabContentReport">
+  <div class="report-wrap">
+    <div class="report-summary" id="reportSummary"></div>
+    <div class="report-filter">
+      <span class="filter-label">分店：</span>
+      <select class="filter-select" id="repStore" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="central">中環店</option>
+        <option value="pioneer">始創店</option>
+      </select>
+      <span class="filter-label">狀態：</span>
+      <select class="filter-select" id="repStatus" onchange="renderReport()">
+        <option value="all">全部</option>
+        <option value="alert">⚠️ 低庫存</option>
+        <option value="zero">🔴 缺貨</option>
+        <option value="discontinued">❌ 停售</option>
+      </select>
+    </div>
+    <div class="report-section">
+      <div class="report-secti
