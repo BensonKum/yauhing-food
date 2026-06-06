@@ -2177,24 +2177,48 @@ async function handleInvoiceUpload(input){
     if(customerName.includes('中環')) targetStore='central';
     else if(customerName.includes('始創')) targetStore='pioneer';
     
-    // Parse product rows (typically starting around row 21)
-    for(let i=21;i<jsonData.length;i++){
+    // Parse product rows (flexible column detection)
+    for(let i=0;i<jsonData.length;i++){
       const row=jsonData[i];
-      if(!row || row.length<5) continue;
+      if(!row || row.length<3) continue;
       
-      const sku=String(row[0]||'').trim();
-      const name=String(row[4]||'').trim();
-      const qty=parseInt(row[11])||0;
+      // Try to find SKU pattern (YHxxx) in any column
+      let sku='';
+      let name='';
+      let qty=0;
+      
+      for(let col=0;col<row.length;col++){
+        const cellValue=row[col];
+        if(!cellValue) continue;
+        
+        const strValue=String(cellValue).trim();
+        
+        // Check for SKU pattern (YH followed by digits)
+        if(!sku && /^YH\d+[A-Z]?$/i.test(strValue)){
+          sku=strValue.toUpperCase();
+        }
+        // Check for quantity (number that looks like quantity)
+        else if(!qty && !isNaN(parseFloat(strValue)) && parseFloat(strValue)>0 && parseFloat(strValue)<10000){
+          // Make sure it's not the price (usually larger or has decimal)
+          const numVal=parseFloat(strValue);
+          if(numVal<1000 || Number.isInteger(numVal)){
+            qty=Math.floor(numVal);
+          }
+        }
+        // Check for product name (contains Chinese characters and is longer)
+        else if(!name && strValue.length>3 && /[\u4e00-\u9fa5]/.test(strValue) && !strValue.includes('發票') && !strValue.includes('客戶')){
+          name=strValue;
+        }
+      }
       
       if(sku && name && qty>0){
         // Find matching product in products.json
-        const product=products.find(p=>p.sku===sku || p.name===name || name.includes(p.name));
+        const product=products.find(p=>p.sku===sku || p.name===name || name.includes(p.name) || p.name.includes(name.substring(0,5)));
         if(product){
           invoiceItems.push({
             sku:sku,
             name:product.name,
-            qty:qty,
-            price:parseFloat(row[14])||0
+            qty:qty
           });
         }
       }
