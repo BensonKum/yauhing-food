@@ -1385,6 +1385,7 @@ function renderGrid(){
 
 // --- Cart Logic ---
 function changeQty(cartKey,delta,p,selPack){
+  alert('changeQty triggered! cartKey='+cartKey+' delta='+delta);
   // Allow if store is selected OR if user is logged in as employee (store inferred from email)
   if(!currentStore){
     const email = currentUser ? currentUser.email.toLowerCase() : '';
