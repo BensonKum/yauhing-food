@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- SheetJS for Excel parsing -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#FAFAF8;--bg2:#F0EAE0;--txt:#2D2D2D;--muted:#6B6B6B;--red:#C8462B;--orange:#E07B3A;--green:#2D6A4F;--gold:#D4A843;--bd:#E0D8C8;--sh1:0 2px 8px rgba(0,0,0,.06);--sh2:0 8px 24px rgba(0,0,0,.10);--r:14px;--tr:all .3s cubic-bezier(.4,0,.2,1);}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -575,6 +577,14 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     <div class="cart-head">
       <div class="cart-head-title" id="cartTitle">📤 銷售清單</div>
       <div class="cart-head-sub" id="cartSub">揀選產品後，點擊確認</div>
+      <!-- 發票上傳按鈕（僅進貨模式顯示） -->
+      <div id="invoiceUploadArea" style="display:none;margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--bd);">
+        <input type="file" id="invoiceFileInput" accept=".xls,.xlsx" style="display:none" onchange="handleInvoiceUpload(this)">
+        <button class="btn-confirm btn-confirm-purchase" onclick="document.getElementById('invoiceFileInput').click()" style="font-size:.8rem;padding:.5rem;width:100%">
+          📄 上傳發票 Excel 入庫
+        </button>
+        <div id="invoicePreview" style="margin-top:.4rem;font-size:.72rem;color:var(--muted);"></div>
+      </div>
     </div>
     <div class="cart-items" id="cartItems">
       <div class="cart-empty">
@@ -1210,6 +1220,7 @@ function setMode(mode){
   const cartTitle=document.getElementById('cartTitle');
   const cartSub=document.getElementById('cartSub');
   const confirmBtn=document.getElementById('confirmBtn');
+  const invoiceArea=document.getElementById('invoiceUploadArea');
   if(mode==='sale'){
     sale.className='mode-btn active';
     pur.className='mode-btn';
@@ -1217,6 +1228,7 @@ function setMode(mode){
     cartSub.textContent='選擇銷售產品，確認後自動扣減庫存';
     confirmBtn.className='btn-confirm btn-confirm-sale';
     confirmBtn.textContent='✅ 確認交易';
+    if(invoiceArea) invoiceArea.style.display='none';
   } else {
     sale.className='mode-btn';
     pur.className='mode-btn active-purchase';
@@ -1224,6 +1236,7 @@ function setMode(mode){
     cartSub.textContent='選擇進貨產品，確認後自動增加庫存';
     confirmBtn.className='btn-confirm btn-confirm-purchase';
     confirmBtn.textContent='✅ 確認進貨';
+    if(invoiceArea) invoiceArea.style.display='block';
   }
 }
 
@@ -2125,6 +2138,143 @@ function doLogout(){
   // Clear PIN inputs
   document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
 }
+// --- Invoice Upload Functions ---
+async function handleInvoiceUpload(input){
+  const file=input.files[0];
+  if(!file) return;
+  
+  const preview=document.getElementById('invoicePreview');
+  preview.textContent='正在解析發票...';
+  
+  try{
+    const arrayBuffer=await file.arrayBuffer();
+    const data=new Uint8Array(arrayBuffer);
+    
+    // Use SheetJS to parse Excel
+    const workbook=XLSX.read(data,{type:'array'});
+    const sheetName=workbook.SheetNames[0];
+    const sheet=workbook.Sheets[sheetName];
+    const jsonData=XLSX.utils.sheet_to_json(sheet,{header:1});
+    
+    // Parse invoice data (rows 22-29 typically contain products)
+    const invoiceItems=[];
+    let invoiceNumber='';
+    let customerName='';
+    
+    // Find invoice number and customer
+    for(let i=0;i<jsonData.length;i++){
+      const row=jsonData[i];
+      if(row[0] && String(row[0]).includes('發票號碼')){
+        invoiceNumber=String(row[1]||row[2]||'').trim();
+      }
+      if(row[0] && String(row[0]).includes('客戶名稱')){
+        customerName=String(row[1]||row[2]||'').trim();
+      }
+    }
+    
+    // Detect store from customer name
+    let targetStore=currentStore;
+    if(customerName.includes('中環')) targetStore='central';
+    else if(customerName.includes('始創')) targetStore='pioneer';
+    
+    // Parse product rows (typically starting around row 21)
+    for(let i=21;i<jsonData.length;i++){
+      const row=jsonData[i];
+      if(!row || row.length<5) continue;
+      
+      const sku=String(row[0]||'').trim();
+      const name=String(row[4]||'').trim();
+      const qty=parseInt(row[11])||0;
+      
+      if(sku && name && qty>0){
+        // Find matching product in products.json
+        const product=products.find(p=>p.sku===sku || p.name===name || name.includes(p.name));
+        if(product){
+          invoiceItems.push({
+            sku:sku,
+            name:product.name,
+            qty:qty,
+            price:parseFloat(row[14])||0
+          });
+        }
+      }
+    }
+    
+    if(invoiceItems.length===0){
+      preview.textContent='❌ 未能識別發票產品資料';
+      return;
+    }
+    
+    // Show preview
+    let previewHtml=`✅ 識別到 ${invoiceItems.length} 款產品<br>`;
+    previewHtml+=`<small>發票：${invoiceNumber || 'N/A'} | 客戶：${customerName || 'N/A'}</small><br>`;
+    previewHtml+=`<div style="max-height:100px;overflow-y:auto;margin-top:.4rem;text-align:left;background:#f5f5f5;padding:.4rem;border-radius:6px;">`;
+    invoiceItems.forEach(item=>{
+      previewHtml+=`• ${item.name} × ${item.qty}<br>`;
+    });
+    previewHtml+=`</div>`;
+    previewHtml+=`<button onclick="confirmInvoiceRestock(${JSON.stringify(invoiceItems).replace(/"/g,'&quot;')},'${targetStore}')" class="btn-confirm btn-confirm-purchase" style="margin-top:.5rem;width:100%;font-size:.8rem;padding:.4rem;">確認入庫</button>`;
+    preview.innerHTML=previewHtml;
+    
+  }catch(err){
+    console.error('Invoice parse error:',err);
+    preview.textContent='❌ 解析失敗：'+err.message;
+  }
+}
+
+async function confirmInvoiceRestock(items,targetStore){
+  if(!targetStore){
+    toast('請先選擇分店');
+    return;
+  }
+  
+  if(!confirm(`確認將 ${items.length} 款產品入庫到 ${targetStore==='central'?'中環店':'始創店'}？`)) return;
+  
+  try{
+    const batch=db.batch();
+    const timestamp=firebase.firestore.FieldValue.serverTimestamp();
+    
+    for(const item of items){
+      // Update inventory
+      const invRef=db.collection('inventory').doc(item.name);
+      batch.set(invRef,{
+        [targetStore]:firebase.firestore.FieldValue.increment(item.qty),
+        lastUpdated:timestamp
+      },{merge:true});
+      
+      // Add transaction record
+      const txnRef=db.collection('inventory_transactions').doc();
+      batch.set(txnRef,{
+        type:'purchase',
+        productName:item.name,
+        sku:item.sku,
+        qty:item.qty,
+        store:targetStore,
+        price:item.price,
+        total:item.qty*item.price,
+        source:'invoice_upload',
+        createdAt:timestamp,
+        createdBy:currentUser?.email || 'unknown'
+      });
+    }
+    
+    await batch.commit();
+    
+    // Refresh inventory
+    await loadInventory();
+    
+    document.getElementById('invoicePreview').innerHTML='✅ 入庫成功！已更新 '+items.length+' 款產品';
+    toast('發票入庫完成');
+    
+  }catch(err){
+    console.error('Restock error:',err);
+    toast('入庫失敗：'+err.message);
+  }
+}
+
+window.handleInvoiceUpload=handleInvoiceUpload;
+window.confirmInvoiceRestock=confirmInvoiceRestock;
+
 window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
 window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
 window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
