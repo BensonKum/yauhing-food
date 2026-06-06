@@ -545,7 +545,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
     <button class="tab-btn active" id="tabPos" onclick="switchTab('pos')">📤 POS</button>
     <button class="tab-btn" id="tabReport" onclick="switchTab('report')">📊 報表</button>
     <button class="tab-btn" id="tabLog" onclick="switchTab('log')">📋 記錄</button>
-    <button class="tab-btn" id="tabEmployee" onclick="switchTab('employee')" style="display:none">👥 員工</button>
+    <button class="tab-btn" id="tabEmployee" onclick="switchTab('employee')">👥 員工</button>
   </div>
   <div class="mode-toggle">
     <button class="mode-btn active" id="modeSale" onclick="setMode('sale')">📤 銷售</button>
@@ -1651,8 +1651,16 @@ let currentTab = 'pos';
 // --- Employee Management (Admin Only) ---
 let editingEmpId = null;
 
-function showEmployeeTab(){ document.getElementById('tabEmployee').style.display = 'block'; }
-function hideEmployeeTab(){ document.getElementById('tabEmployee').style.display = 'none'; }
+function showEmployeeTab(){ 
+  var btn = document.getElementById('tabEmployee');
+  if(btn) btn.style.display = '';
+  document.getElementById('tabContentEmployee').style.display = 'block'; 
+}
+function hideEmployeeTab(){ 
+  var btn = document.getElementById('tabEmployee');
+  if(btn) btn.style.display = 'none';
+  document.getElementById('tabContentEmployee').style.display = 'none'; 
+}
 
 async function renderEmployeeList(){
   console.log('[EMP] renderEmployeeList called. isAdminUser='+isAdminUser+' isSMUser='+isSMUser+' userStore='+userStore);
