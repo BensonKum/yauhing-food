@@ -2057,6 +2057,16 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
   // Render grouped entries
   document.getElementById('logList').innerHTML=groups.map(g=>{
     const dtStr=g.dt.toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  // Event delegation for log group toggle
+  document.getElementById('logList').addEventListener('click', function(e){
+    const entry = e.target.closest('.log-group-toggle');
+    if(entry){
+      const gid = entry.getAttribute('data-gid');
+      const detail = document.getElementById(gid);
+      if(detail) detail.style.display = detail.style.display==='none'?'block':'none';
+    }
+  });
     const type = g.txns[0].type;
     const store = g.store;
     const user = g.txns[0].user || '';
@@ -2073,7 +2083,7 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
     const itemCount = allItems.length;
     const gid = 'g_' + Math.random().toString(36).substr(2,9);
     const adminBtns = (isAdminUser || isSMUser) ? '<button class="log-edit-btn" onclick="editTransaction(\'' + g.txns[0].id + '\')">✏️</button><button class="log-del-btn" onclick="deleteTransaction(\'' + g.txns[0].id + '\')">🗑️</button>' : '';
-    return '<div class="log-entry" onclick="document.getElementById(\''+gid+'\').style.display=document.getElementById(\''+gid+'\').style.display===\'none\'?'\'block\':\'none\'">' +
+    return '<div class="log-entry log-group-toggle" data-gid="'+gid+'">' +
       '<div style="flex:1">' +
         '<div class="log-meta">' + dtStr + ' · <span class="log-type ' + type + '">' + (type==='sale'?'📤 銷售':'📥 進貨') + '</span> · ' + (store==='central'?'中環':'始創') + ' · ' + user + '</div>' +
         '<div class="log-items" style="cursor:pointer">📦 ' + itemCount + '款產品 (click to expand)</div>' +
