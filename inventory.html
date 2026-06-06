@@ -1418,6 +1418,7 @@ function changeQty(cartKey,delta,p,selPack){
 function renderCart(){
   const container=document.getElementById('cartItems');
   const keys=Object.keys(cart);
+  alert('renderCart called! cart keys='+keys.length+', currentStore='+(currentStore||'NULL'));
   if(keys.length===0){
     container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品</div>`;
     document.getElementById('cartTotal').textContent='HK$0';
