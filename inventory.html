@@ -2274,8 +2274,8 @@ async function confirmInvoiceRestock(items,targetStore){
         sku:item.sku,
         qty:item.qty,
         store:targetStore,
-        price:item.price,
-        total:item.qty*item.price,
+        price:item.price||0,
+        total:item.qty*(item.price||0),
         source:'invoice_upload',
         createdAt:timestamp,
         createdBy:currentUser?.email || 'unknown'
