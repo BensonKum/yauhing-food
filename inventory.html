@@ -2048,7 +2048,8 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
       Math.abs(g.dtMs - dtMs) < 60000 // within 1 minute
     );
     if(!group){
-      group = { dt, dtMs, store, source, txns: [], total: 0 };
+      const gid = 'g_' + Math.random().toString(36).substr(2,9);
+      group = { dt, dtMs, store, source, txns: [], total: 0, gid: gid };
       groups.push(group);
     }
     group.txns.push(t);
@@ -2152,20 +2153,53 @@ window.editTransaction = function(id) {
 window.deleteTransaction = function(gid) {
   // Find the group by gid
   const groups = window._logGroups || [];
-  const group = groups.find(g => ('g_' + Math.random().toString(36).substr(2,9) === gid); // This won't work, need to store gid in group
-  // Actually, we need to pass gid differently. Let's change approach:
-  // Instead of passing gid, pass the group index or store group in a data attribute.
-  // But for now, we'll just delete the first transaction (old behavior).
-  // TODO: Implement proper batch delete.
-  if(!confirm('Confirm DELETE this transaction? This cannot be undone.')) return;
-  db.collection('inventory_transactions').doc(id).delete().then(function() {
-    alert('Transaction deleted');
-    renderLog();
+  const group = groups.find(g => g.gid === gid);
+  if (!group) {
+    alert('Error: group not found');
+    return;
+  }
+  // Show confirmation dialog with details
+  let msg = '確定要刪除以下交易記錄？\n\n';
+  group.txns.forEach(t => {
+    const type = t.type === 'sale' ? '銷售' : '進貨';
+    const user = t.user || '—';
+    msg += `- ${type} HK$' + t.total + ' (' + user + ')\n';
+  });
+  msg += '\n合計：HK$' + group.total + '\n\n此操作不可還原！';
+  if (!confirm(msg)) return;
+  // Delete all transactions in the group
+  const batch = db.batch();
+  group.txns.forEach(t => {
+    batch.delete(db.collection('inventory_transactions').doc(t.id));
+  });
+  batch.commit().then(function() {
+    // Update inventory (reverse the transactions)
+    const updatePromises = [];
+    group.txns.forEach(t => {
+      const delta = t.type === 'sale' ? 1 : -1;  // sale: add back; purchase: subtract
+      t.items.forEach(item => {
+        const pName = item.name;
+        const qty = item.qty;
+        const ref = db.collection('inventory').doc(pName);
+        // Use serverTimestamp to increment/decrement
+        const update = {};
+        update[t.store] = firebase.firestore.FieldValue.increment(qty * delta);
+        updatePromises.push(ref.set(update, { merge: true }));
+      });
+    });
+    Promise.all(updatePromises).then(function() {
+      alert('已刪除 ' + group.txns.length + ' 筆交易，庫存已還原');
+      renderLog();
+    }).catch(function(e) {
+      console.error('Inventory update failed:', e);
+      alert('交易已刪除，但庫存還原失敗：' + e.message);
+      renderLog();
+    });
   }).catch(function(e) {
     console.error(e);
-    alert('Delete failed: ' + e.message);
+    alert('刪除失敗：' + e.message);
   });
-};
+};;
 
 // window expose (at end, so all functions are defined)
 function doLogout(){
