@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -2083,7 +2083,7 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
     });
     const itemsStr = allItems.join(', ');
     const itemCount = allItems.length;
-    const gid = 'g_' + Math.random().toString(36).substr(2,9);
+    const gid = g.gid;
     const adminBtns = (isAdminUser || isSMUser) ? '<button class="log-edit-btn" onclick="editTransaction(\'' + gid + '\')">✏️</button><button class="log-del-btn" onclick="deleteTransaction(\'' + gid + '\')">🗑️</button>' : '';
     return '<div class="log-entry log-group-toggle" data-gid="'+gid+'">' +
       '<div style="flex:1">' +
