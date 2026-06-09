@@ -1326,17 +1326,22 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
 
   // Event delegation for invoice confirm button (invoicePreview)
   document.getElementById('invoicePreview').addEventListener('click', function(e){
+    console.log('Invoice preview clicked:', e.target);
     const btn = e.target.closest('[data-invoice-items]');
     if(btn){
+      console.log('Found button with data:', btn.getAttribute('data-store'), btn.getAttribute('data-invoice-items').substring(0,50));
       try{
         const itemsJson = decodeURIComponent(escape(atob(btn.getAttribute('data-invoice-items'))));
         const items = JSON.parse(itemsJson);
         const store = btn.getAttribute('data-store');
+        console.log('Calling confirmInvoiceRestock with', items.length, 'items, store:', store);
         confirmInvoiceRestock(items, store);
       }catch(err){
         console.error('Invoice button error:', err);
         toast('按鈕錯誤：'+err.message);
       }
+    } else {
+      console.log('No button found, clicked element:', e.target.tagName, e.target.className);
     }
   });
     const type = g.txns[0].type;
