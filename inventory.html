@@ -2160,7 +2160,7 @@ window.deleteTransaction = function(gid) {
   group.txns.forEach(t => {
     const type = t.type === 'sale' ? '銷售' : '進貨';
     const user = t.user || '—';
-    msg += `- ${type} HK$' + t.total + ' (' + user + ')\n';
+    msg += `- ${type} HK$${t.total} (${user})\n`;
   });
   msg += '\n合計：HK$' + group.total + '\n\n此操作不可還原！';
   if (!confirm(msg)) return;
@@ -2321,7 +2321,8 @@ async function handleInvoiceUpload(input){
       previewHtml+=`• ${item.name} × ${item.qty}<br>`;
     });
     previewHtml+=`</div>`;
-    previewHtml+=`<button onclick="confirmInvoiceRestock(${JSON.stringify(invoiceItems).replace(/"/g,'&quot;')},'${targetStore}')" class="btn-confirm btn-confirm-purchase" style="margin-top:.5rem;width:100%;font-size:.8rem;padding:.4rem;">確認入庫</button>`;
+    let itemsJson = JSON.stringify(invoiceItems).replace(/"/g,'&quot;');
+    previewHtml += '<button onclick=\x27confirmInvoiceRestock(' + itemsJson + ',\x27' + targetStore + '\x27)\x27 class=\x27btn-confirm btn-confirm-purchase\x27 style=\x27margin-top:.5rem;width:100%;font-size:.8rem;padding:.4rem;\x27>確認入庫</button>';
     preview.innerHTML=previewHtml;
     
   }catch(err){
