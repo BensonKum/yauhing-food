@@ -1323,6 +1323,22 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
       if(detail) detail.style.display = detail.style.display==='none'?'block':'none';
     }
   });
+
+  // Event delegation for invoice confirm button (invoicePreview)
+  document.getElementById('invoicePreview').addEventListener('click', function(e){
+    const btn = e.target.closest('[data-invoice-items]');
+    if(btn){
+      try{
+        const itemsJson = decodeURIComponent(escape(atob(btn.getAttribute('data-invoice-items'))));
+        const items = JSON.parse(itemsJson);
+        const store = btn.getAttribute('data-store');
+        confirmInvoiceRestock(items, store);
+      }catch(err){
+        console.error('Invoice button error:', err);
+        toast('按鈕錯誤：'+err.message);
+      }
+    }
+  });
     const type = g.txns[0].type;
     const store = g.store;
     const user = g.txns[0].user || '';
@@ -1578,8 +1594,8 @@ async function handleInvoiceUpload(input){
       previewHtml+=`• ${item.name} × ${item.qty}<br>`;
     });
     previewHtml+=`</div>`;
-    let itemsJson = JSON.stringify(invoiceItems).replace(/"/g,'&quot;');
-    previewHtml += '<button onclick=\x27confirmInvoiceRestock(' + itemsJson + ',\x27' + targetStore + '\x27)\x27 class=\x27btn-confirm btn-confirm-purchase\x27 style=\x27margin-top:.5rem;width:100%;font-size:.8rem;padding:.4rem;\x27>確認入庫</button>';
+    let itemsJson = JSON.stringify(invoiceItems);
+    previewHtml += '<button data-invoice-items="' + btoa(unescape(encodeURIComponent(itemsJson))) + '" data-store="' + targetStore + '" class="btn-confirm btn-confirm-purchase" style="margin-top:.5rem;width:100%;font-size:.8rem;padding:.4rem;">確認入庫</button>';
     preview.innerHTML=previewHtml;
     
   }catch(err){
