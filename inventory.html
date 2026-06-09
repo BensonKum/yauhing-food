@@ -815,10 +815,7 @@ function showPinLogin(){
   pinInput.focus();
 }
 
-function showEmailLogin(){
-  document.getElementById('pinLoginForm').style.display='none';
-  document.getElementById('emailLoginForm').style.display='block';
-}
+// (moved below with resetForm support)
 
 function checkPinLock(){
   const lockMsg = document.getElementById('pinLockMsg');
@@ -2317,7 +2314,7 @@ async function handleInvoiceUpload(input){
     }
     
     // Show preview
-    let previewHtml=`✅ 識別到 ${invoiceItems.length} 款產品<br>`;
+    let previewHtml=`[OK] 識別到 ${invoiceItems.length} 款產品<br>`;
     previewHtml+=`<small>發票：${invoiceNumber || 'N/A'} | 客戶：${customerName || 'N/A'}</small><br>`;
     previewHtml+=`<div style="max-height:100px;overflow-y:auto;margin-top:.4rem;text-align:left;background:#f5f5f5;padding:.4rem;border-radius:6px;">`;
     invoiceItems.forEach(item=>{
