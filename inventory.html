@@ -2369,8 +2369,9 @@ async function confirmInvoiceRestock(items,targetStore){
     
     await batch.commit();
     
-    // Refresh inventory
+    // Refresh inventory + transaction log
     await loadInventory();
+    await renderLog();
     
     document.getElementById('invoicePreview').innerHTML='✅ 入庫成功！已更新 '+items.length+' 款產品';
     toast('發票入庫完成');
