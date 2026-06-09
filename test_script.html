@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Script Test</title></head>
+<body>
+<h1>如果見到呢行 = HTML OK</h1>
+<div id="result">JS 未執行...</div>
+<script>
+try {
+  document.getElementById('result').innerHTML = '<span style="color:green;font-size:24px">✅ JS 正常運作！inventory.html 問題可能係 Chrome 擴展或緩存</span>';
+} catch(e) {
+  document.getElementById('result').innerHTML = '<span style="color:red;font-size:24px">❌ JS 錯誤: ' + e.message + '</span>';
+}
+</script>
+</body>
+</html>
