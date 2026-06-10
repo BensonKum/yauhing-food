@@ -392,6 +392,86 @@
     "sku": "YH609A"
   },
   {
+    "cat": "蝦籽麵",
+    "name": "十年陳皮鴨湯麵 (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "十年陳皮鴨湯麵6個裝.jpg",
+    "sku": "YH602"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "古法大地魚蝦籽麵 (幼) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "古法大地魚蝦籽麵(幼)6個裝.jpg",
+    "sku": "YH603"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "古法大地魚蝦籽麵 (粗) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "古法大地魚蝦籽麵(粗)6個裝.jpg",
+    "sku": "YH604"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "瑤柱蝦籽麵 (幼) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "瑤柱蝦籽麵 (幼)6個裝.jpg",
+    "sku": "YH605"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "瑤柱蝦籽麵 (粗) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "瑤柱蝦籽麵 (粗)6個裝.jpg",
+    "sku": "YH606"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "鮑魚蝦籽麵 (幼) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "鮑魚蝦籽麵(幼)6個裝.jpg",
+    "sku": "YH607"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "鮑魚蝦籽麵 (粗) (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "鮑魚蝦籽麵(粗)6個裝.jpg",
+    "sku": "YH608"
+  },
+  {
+    "cat": "蝦籽麵",
+    "name": "黃金花膠海參蝦籽麵 (6個裝)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "黃金花膠海參蝦籽麵6個裝.jpg",
+    "sku": "YH609"
+  },
+  {
     "cat": "醬汁配料",
     "name": "秘製紅蔥油",
     "price": "HKD 25 (細樽裝) / HKD 40 (大樽裝)",
