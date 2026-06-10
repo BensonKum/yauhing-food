@@ -595,7 +595,7 @@ function renderGrid(){
     const stockClass=typeof stock==='number'?(stock===0?'zero':stock<5?'low':''):'';
     const packOpts=getPackOptions(p);
     const selPack=getSelectedPack(p);
-    const cartKey=selPack?p.name+'|'+selPack:p.name;
+    const cartKey=selPack?p.sku+'|'+selPack:p.sku;
     const inCart=cart[cartKey]||{qty:0,price:getPackPrice(p,selPack),cat:p.cat,pack:selPack};
     const packImg=getPackImg(p,selPack);
 
