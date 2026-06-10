@@ -1286,7 +1286,19 @@ function getPackImg(p,packLabel){
 }
 
 function renderGrid(){
-  const filtered=currentCat==='全部'?products:products.filter(p=>p.cat===currentCat);
+  // Build set of SKUs that are covered by multi-pack cards (hide standalone cards)
+  const multiPackSkus=new Set();
+  products.forEach(p=>{
+    if(p.label1&&p.sku&&p.sku.endsWith('A')){
+      const baseSku=p.sku.slice(0,-1);
+      multiPackSkus.add(baseSku);
+    }
+  });
+  const filtered=(currentCat==='全部'?products:products.filter(p=>p.cat===currentCat)).filter(p=>{
+    // Hide standalone SKU if it's already a pack option in a multi-pack card
+    if(p.sku&&multiPackSkus.has(p.sku)&&!p.label1) return false;
+    return true;
+  });
   const grid=document.getElementById('pgrid');
   grid.innerHTML='';
   filtered.forEach(p=>{
