@@ -17,7 +17,7 @@ let products = [];
 // --- Discontinued Products (停售) ---
 const discontinuedSkus = ['YH017']; // Add SKUs here to mark as 停售
 let cart = {};       // {cartKey: {qty, price, cat, pack}}
-let selectedPack = {}; // {productName: selectedPackLabel}
+let selectedPack = {}; // {sku: selectedPackLabel}
 let currentMode = 'sale';
 let currentStore = null;  // 'central' | 'pioneer'
 let currentUser = null;
@@ -557,7 +557,7 @@ function getPackOptions(p){
 }
 
 function getSelectedPack(p){
-  const saved=selectedPack[p.name];
+  const saved=selectedPack[p.sku];
   const opts=getPackOptions(p);
   if(!opts) return null;
   return saved&&opts.find(o=>o.label===saved)?saved:opts[0].label;
@@ -636,7 +636,7 @@ function renderGrid(){
         const btn=document.createElement('button');
         btn.style.cssText=`padding:.2rem .55rem;border-radius:50px;font-size:.68rem;border:1.5px solid ${selPack===opt.label?'var(--red)':'var(--bd)'};background:${selPack===opt.label?'var(--red)':'white'};color:${selPack===opt.label?'white':'var(--muted)'};cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:var(--tr);`;
         btn.textContent=opt.label;
-        btn.onclick=(e)=>{e.stopPropagation();selectedPack[p.name]=opt.label;renderGrid();};
+        btn.onclick=(e)=>{e.stopPropagation();selectedPack[p.sku]=opt.label;renderGrid();};
         packRow.appendChild(btn);
       });
       body.appendChild(name);
