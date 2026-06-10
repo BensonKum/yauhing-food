@@ -33,6 +33,9 @@ let pinLockedUntil = 0;
 // --- Load Products from products.json ---
 fetch('products.json').then(r=>r.json()).then(data=>{
   products = data;
+  console.log('[DEBUG] Loaded products:', products.length, 'items');
+  console.log('[DEBUG] YH603:', products.find(p=>p.sku==='YH603'));
+  console.log('[DEBUG] YH603A:', products.find(p=>p.sku==='YH603A'));
   renderCatBar();
   renderGrid();
 }).catch(e=>console.error('products.json load failed:',e));
