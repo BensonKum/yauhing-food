@@ -34,8 +34,11 @@ let pinLockedUntil = 0;
 fetch('products.json').then(r=>r.json()).then(data=>{
   products = data;
   console.log('[DEBUG] Loaded products:', products.length, 'items');
-  console.log('[DEBUG] YH603:', products.find(p=>p.sku==='YH603'));
-  console.log('[DEBUG] YH603A:', products.find(p=>p.sku==='YH603A'));
+  const yh603 = products.find(p=>p.sku==='YH603');
+  const yh603a = products.find(p=>p.sku==='YH603A');
+  console.log('[DEBUG] YH603 price:', yh603 ? yh603.price : 'NOT FOUND');
+  console.log('[DEBUG] YH603A price:', yh603a ? yh603a.price : 'NOT FOUND');
+  console.log('[DEBUG] All 大地魚 products:', products.filter(p=>p.name.includes('大地魚')).map(p=>({sku:p.sku, name:p.name, price:p.price})));
   renderCatBar();
   renderGrid();
 }).catch(e=>console.error('products.json load failed:',e));
