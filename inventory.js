@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function(){
 // --- PIN Login Functions ---
 function showPinLogin(){
   document.getElementById('emailLoginForm').style.display='none';
-  document.getElementById('pinLoginForm').style.display='block';
+  document.getElementById('pinForm').style.display='block';
   // Check if locked
   checkPinLock();
   // Setup single PIN input (only bind once)
@@ -259,14 +259,14 @@ function authLogin(){
 }
 function showResetForm(){
   document.getElementById('emailLoginForm').style.display='none';
-  document.getElementById('pinLoginForm').style.display='none';
+  document.getElementById('pinForm').style.display='none';
   document.getElementById('resetForm').style.display='block';
   document.getElementById('resetEmail').value='';
   document.getElementById('resetError').textContent='';
 }
 function showEmailLogin(){
   document.getElementById('emailLoginForm').style.display='block';
-  document.getElementById('pinLoginForm').style.display='none';
+  document.getElementById('pinForm').style.display='none';
   document.getElementById('resetForm').style.display='none';
 }
 function sendResetEmail(){
@@ -1502,7 +1502,7 @@ function doLogout(){
   // Show login overlay
   document.getElementById('authOverlay').style.display = 'flex';
   document.getElementById('emailLoginForm').style.display = 'block';
-  document.getElementById('pinLoginForm').style.display = 'none';
+  document.getElementById('pinForm').style.display = 'none';
   // Clear PIN inputs
   document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
 }
