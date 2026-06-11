@@ -1008,7 +1008,7 @@ async function showApp(){
   // Auto-detect store from email IMMEDIATELY (no Firestore dependency)
   const email = currentUser ? currentUser.email.toLowerCase() : '';
   // Admin emails: Jimmy and 容
-  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk'){
+  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk' || email === 'admin@yauhing.hk'){
     isAdminUser = true;
     isSMUser = false;
     showEmployeeTab();
@@ -1030,7 +1030,7 @@ async function showStoreSelect(){
 
   // Step 1: Admin & SM -> show dialog so they can pick any store
   // Step 1: Admin & SM -> show dialog so they can pick any store
-  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk'){
+  if(email === 'jyvivi618@yahoo.com.hk' || email === 'inamyleung@yahoo.com.hk' || email === 'admin@yauhing.hk'){
     isAdminUser = true;
     isSMUser = false;
     showEmployeeTab();
