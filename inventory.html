@@ -2174,7 +2174,7 @@ async function handleInvoiceUpload(file) {
     const txn = {
       type: 'purchase',
       store: currentStore,
-      user: currentUser.name,
+      user: currentUser.email,
       total,
       items,
       source: 'invoice_upload',
