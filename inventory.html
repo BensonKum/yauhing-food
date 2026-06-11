@@ -1871,7 +1871,10 @@ async function renderReport(){
   let txns=[];
   try {
     const snap=await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
-    snap.forEach(d=>txns.push(d.data()));
+    snap.forEach(d=>{
+      const data=d.data();
+      if(data.status!=='cancelled') txns.push(data);
+    });
   } catch(e){console.error(e);}
 
   // === Calculate inventory health metrics ===
@@ -2049,13 +2052,14 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
     }else if(t.productName){
       itemsStr=`${t.productName} × ${t.qty||1}`;
     }
-    const adminBtns = (isAdminUser || isSMUser) ? '<button class="log-edit-btn" onclick="editTransaction(\'' + t.id + '\')">✏️</button><button class="log-del-btn" onclick="deleteTransaction(\'' + t.id + '\')">🗑️</button>' : '';
+    const isCancelled = t.status === 'cancelled';
+    const adminBtns = (isAdminUser || isSMUser) ? '<button class="log-edit-btn" onclick="editTransaction(\'' + t.id + '\')">✏️</button><button class="log-del-btn" onclick="deleteTransaction(\'' + t.id + '\')">🗑️</button>' + (isCancelled ? '' : '<button class="log-cancel-btn" onclick="cancelTransaction(\'' + t.id + '\')">❌ 取消</button>') : '';
     // Calculate display total (handles both formats)
     const displayTotal = getTxnTotal(t);
     return '<div class="log-entry">' +
       '<div style="flex:1">' +
         '<div class="log-meta">' + dtStr + ' · <span class="log-type ' + t.type + '">' + (t.type==='sale'?'📤 銷售':'📥 進貨') + '</span> · ' + (t.store==='central'?'中環':'始創') + ' · ' + (t.user||'') + '</div>' +
-        '<div class="log-items">' + itemsStr + '</div>' +
+        '<div class="log-items">' + (isCancelled ? ' <span style="color:#999;text-decoration:line-through;">' + itemsStr + '</span> <span style="color:#e74c3c;font-size:.75rem;">[已取消]</span>' : itemsStr) + '</div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:.5rem;">' +
         '<div class="log-total">HK$' + displayTotal + '</div>' +
@@ -2068,6 +2072,43 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
 // OLD editTransaction removed
 
 // OLD deleteTransaction removed
+
+// Cancel transaction - mark as cancelled and reverse inventory impact
+async function cancelTransaction(id) {
+  if(!confirm('確定取消此交易？\n取消後將逆轉庫存影響。')) return;
+  
+  try {
+    const ref = doc(db, 'inventory_transactions', id);
+    const snap = await getDoc(ref);
+    if(!snap.exists()) throw new Error('交易不存在');
+    
+    const t = snap.data();
+    const items = t.items || [];
+    
+    // Reverse inventory: sales cancel → add back, purchase cancel → deduct
+    for(const item of items) {
+      const qty = parseInt(item.qty) || 0;
+      if(qty <= 0) continue;
+      
+      const q = query(collection(db, 'inventory'), where('name', '==', item.name));
+      const qs = await getDocs(q);
+      if(!qs.empty) {
+        const prodDoc = qs.docs[0];
+        const currentStock = parseInt(prodDoc.data().stock) || 0;
+        const delta = t.type === 'sale' ? qty : -qty;
+        await updateDoc(prodDoc.ref, { stock: Math.max(0, currentStock + delta) });
+      }
+    }
+    
+    await updateDoc(ref, { status: 'cancelled' });
+    toast('✅ 交易已取消');
+    renderLog();
+    renderReport();
+  } catch(e) {
+    console.error('Cancel error:', e);
+    toast('❌ 取消失敗：' + e.message);
+  }
+}
 
 // Quick button click handler for log date card
 
