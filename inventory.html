@@ -1999,8 +1999,16 @@ async function renderLog(){
     return true;
   });
 
-  const sales = txns.filter(t=>t.type==='sale'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
-  const purchase = txns.filter(t=>t.type==='purchase'&&inDateRange(t)).reduce((s,t)=>s+(t.total||0),0);
+  // Helper to get total from transaction (fallback to recalculating from items)
+  const getTxnTotal = (t) => {
+    if(t.total && t.total > 0) return t.total;
+    if(t.items && Array.isArray(t.items)) {
+      return t.items.reduce((sum, item) => sum + ((item.lineTotal || (item.qty * (item.price || 0))) || 0), 0);
+    }
+    return 0;
+  };
+  const sales = txns.filter(t=>t.type==='sale').reduce((s,t)=>s+getTxnTotal(t),0);
+  const purchase = txns.filter(t=>t.type==='purchase').reduce((s,t)=>s+getTxnTotal(t),0);
   const net = sales - purchase;
   // todayStr already defined above
 
@@ -2030,13 +2038,15 @@ document.getElementById('logList').innerHTML='<div style="text-align:center;padd
     const itemsStr=t.items&&t.items.length>0?
       t.items.map(i=>`${i.name}${i.pack?'('+i.pack+')':''} × ${i.qty}`).join(', '):'—';
     const adminBtns = (isAdminUser || isSMUser) ? '<button class="log-edit-btn" onclick="editTransaction(\'' + t.id + '\')">✏️</button><button class="log-del-btn" onclick="deleteTransaction(\'' + t.id + '\')">🗑️</button>' : '';
+    // Calculate display total (fallback to items if total is missing)
+    const displayTotal = getTxnTotal(t);
     return '<div class="log-entry">' +
       '<div style="flex:1">' +
         '<div class="log-meta">' + dtStr + ' · <span class="log-type ' + t.type + '">' + (t.type==='sale'?'📤 銷售':'📥 進貨') + '</span> · ' + (t.store==='central'?'中環':'始創') + ' · ' + (t.user||'') + '</div>' +
         '<div class="log-items">' + itemsStr + '</div>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:.5rem;">' +
-        '<div class="log-total">HK$' + (t.total||0) + '</div>' +
+        '<div class="log-total">HK$' + displayTotal + '</div>' +
         adminBtns +
       '</div>' +
     '</div>';
