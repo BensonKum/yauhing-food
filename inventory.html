@@ -2248,9 +2248,12 @@ function doLogout(){
   document.getElementById('userInfo').textContent = '';
   document.getElementById('topbarStore').textContent = '';
   // Show login overlay
-  document.getElementById('authOverlay').style.display = 'flex';
-  document.getElementById('emailLoginForm').style.display = 'block';
-  document.getElementById('pinLoginForm').style.display = 'none';
+  const ao = document.getElementById('authOverlay');
+  if(ao) ao.style.display = 'flex';
+  const elf = document.getElementById('emailLoginForm');
+  if(elf) elf.style.display = 'block';
+  const plf = document.getElementById('pinLoginForm');
+  if(plf) plf.style.display = 'none';
   // Clear PIN inputs
   document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
 }
