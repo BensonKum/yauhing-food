@@ -2002,7 +2002,14 @@ async function renderLog(){
   // Helper to get total from transaction (fallback to recalculating from items)
   const getTxnTotal = (t) => {
     if(t.total && t.total > 0) return t.total;
-    if(t.items && Array.isArray(t.items)) {
+    // DEBUG: log first transaction structure
+    if(window._logDebug === undefined){
+      window._logDebug = true;
+      console.log('[DEBUG] First txn:', JSON.stringify(txns[0], null, 2));
+      console.log('[DEBUG] items:', txns[0]?.items);
+      console.log('[DEBUG] total:', txns[0]?.total, typeof txns[0]?.total);
+    }
+    if(t.items && Array.isArray(t.items) && t.items.length > 0) {
       return t.items.reduce((sum, item) => sum + ((item.lineTotal || (item.qty * (item.price || 0))) || 0), 0);
     }
     return 0;
