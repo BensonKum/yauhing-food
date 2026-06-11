@@ -1,0 +1,3 @@
+v></div>
+
+<div class="p-card has-image multi-pack" data-cat="蝦籽麵" data-stock="in"><div class="p-img"><span class="s-badge in">有庫存</span><div class="pk-sw"><button class="pk-btn active" data-pk="1">單包</button><button class="pk-btn" data-pk="2">6個裝</button></div><img src="images/古法大地魚蝦籽麵(粗).jpg" alt="
