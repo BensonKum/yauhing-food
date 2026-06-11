@@ -1592,7 +1592,8 @@ async function handleInvoiceUpload(input){
           invoiceItems.push({
             sku:sku,
             name:product.name,
-            qty:qty
+            qty:qty,
+            price:product.price || 0
           });
         }
       }
