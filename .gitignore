@@ -25,3 +25,10 @@ change_jimmy_password.js
 create_yung_account.js
 remove_admin_pins.js
 temp_backup_*/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
