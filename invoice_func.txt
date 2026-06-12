@@ -1,0 +1,148 @@
+async function handleInvoiceUpload(file) {
+  if (!file) return;
+  if (!currentUser) { alert('請先登入'); return; }
+  if (!confirm('確認上載發票「' + file.name + '」？\n將自動新增進貨記錄。')) return;
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, {header: 1, defval: ''});
+
+
+    // Parse invoice products (rows with YH code in col B index 1)
+    const products = [];
+    for (let r = 0; r < rows.length; r++) {
+      const row = rows[r];
+      const code = String(row[1] || '').trim();
+      if (code && code.startsWith('YH')) {
+        const qty = parseFloat(row[12]) || 0;
+        const price = parseFloat(row[16]) || 0;
+        const amount = parseFloat(row[23]) || 0;
+        if (qty > 0) {
+          products.push({code, qty, price, amount});
+        }
+      }
+    }
+
+    if (products.length === 0) {
+      alert('找不到任何產品記錄（請確認檔案格式）');
+      return;
+    }
+
+    // Build items array for Firestore
+    const items = products.map(p => ({
+      name: p.code,
+      qty: p.qty,
+      price: p.amount / p.qty,
+      lineTotal: p.amount
+    }));
+
+    // Save to Firestore as purchase transaction
+    const total = products.reduce((s, p) => s + p.amount, 0);
+    const txn = {
+      type: 'purchase',
+      store: currentStore,
+      user: currentUser.email,
+      total,
+      items,
+      source: 'invoice_upload',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    await db.collection('inventory_transactions').add(txn);
+    toast('✅ 發票已上載！共 ' + products.length + ' 項，HK$' + total.toLocaleString());
+    document.getElementById('invoiceFileInput').value = '';
+  } catch(e) {
+    alert('上載失敗：' + e.message);
+    console.error(e);
+  }
+}
+
+// window expose (at end, so all functions are defined)
+function doLogout(){
+  // Reset all state
+  currentUser = null;
+  isAdminUser = false;
+  isSMUser = false;
+  userStore = null;
+  currentStore = '';
+  cart = {};
+  pinFailCount = 0;
+  // Sign out from Firebase Auth (safe even if not logged in via auth)
+  try { auth.signOut(); } catch(e){ /* ignore */ }
+  // Reset UI
+  document.getElementById('storeBtn').textContent='選擇分店 ▼';
+  document.getElementById('storeBtn').className='store-badge central';
+  document.getElementById('userInfo').textContent = '';
+  document.getElementById('topbarStore').textContent = '';
+  // Show login overlay
+  const ao = document.getElementById('authOverlay');
+  if(ao) ao.style.display = 'flex';
+  const elf = document.getElementById('emailLoginForm');
+  if(elf) elf.style.display = 'block';
+  const plf = document.getElementById('pinLoginForm');
+  if(plf) plf.style.display = 'none';
+  // Clear PIN inputs
+  document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
+}
+window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;
+window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
+window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
+window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switchTab=switchTab;
+window.doLogout=doLogout;
+window.renderReport=renderReport;window.renderLog=renderLog;
+
+</script>
+
+<!-- Edit Modal -->
+<div id="editModal" class="edit-modal">
+  <div class="edit-modal-content" id="editModalContent"></div>
+</div>
+
+
+<!-- Add Employee Modal -->
+<div id="addEmpModal" class="add-emp-modal">
+  <div class="add-emp-content">
+    <h3 id="empModalTitle">＋ 新增員工</h3>
+    <div class="add-emp-form">
+      <div>
+        <label>姓名</label>
+        <input type="text" id="empName" placeholder="例：陳大明">
+      </div>
+      <div>
+        <label>電郵</label>
+        <input type="email" id="empEmail" placeholder="例：david@yauhing.hk">
+      </div>
+      <div>
+        <label>權限</label>
+        <select id="empRole">
+          <option value="central">中環店員工</option>
+          <option value="pioneer">始創店員工</option>
+          <option value="sm">區域主管</option>
+          <option value="admin">管理員</option>
+        </select>
+      </div>
+      <div id="empPwdRow">
+        <label>登入密碼</label>
+        <input type="password" id="empPwd" placeholder="設定員工登入密碼（6位以上）" minlength="6">
+      </div>
+      <div class="emp-phone-field">
+        <label>手機號碼 <span style="color:var(--muted);font-size:.72rem">（PIN 自動取最後4位）</span></label>
+        <input type="tel" id="empPhone" placeholder="例：91234567" maxlength="11">
+      </div>
+      <div class="add-emp-btns">
+        <button class="btn-emp-cancel" onclick="closeAddEmployee()">取消</button>
+        <button class="btn-emp-save" onclick="saveEmployee()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Edit Transaction Modal -->
+    <div id="editTransactionModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeEditMo

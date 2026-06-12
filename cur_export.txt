@@ -1,0 +1,113 @@
+async function exportLogToExcel(){
+  try {
+    const store = document.getElementById('logStore').value;
+    const from = document.getElementById('logFromDate').value;
+    const to = document.getElementById('logToDate').value;
+
+    // Query Firestore directly (same filters as renderLog)
+    const snap = await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
+    let txns = [];
+    snap.forEach(d => txns.push({id: d.id, ...d.data()}));
+
+    // Apply date filter
+    let fromDate = null, toDate = null;
+    if(from && to){
+      fromDate = new Date(from+'T00:00:00');
+      toDate = new Date(to+'T23:59:59');
+    }
+    const inDateRange = (t) => {
+      if(!fromDate || !toDate) return true;
+      const d2 = t.createdAt ? t.createdAt.toDate() : new Date();
+      return fromDate <= d2 && d2 <= toDate;
+    };
+
+    // Apply store / type / cancelled filters
+    const typeFilter = document.getElementById('logType')?.value || 'all';
+    txns = txns.filter(t => {
+      if(store !== 'all' && t.store !== store) return false;
+      if(typeFilter !== 'all' && t.type !== typeFilter) return false;
+      if(!inDateRange(t)) return false;
+      if(t.status === 'cancelled') return false;
+      return true;
+    });
+
+    // Header
+    const header = [
+      ['祐興食品 - 交易記錄', '', '', '', '', '', '', ''],
+      ['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '', '', ''],
+      ['日期範圍', from && to ? from + ' 至 ' + to : '全部', '', '', '', '', ''],
+      [],
+      ['時間', '類型', '分店', 'SKU', '產品名稱', '數量', '單價', '金額']
+    ];
+
+    // Build one row per line item
+    const dataRows = [];
+    txns.forEach(t => {
+      const dt = t.createdAt ? new Date(t.createdAt.toDate()) : new Date();
+      const dtStr = dt.toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const typeLabel = t.type === 'sale' ? '📤 銷售' : '📥 進貨';
+      const storeLabel = t.store === 'central' ? '中環' : '始創';
+
+      let lineItems = [];
+      if(t.items && t.items.length > 0){
+        lineItems = t.items.map(i => ({
+          sku: i.name || '',
+          name: i.productName || i.name || '',
+          qty: i.qty || 1,
+          unitPrice: i.price || 0,
+          lineTotal: i.lineTotal || (i.qty * (i.price || 0))
+        }));
+      } else if(t.productName){
+        lineItems = [{
+          sku: t.productCode || '',
+          name: t.productName,
+          qty: t.qty || 1,
+          unitPrice: t.price || 0,
+          lineTotal: (t.qty || 1) * (t.price || 0)
+        }];
+      }
+
+      lineItems.forEach(item => {
+        dataRows.push([
+          dtStr, typeLabel, storeLabel,
+          item.sku, item.name,
+          item.qty, item.unitPrice, item.lineTotal
+        ]);
+      });
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(header);
+
+    if(dataRows.length > 0){
+      XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
+    }
+
+    // Format columns: F=qty, G=unitPrice, H=lineTotal
+    const lastRow = 5 + dataRows.length;
+    for(let r = 6; r <= lastRow; r++){
+      const idx = r - 6;
+      if(idx < dataRows.length){
+        ws['F' + r] = { t:'n', v: dataRows[idx][5], z: '#,##0' };
+        ws['G' + r] = { t:'n', v: dataRows[idx][6], z: '$#,##0.00' };
+        ws['H' + r] = { t:'n', v: dataRows[idx][7], z: '$#,##0.00' };
+      }
+    }
+
+    // Column widths
+    ws['!cols'] = [
+      {wch:18},{wch:10},{wch:8},{wch:12},{wch:32},{wch:8},{wch:12},{wch:12}
+    ];
+
+    XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
+    XLSX.writeFile(wb, '交易記錄_' + new Date().toISOString().split('T')[0] + '.xlsx');
+    toast('✅ 記錄已匯出（' + dataRows.length + ' 項明細）');
+  } catch(e) {
+    console.error('Export log error:', e);
+    toast('❌ 匯出失敗：' + e.message);
+  }
+}
+
+// --- Add Export Buttons Dynamically ---
+
+// --- Mobile Cart ---

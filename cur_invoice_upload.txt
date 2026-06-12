@@ -1,0 +1,63 @@
+async function handleInvoiceUpload(file) {
+  if (!file) return;
+  if (!currentUser) { alert('請先登入'); return; }
+  if (!confirm('確認上載發票「' + file.name + '」？\n將自動新增進貨記錄。')) return;
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+    const workbook = XLSX.read(data, {type: 'array', cellDates: true});
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, {header: 1, defval: ''});
+
+
+    // Parse invoice products (rows with YH code in col B index 1)
+    const products = [];
+    for (let r = 0; r < rows.length; r++) {
+      const row = rows[r];
+      const code = String(row[1] || '').trim();
+      if (code && code.startsWith('YH')) {
+        const qty = parseFloat(row[12]) || 0;
+        const price = parseFloat(row[16]) || 0;
+        const amount = parseFloat(row[23]) || 0;
+        if (qty > 0) {
+          products.push({code, qty, price, amount});
+        }
+      }
+    }
+
+    if (products.length === 0) {
+      alert('找不到任何產品記錄（請確認檔案格式）');
+      return;
+    }
+
+    // Build items array for Firestore
+    const items = products.map(p => ({
+      name: p.code,
+      qty: p.qty,
+      price: p.amount / p.qty,
+      lineTotal: p.amount
+    }));
+
+    // Save to Firestore as purchase transaction
+    const total = products.reduce((s, p) => s + p.amount, 0);
+    const txn = {
+      type: 'purchase',
+      store: currentStore,
+      user: currentUser.email,
+      total,
+      items,
+      source: 'invoice_upload',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    await db.collection('inventory_transactions').add(txn);
+    toast('✅ 發票已上載！共 ' + products.length + ' 項，HK$' + total.toLocaleString());
+    document.getElementById('invoiceFileInput').value = '';
+  } catch(e) {
+    alert('上載失敗：' + e.message);
+    console.error(e);
+  }
+}
+
+// window expose (at end, so all functions are defined)
