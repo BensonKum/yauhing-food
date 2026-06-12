@@ -1632,6 +1632,11 @@ async function exportLogToExcel(){
       ['時間', '類型', '分店', 'SKU', '產品名稱', '數量', '單價', '金額']
     ];
 
+    // Build SKU -> name lookup from products.json (inline map for invoice uploads)
+    // Invoice uploads store SKU in items[].name; we need Chinese names
+    const skuNames = {};
+    try { await db.collection('products').limit(100).get().then(s=>s.forEach(d=>{const p=d.data();if(p.sku&&p.name)skuNames[p.sku]=p.name;})); } catch(e){}
+    
     // Build one row per line item
     const dataRows = [];
     txns.forEach(t => {
@@ -1642,20 +1647,24 @@ async function exportLogToExcel(){
 
       let lineItems = [];
       if(t.items && t.items.length > 0){
-        lineItems = t.items.map(i => ({
-          sku: i.name || '',
-          name: i.productName || i.name || '',
-          qty: i.qty || 1,
-          unitPrice: i.price || 0,
-          lineTotal: i.lineTotal || (i.qty * (i.price || 0))
-        }));
+        lineItems = t.items.map(i => {
+          const rawSku = i.name || '';
+          const resolvedName = i.productName || (rawSku && skuNames[rawSku] ? skuNames[rawSku] : rawSku);
+          return {
+            sku: rawSku,
+            name: resolvedName,
+            qty: i.qty || 1,
+            unitPrice: Number(i.price) || 0,
+            lineTotal: Number(i.lineTotal) || (Number(i.qty||0) * Number(i.price||0))
+          };
+        });
       } else if(t.productName){
         lineItems = [{
           sku: t.productCode || '',
           name: t.productName,
           qty: t.qty || 1,
-          unitPrice: t.price || 0,
-          lineTotal: (t.qty || 1) * (t.price || 0)
+          unitPrice: Number(t.price) || 0,
+          lineTotal: (Number(t.qty)||1) * (Number(t.price)||0)
         }];
       }
 
