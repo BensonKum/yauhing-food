@@ -1935,6 +1935,10 @@ async function renderReport(){
     });
   } catch(e){console.error(e);}
 
+  // === Determine user store view (for employees, only show their store) ===
+  const canViewAll = isAdminUser || isSMUser;
+  const userViewStore = canViewAll ? null : (userStore || currentStore);
+
   // === Calculate inventory health metrics ===
   const LOW_THRESHOLD = 10;
   const OVER_THRESHOLD = 100;
@@ -1942,7 +1946,10 @@ async function renderReport(){
 
   products.forEach(p=>{
     const inv=inventory[p.name]||{};
-    const total=(inv.central??0)+(inv.pioneer??0);
+    // For employees: only count their store's stock
+    const total = canViewAll 
+      ? (inv.central??0)+(inv.pioneer??0)
+      : (userViewStore === 'central' ? (inv.central??0) : (inv.pioneer??0));
     if(total===0) outOfStock++;
     else if(total<LOW_THRESHOLD) lowStock++;
     else if(total>OVER_THRESHOLD) overStock++;
@@ -1973,7 +1980,10 @@ async function renderReport(){
     const inv=inventory[p.name]||{};
     const central=inv.central??0;
     const pioneer=inv.pioneer??0;
-    const total=central+pioneer;
+    // For employees: only show their store's data
+    const total = canViewAll 
+      ? central+pioneer
+      : (userViewStore === 'central' ? central : pioneer);
     let status='stock-ok',statusText='充足',badge='badge-green';
     const isDiscontinued = discontinuedSkus.includes(p.sku || '');
     if(isDiscontinued){
@@ -1993,18 +2003,42 @@ async function renderReport(){
   // Sort by total stock ascending (low stock first)
   const rows=Object.values(prodMap).sort((a,b)=>a.total-b.total);
 
+  // Build table header based on user permissions
+  const tableHeader = canViewAll 
+    ? '<tr><th>SKU</th><th>產品名稱</th><th>分類</th><th>中環</th><th>始創</th><th>總庫存</th><th>狀態</th><th>建議補貨量</th></tr>'
+    : (userViewStore === 'central' 
+      ? '<tr><th>SKU</th><th>產品名稱</th><th>分類</th><th>中環庫存</th><th>狀態</th><th>建議補貨量</th></tr>'
+      : '<tr><th>SKU</th><th>產品名稱</th><th>分類</th><th>始創庫存</th><th>狀態</th><th>建議補貨量</th></tr>');
+
+  // Update thead
+  document.querySelector('#tabContentReport .report-table thead').innerHTML = tableHeader;
+
   const rowsHtml = rows.length===0?
-    '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted)">暫無數據</td></tr>':
-    rows.map(r=>`<tr style="${r.status==='stock-out'?'background-color:#ffebee;':(r.status==='stock-low'?'background-color:#fff3e0;':'')}">
-      <td>${r.sku}</td>
-      <td style="font-weight:600">${r.name}</td>
-      <td>${r.cat}</td>
-      <td style="text-align:center">${r.central}</td>
-      <td style="text-align:center">${r.pioneer}</td>
-      <td style="text-align:center;font-weight:700">${r.total}</td>
-      <td><span class="badge ${r.badge}">${r.statusText}</span></td>
-      <td style="text-align:center;color:#2196f3;font-weight:600">${r.suggestRestock>0?r.suggestRestock:'-'}</td>
-    </tr>`).join('');
+    `<tr><td colspan="${canViewAll?8:6}" style="text-align:center;padding:2rem;color:var(--muted)">暫無數據</td></tr>`:
+    rows.map(r=>{
+      const rowStyle = r.status==='stock-out'?'background-color:#ffebee;':(r.status==='stock-low'?'background-color:#fff3e0;':'');
+      if(canViewAll){
+        return `<tr style="${rowStyle}">
+          <td>${r.sku}</td>
+          <td style="font-weight:600">${r.name}</td>
+          <td>${r.cat}</td>
+          <td style="text-align:center">${r.central}</td>
+          <td style="text-align:center">${r.pioneer}</td>
+          <td style="text-align:center;font-weight:700">${r.total}</td>
+          <td><span class="badge ${r.badge}">${r.statusText}</span></td>
+          <td style="text-align:center;color:#2196f3;font-weight:600">${r.suggestRestock>0?r.suggestRestock:'-'}</td>
+        </tr>`;
+      } else {
+        return `<tr style="${rowStyle}">
+          <td>${r.sku}</td>
+          <td style="font-weight:600">${r.name}</td>
+          <td>${r.cat}</td>
+          <td style="text-align:center;font-weight:700">${r.total}</td>
+          <td><span class="badge ${r.badge}">${r.statusText}</span></td>
+          <td style="text-align:center;color:#2196f3;font-weight:600">${r.suggestRestock>0?r.suggestRestock:'-'}</td>
+        </tr>`;
+      }
+    }).join('');
 
   document.getElementById('reportBody').innerHTML = rowsHtml;
 }
