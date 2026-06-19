@@ -151,6 +151,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.85rem
 }
 .cart-empty-icon{font-size:3rem;margin-bottom:.6rem;opacity:.3}
+.cart-back-btn{margin-top:1rem;padding:.7rem 1.8rem;border:none;border-radius:50px;background:var(--green);color:white;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);font-family:'Noto Sans TC',sans-serif}
+.cart-back-btn:hover{background:#245a43;transform:scale(1.05)}
+.cart-back-btn:active{transform:scale(.97)}
 
 .cart-foot{padding:1rem;border-top:1px solid var(--bd);background:var(--bg2)}
 .cart-summary{
@@ -1440,7 +1443,7 @@ function renderCart(){
   const container=document.getElementById('cartItems');
   const keys=Object.keys(cart);
   if(keys.length===0){
-    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品</div>`;
+    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品<br><br><button class="cart-back-btn" onclick="showTab('POS')">🏠 返回主頁</button></div>`;
     document.getElementById('cartTotal').textContent='HK$0';
     document.getElementById('cartCount').innerHTML='共 <span>0</span> 款產品';
     return;
