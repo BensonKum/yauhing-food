@@ -5,7 +5,7 @@
   "description": "祐興食品倉存管理系統",
   "start_url": "/inventory.html",
   "display": "standalone",
-  "background_color": "#FAFAF8",
+  "background_color": "#E8F4FC",
   "theme_color": "#C8462B",
   "orientation": "portrait-primary",
   "icons": [
