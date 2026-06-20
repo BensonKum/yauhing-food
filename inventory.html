@@ -1445,7 +1445,7 @@ function renderCart(){
   const container=document.getElementById('cartItems');
   const keys=Object.keys(cart);
   if(keys.length===0){
-    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品<br><br><button class="cart-back-btn" onclick="window.location.href='/'">🏠 返回主頁</button></div>`;
+    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品<br><br><button class="cart-back-btn" onclick="window.location.assign('https://yauhing-food.com/')">🏠 返回主頁</button></div>`;
     document.getElementById('cartTotal').textContent='HK$0';
     document.getElementById('cartCount').innerHTML='共 <span>0</span> 款產品';
     return;
