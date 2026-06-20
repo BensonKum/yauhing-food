@@ -176,6 +176,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 .btn-confirm-purchase:hover{background:#1b4332;transform:scale(1.02)}
 .btn-clear{background:transparent;border:1.5px solid var(--bd);color:var(--muted);border-radius:50px;padding:.45rem;font-size:.78rem;cursor:pointer;transition:var(--tr)}
 .btn-clear:hover{border-color:var(--red);color:var(--red)}
+.btn-home{background:transparent;border:1.5px solid var(--a);color:var(--a);border-radius:50px;padding:.45rem;font-size:.78rem;cursor:pointer;transition:var(--tr)}
+.btn-home:hover{background:var(--a);color:white}
 
 /* Export Button */
 .btn-export{padding:.45rem .9rem;border:none;border-radius:50px;font-size:.78rem;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:var(--tr);background:var(--green);color:white;display:flex;align-items:center;gap:.3rem}
@@ -1443,7 +1445,7 @@ function renderCart(){
   const container=document.getElementById('cartItems');
   const keys=Object.keys(cart);
   if(keys.length===0){
-    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品<br><br><button class="cart-back-btn" onclick="showTab('POS')">🏠 返回主頁</button></div>`;
+    container.innerHTML=`<div class="cart-empty"><div class="cart-empty-icon">🛒</div>尚未加入任何項目<br>從左邊選擇產品<br><br><button class="cart-back-btn" onclick="window.location.href='/'">🏠 返回主頁</button></div>`;
     document.getElementById('cartTotal').textContent='HK$0';
     document.getElementById('cartCount').innerHTML='共 <span>0</span> 款產品';
     return;
