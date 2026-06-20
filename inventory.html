@@ -1463,6 +1463,8 @@ function renderCart(){
       <button class="ci-remove" onclick="removeItem('${cartKey.replace(/'/g,"\\'")}')">✕</button>
     </div>`;
   });
+  // Add back button after cart items
+  html+=`<div style="text-align:center;margin-top:.8rem"><button class="cart-back-btn" onclick="window.location.reload()">🏠 返回主頁</button></div>`;
   container.innerHTML=html;
   document.getElementById('cartTotal').textContent='HK$'+total;
   document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
