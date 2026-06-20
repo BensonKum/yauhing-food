@@ -1524,5 +1524,17 @@ async function saveOrder(orderData){
 .qr-placeholder{background:var(--bg);border:2px dashed var(--bd);border-radius:12px;padding:2rem;text-align:center}
 .qr-notice{color:var(--muted);font-size:.85rem;line-height:1.6}
 </style>
+
+<!-- Service Worker Registration (PWA) -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw-frontend.js')
+        .then(reg => console.log('[SW Frontend] Registered:', reg.scope))
+        .catch(err => console.log('[SW Frontend] Registration failed:', err));
+    });
+  }
+</script>
+
 </body></html>
 
