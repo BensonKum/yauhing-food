@@ -129,6 +129,10 @@
     color:#856404;
     text-align:center;
   }
+  .btn-confirm { background:#2E6A4F !important; }
+  .btn-confirm:hover { background:#1B5E20 !important; }
+  .btn-undo { background:#666 !important; }
+  .btn-undo:hover { background:#444 !important; }
 </style>
 </head>
 <body>
@@ -334,10 +338,29 @@ function showOrder(d, did) {
   html += '<div class="body">';
   html += rows;
   if(items) html += '<div class="items"><div class="items-title">訂購商品</div>' + items + '</div>';
-  if(isPaid) {
-    html += '<div class="ok show">確認為有效已付款訂單<small>顧客：' + (d.customerName||"-") + "｜金額：HK$" + (d.finalTotal||d.total||0) + '</small></div>';
+  // 按狀態顯示對應操作按鈕
+  if(st === "paid") {
+    html += '<div class="ok show">✅ 已付款，可確認取貨<small>顧客：' + (d.customerName||"-") + '｜金額：HK$' + (d.finalTotal||d.total||0) + '</small></div>';
+    html += '<button class="btn btn-confirm" style="margin-top:1rem;width:100%;" onclick="confirmPickup(\' + (d.orderId||did) + '\',\'' + did + '\')">✅ 確認取貨</button>';
+  } else if(st === "completed") {
+    html += '<div class="ok show" style="background:#388E3C;">🎉 訂單已完成<small>';
+    if(d.completedAt) {
+      var ca = d.completedAt.toDate ? d.completedAt.toDate() : new Date(d.completedAt);
+      html += '完成時間：' + ca.toLocaleString("zh-HK");
+    }
+    if(d.completedBy) {
+      html += '｜確認人：' + d.completedBy;
+    }
+    html += '</small></div>';
+    html += '<button class="btn btn-undo" style="margin-top:1rem;width:100%;" onclick="undoPickup(\' + (d.orderId||did) + '\',\'' + did + '\')">↩️ 復原（改為已付款）</button>';
+  } else if(st === "shipped") {
+    html += '<div class="ok show" style="background:#1565C0;">📦 已發貨（順豐快遞）<small>此訂單已出貨，無需到店取貨</small></div>';
+  } else if(st === "pending") {
+    html += '<div class="warn2">⚠️ 此訂單尚未付款，請確認顧客已完成轉數快付款</div>';
+  } else if(st === "cancelled") {
+    html += '<div class="warn2" style="background:#E0E0E0;color:#666;">此訂單已取消</div>';
   } else {
-    html += '<div class="warn2">此訂單尚未付款，請確認顧客已完成轉數快付款</div>';
+    html += '<div class="ok show">確認為有效訂單<small>顧客：' + (d.customerName||"-") + '｜金額：HK$' + (d.finalTotal||d.total||0) + '</small></div>';
   }
   html += '</div></div>';
   document.getElementById("res").innerHTML = html;
@@ -413,6 +436,39 @@ document.getElementById("sbtn").onclick = function() {
 window.onerror = function(msg) {
   setStatus("JS Error: " + msg, "err");
 };
+
+// 確認取貨 - 更新狀態為 completed
+function confirmPickup(oid, docId) {
+  if(!confirm("確認客人已取貨？\n\n訂單 #" + oid)) return;
+  var emp = null;
+  try { emp = JSON.parse(localStorage.getItem('currentEmployee')); } catch(e) {}
+  var completedBy = emp ? (emp.name || emp.pin || 'staff') : 'staff';
+  window.db.collection("orders").doc(docId).update({
+    status: "completed",
+    completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    completedBy: completedBy
+  }).then(function(){
+    alert("🎉 取貨確認成功！");
+    doSearch(oid);
+  }).catch(function(e){
+    alert("錯誤：" + e.message);
+  });
+}
+
+// 復原 - 狀態改回 paid
+function undoPickup(oid, docId) {
+  if(!confirm("確認復原此訂單？\n\n訂單 #" + oid + "\n\n狀態將改為：已付款")) return;
+  window.db.collection("orders").doc(docId).update({
+    status: "paid",
+    completedAt: firebase.firestore.FieldValue.delete(),
+    completedBy: firebase.firestore.FieldValue.delete()
+  }).then(function(){
+    alert("↩️ 已復原為已付款狀態");
+    doSearch(oid);
+  }).catch(function(e){
+    alert("錯誤：" + e.message);
+  });
+}
 </script>
 </body>
 </html>
