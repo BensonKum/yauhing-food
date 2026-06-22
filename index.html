@@ -991,6 +991,7 @@ if(firebaseReady&&auth&&db){
     authEmail.value='';authPassword.value='';
     nameField.style.display='none';phoneField.style.display='none';
     authPassword.parentElement.style.display='none';
+    authPassword.removeAttribute('required');
     authSubmit.textContent='發送重設電郵';
     authSwitch.innerHTML='想起密碼了？<a href="#" id="switchLink">返回登入</a>';
     document.getElementById('switchLink').onclick=function(e){e.preventDefault();exitResetMode();};
@@ -1003,6 +1004,7 @@ if(firebaseReady&&auth&&db){
     document.getElementById('authSubtitle').style.display='';
     document.getElementById('authTabRow').style.display='';
     authPassword.parentElement.style.display='';
+    authPassword.setAttribute('required','');
     document.querySelector('.auth-forgot').style.display='';
   }
   document.getElementById('forgotLink').onclick=function(e){e.preventDefault();switchResetMode();};
