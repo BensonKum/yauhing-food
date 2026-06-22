@@ -343,7 +343,7 @@ function showOrder(d, did) {
   // 按狀態顯示對應操作按鈕
   if(st === "paid") {
     html += '<div class="ok show">✅ 已付款，可確認取貨<small>顧客：' + (d.customerName||"-") + '｜金額：HK$' + (d.finalTotal||d.total||0) + '</small></div>';
-    html += '<button class="btn btn-confirm" style="margin-top:1rem;width:100%;" onclick="confirmPickup(\' + (d.orderId||did) + '\',\'' + did + '\')">✅ 確認取貨</button>';
+    html += '<button class="btn btn-confirm" id="btnConfirm" style="margin-top:1rem;width:100%;">✅ 確認取貨</button>';
   } else if(st === "completed") {
     html += '<div class="ok show" style="background:#388E3C;">🎉 訂單已完成<small>';
     if(d.completedAt) {
@@ -354,7 +354,7 @@ function showOrder(d, did) {
       html += '｜確認人：' + d.completedBy;
     }
     html += '</small></div>';
-    html += '<button class="btn btn-undo" style="margin-top:1rem;width:100%;" onclick="undoPickup(\' + (d.orderId||did) + '\',\'' + did + '\')">↩️ 復原（改為已付款）</button>';
+    html += '<button class="btn btn-undo" id="btnUndo" style="margin-top:1rem;width:100%;">↩️ 復原（改為已付款）</button>';
   } else if(st === "shipped") {
     html += '<div class="ok show" style="background:#1565C0;">📦 已發貨（順豐快遞）<small>此訂單已出貨，無需到店取貨</small></div>';
   } else if(st === "pending") {
@@ -366,6 +366,22 @@ function showOrder(d, did) {
   }
   html += '</div></div>';
   document.getElementById("res").innerHTML = html;
+
+  // 綁定確認取貨 / 復原按鈕（動態生成，用 setTimeout 確保 DOM 已更新）
+  setTimeout(function() {
+    var btnC = document.getElementById("btnConfirm");
+    if(btnC) {
+      btnC.onclick = function() {
+        confirmPickup(d.orderId||did, did);
+      };
+    }
+    var btnU = document.getElementById("btnUndo");
+    if(btnU) {
+      btnU.onclick = function() {
+        undoPickup(d.orderId||did, did);
+      };
+    }
+  }, 100);
 
   // QR code for order ID
   var oid2 = d.orderId || did;
