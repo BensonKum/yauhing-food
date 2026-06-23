@@ -342,8 +342,17 @@ function showOrder(d, did) {
   if(items) html += '<div class="items"><div class="items-title">訂購商品</div>' + items + '</div>';
   // 按狀態顯示對應操作按鈕
   if(st === "paid") {
+    // 自取：確認取貨｜順豐：發貨
     html += '<div class="ok show">✅ 已付款，可確認取貨<small>顧客：' + (d.customerName||"-") + '｜金額：HK$' + (d.finalTotal||d.total||0) + '</small></div>';
-    html += '<button class="btn btn-confirm" id="btnConfirm" style="margin-top:1rem;width:100%;">✅ 確認取貨</button>';
+    if(d.deliveryMethod === "順豐") {
+      html += '<button class="btn btn-confirm" id="btnConfirmShip" style="margin-top:1rem;width:100%;">📦 確認已發貨</button>';
+    } else {
+      html += '<button class="btn btn-confirm" id="btnConfirm" style="margin-top:1rem;width:100%;">✅ 確認取貨</button>';
+    }
+  } else if(st === "shipped") {
+    // 順豐訂單：客戶自行確認收貨
+    html += '<div class="ok show" style="background:#1565C0;">📦 已發貨（順豐快遞）</div>';
+    html += '<button class="btn btn-confirm" id="btnCustomerConfirm" style="margin-top:1rem;width:100%;">📦 我已收到貨物</button>';
   } else if(st === "completed") {
     html += '<div class="ok show" style="background:#388E3C;">🎉 訂單已完成<small>';
     if(d.completedAt) {
@@ -373,6 +382,18 @@ function showOrder(d, did) {
     if(btnC) {
       btnC.onclick = function() {
         confirmPickup(d.orderId||did, did);
+      };
+    }
+    var btnS = document.getElementById("btnConfirmShip");
+    if(btnS) {
+      btnS.onclick = function() {
+        confirmShipped(d.orderId||did, did);
+      };
+    }
+    var btnCust = document.getElementById("btnCustomerConfirm");
+    if(btnCust) {
+      btnCust.onclick = function() {
+        customerConfirmReceived(d.orderId||did, did);
       };
     }
     var btnU = document.getElementById("btnUndo");
@@ -467,6 +488,39 @@ function confirmPickup(oid, docId) {
     completedBy: completedBy
   }).then(function(){
     alert("🎉 取貨確認成功！");
+    doSearch(oid);
+  }).catch(function(e){
+    alert("錯誤：" + e.message);
+  });
+}
+
+// 確認已發貨（順豐員工用）- 將 paid 改為 shipped
+function confirmShipped(oid, docId) {
+  if(!confirm("📦 確認已發貨（順豐）？\n\n訂單 #" + oid)) return;
+  var emp = null;
+  try { emp = JSON.parse(localStorage.getItem('currentEmployee')); } catch(e) {}
+  var shippedBy = emp ? (emp.name || emp.pin || 'staff') : 'staff';
+  window.db.collection("orders").doc(docId).update({
+    status: "shipped",
+    shippedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    shippedBy: shippedBy
+  }).then(function(){
+    alert("📦 已標記為已發貨！");
+    doSearch(oid);
+  }).catch(function(e){
+    alert("錯誤：" + e.message);
+  });
+}
+
+// 客戶自行確認收貨（順豐）- shipped 改為 completed
+function customerConfirmReceived(oid, docId) {
+  if(!confirm("📦 確認你已收到貨物？\n\n訂單 #" + oid + "\n\n確認後訂單狀態將變為「已完成」")) return;
+  window.db.collection("orders").doc(docId).update({
+    status: "completed",
+    completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    completedBy: "客戶自行確認"
+  }).then(function(){
+    alert("🎉 多謝！已確認收貨成功～");
     doSearch(oid);
   }).catch(function(e){
     alert("錯誤：" + e.message);
