@@ -595,9 +595,16 @@ function renderCart(){
   }
 }
 window.addToCart=function(name,price,variant,img){
-  // Skip shop-only items
-  var shopBtn=document.querySelector('.add-cart-btn[data-name="'+name+'"]');
-  if(shopBtn&&shopBtn.dataset.shopOnly==='true')return;
+  // Skip shop-only items (check parent card)
+  var allCards=document.querySelectorAll('.p-card');
+  for(var i=0;i<allCards.length;i++){
+    var nm=allCards[i].querySelector('.p-name');
+    if(nm&&nm.textContent.trim()===name){
+      var btn=allCards[i].querySelector('.add-cart-btn');
+      if(btn&&btn.dataset.shopOnly==='true')return;
+      break;
+    }
+  }
   var existing=cart.find(function(i){return i.name===name&&i.variant===variant});
   if(existing){existing.qty+=1;}else{cart.push({name:name,price:price,variant:variant||null,img:img||null,qty:1});}
   saveCart();
