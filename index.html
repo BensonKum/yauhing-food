@@ -412,7 +412,7 @@ footer{padding:3rem 2rem;background:var(--txt);border-top:1px solid rgba(255,255
 <div class="cart-drawer" id="cartDrawer">
 <div class="cart-header"><h3 class="cart-title">🛒 購物車</h3><div class="cart-header-btns"><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home">🏠 返回首頁</a><button class="cart-close" id="cartClose">×</button></div></div>
 <div class="cart-items" id="cartItems"><div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><p>購物車仲空緊<br>去揀啲嘢啦！</p></div></div>
-<div class="cart-footer"><div class="cart-total"><span class="cart-total-label">總額</span><span class="cart-total-amount" id="cartTotal">HKD 0</span></div><div class="tier-status-bar" id="tierStatusBar" style="display:none;padding:.5rem .8rem;background:var(--bg2);border-radius:8px;margin-bottom:.8rem;font-size:.82rem;color:var(--txt);display:flex;align-items:center;gap:.5rem"></div><button class="cart-checkout" id="cartCheckout"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> WhatsApp 落單</button><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home-btn">🏠 返回首頁</a></div>
+<div class="cart-footer"><div class="cart-total"><span class="cart-total-label">總額</span><span class="cart-total-amount" id="cartTotal">HKD 0</span></div><div class="tier-status-bar" id="promoStatusBar" style="display:none;padding:.5rem .8rem;background:linear-gradient(135deg,#4CAF50,#2E7D32);border-radius:8px;margin-bottom:.5rem;font-size:.82rem;color:#fff;display:flex;align-items:center;gap:.5rem"></div><div class="tier-status-bar" id="tierStatusBar" style="display:none;padding:.5rem .8rem;background:var(--bg2);border-radius:8px;margin-bottom:.8rem;font-size:.82rem;color:var(--txt);display:flex;align-items:center;gap:.5rem"></div><button class="cart-checkout" id="cartCheckout"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg> WhatsApp 落單</button><a href="https://bensonkum.github.io/yauhing-food/" class="cart-home-btn">🏠 返回首頁</a></div>
 </div>
 <div class="auth-modal" id="authModal">
 <div class="auth-box">
@@ -473,6 +473,32 @@ if(typeof firebase!=='undefined'){
 }
 document.addEventListener('DOMContentLoaded',function(){
 
+// ============ PROMOTION SYSTEM ============
+var PROMOTIONS=[
+  {
+    id:'bogo_evening',
+    name:'傍晚1+1優惠',
+    products:['豆卜 (盒裝)'],
+    type:'bogo',       // buy-one-get-one-free
+    timeStart:17,     // 17:00
+    timeEnd:23,
+    days:[0,1,2,3,4,5,6],  // 每日
+    active:true
+  }
+];
+function isPromotionActive(promo){
+  if(!promo.active)return false;
+  var now=new Date();
+  var day=now.getDay();
+  var hour=now.getHours();
+  if(promo.days.indexOf(day)===-1)return false;
+  if(hour>=promo.timeStart&&hour<promo.timeEnd)return true;
+  return false;
+}
+function getActivePromos(){
+  return PROMOTIONS.filter(isPromotionActive);
+}
+
 // ============ SHOPPING CART ============
 var cart=JSON.parse(localStorage.getItem('yauhingCart')||'[]');
 function saveCart(){localStorage.setItem('yauhingCart',JSON.stringify(cart));renderCart()}
@@ -488,19 +514,70 @@ function renderCart(){
   if(cart.length===0){
     itemsEl.innerHTML='<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><p>購物車仲空緊<br>去揀啲嘢啦！</p></div>';
     totalEl.textContent='HKD 0';
+    var tierBarEl=document.getElementById('tierStatusBar');
+    var promoBarEl=document.getElementById('promoStatusBar');
+    if(tierBarEl)tierBarEl.style.display='none';
+    if(promoBarEl)promoBarEl.style.display='none';
     return;
   }
-  var total=0,totalOrig=0,html='';
+  var activePromos=getActivePromos();
+  var total=0,totalOrig=0,totalBogoDisc=0,html='';
+  var promoHtml='';
   cart.forEach(function(item,idx){
+    // Check if this item has an active BOGO promo
+    var promoMatch=null;
+    activePromos.forEach(function(p){
+      if(p.type==='bogo'&&p.products.indexOf(item.name)!==-1)promoMatch=p;
+    });
+    var freeQty=0;
+    var bogoDisc=0;
+    if(promoMatch){
+      freeQty=Math.floor(item.qty/2);  // Buy 1 get 1 free: every 2 items, 1 is free
+      bogoDisc=freeQty*item.price;
+      totalBogoDisc+=bogoDisc;
+    }
     var orig=item.price*item.qty;
-    var disc=currentUserTier&&currentUserTier.discount<1?Math.round(orig*(1-currentUserTier.discount)):0;
-    var sub=orig-disc;
+    var afterBogo=orig-bogoDisc;
+    var disc=currentUserTier&&currentUserTier.discount<1?Math.round(afterBogo*(1-currentUserTier.discount)):0;
+    var sub=afterBogo-disc;
     total+=sub;
     totalOrig+=orig;
-    html+='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'')+'<div class="cart-item-price"'+(disc>0?' style="color:var(--a3);text-decoration:line-through;font-size:.78rem"':'')+'>HKD '+orig+'</div>'+(disc>0?'<div class="cart-item-price" style="color:var(--a3)">HKD '+sub+' ('+Math.round((1-currentUserTier.discount)*100)+'折)</div>':'')+'<div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>';
+    // Build item HTML
+    var itemHtml='<div class="cart-item"><div class="cart-item-img">'+(item.img?'<img src="'+item.img+'" alt="">':'🍜')+'</div><div class="cart-item-info"><div class="cart-item-name">'+item.name+'</div>'+(item.variant?'<div class="cart-item-variant">'+item.variant+'</div>':'');
+    // Price line
+    if(bogoDisc>0){
+      itemHtml+='<div class="cart-item-price" style="text-decoration:line-through;font-size:.78rem">HKD '+orig+'</div>';
+      itemHtml+='<div class="cart-item-price" style="color:#4CAF50">HKD '+(orig-bogoDisc)+' (節省 HK$'+bogoDisc+')</div>';
+      if(disc>0)itemHtml+='<div class="cart-item-price" style="color:var(--a3)">HKD '+sub+' ('+Math.round((1-currentUserTier.discount)*100)+'折)</div>';
+    }else if(disc>0){
+      itemHtml+='<div class="cart-item-price" style="text-decoration:line-through;font-size:.78rem">HKD '+orig+'</div>';
+      itemHtml+='<div class="cart-item-price" style="color:var(--a3)">HKD '+sub+' ('+Math.round((1-currentUserTier.discount)*100)+'折)</div>';
+    }else{
+      itemHtml+='<div class="cart-item-price">HKD '+orig+'</div>';
+    }
+    itemHtml+='<div class="cart-item-qty"><button class="qty-btn" onclick="updateQty('+idx+',-1)">−</button><span class="qty-val">'+item.qty+'</span><button class="qty-btn" onclick="updateQty('+idx+',1)">+</button></div></div><button class="cart-item-remove" onclick="removeItem('+idx+')">×</button></div>';
+    html+=itemHtml;
   });
+  // Promo banner
+  var promoBarEl=document.getElementById('promoStatusBar');
+  if(activePromos.length>0){
+    var promoNames=activePromos.map(function(p){return p.name;}).join('、');
+    if(promoBarEl){
+      promoBarEl.innerHTML='🌟 '+promoNames+' 已自動套用！';
+      promoBarEl.style.display='flex';
+    }
+  }else{
+    if(promoBarEl){
+      promoBarEl.style.display='none';
+    }
+  }
   itemsEl.innerHTML=html;
-  if(currentUserTier&&currentUserTier.discount<1){
+  // Total line
+  if(totalBogoDisc>0&&currentUserTier&&currentUserTier.discount<1){
+    totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--muted);font-size:.9rem">HKD '+totalOrig+'</span> <span style="color:#4CAF50">-HK$'+totalBogoDisc+'</span> <span style="color:var(--a3)">HKD '+total+'</span>';
+  }else if(totalBogoDisc>0){
+    totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--muted);font-size:.9rem">HKD '+totalOrig+'</span> <span style="color:#4CAF50">HKD '+total+' (節省 HK$'+totalBogoDisc+')</span>';
+  }else if(currentUserTier&&currentUserTier.discount<1){
     totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--muted);font-size:.9rem">HKD '+totalOrig+'</span> <span style="color:var(--a3)">HKD '+total+'</span>';
   }else{
     totalEl.textContent='HKD '+total;
@@ -579,13 +656,20 @@ deliveryClose.onclick=function(){
 // Show delivery modal on checkout
 document.getElementById('cartCheckout').onclick=function(){
   if(cart.length===0){alert('購物車係空既！');return;}
-  // Calculate total for free shipping check
+  // Calculate total for free shipping check (with BOGO discount)
   var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
+  var activePromos=getActivePromos();
   cartOrderTotal=0;
   cart.forEach(function(i){
     var orig=i.price*i.qty;
-    var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
-    cartOrderTotal+=orig-disc;
+    // Check BOGO
+    var bogoMatch=null;
+    activePromos.forEach(function(p){
+      if(p.type==='bogo'&&p.products.indexOf(i.name)!==-1)bogoMatch=p;
+    });
+    var afterBogo=orig-(bogoMatch?Math.floor(i.qty/2)*i.price:0);
+    var disc=discountTier?Math.round(afterBogo*(1-discountTier.discount)):0;
+    cartOrderTotal+=afterBogo-disc;
   });
   // Update SF badge based on total
   if(cartOrderTotal>=300){
@@ -631,6 +715,7 @@ deliveryConfirm.onclick=async function(){
   }
   // Build WhatsApp message
   var discountTier=currentUserTier&&currentUserTier.discount<1?currentUserTier:null;
+  var activePromos=getActivePromos();
   var msg='════════════════════════\n';
   msg+='🛒 祐興食品 訂單\n';
   msg+='════════════════════════\n\n';
@@ -641,25 +726,44 @@ deliveryConfirm.onclick=async function(){
   msg+='\n────────────────────\n';
   msg+='📦 訂購商品\n';
   msg+='────────────────────\n';
-  var total=0,totalDiscount=0;
+  var total=0,totalDiscount=0,totalBogoDisc=0;
+  var appliedPromos=[];
   cart.forEach(function(i){
     var orig=i.price*i.qty;
-    var disc=discountTier?Math.round(orig*(1-discountTier.discount)):0;
-    var sub=orig-disc;
+    // Check BOGO
+    var bogoMatch=null,freeQty=0,bogoDisc=0;
+    activePromos.forEach(function(p){
+      if(p.type==='bogo'&&p.products.indexOf(i.name)!==-1){bogoMatch=p;freeQty=Math.floor(i.qty/2);bogoDisc=freeQty*i.price;}
+    });
+    if(bogoMatch&&appliedPromos.indexOf(bogoMatch.id)===-1)appliedPromos.push(bogoMatch.id);
+    var afterBogo=orig-bogoDisc;
+    var disc=discountTier?Math.round(afterBogo*(1-discountTier.discount)):0;
+    var sub=afterBogo-disc;
     total+=orig;
     totalDiscount+=disc;
+    totalBogoDisc+=bogoDisc;
     msg+='\n• '+i.name+(i.variant?' ('+i.variant+')':'')+'\n';
     msg+='  數量：'+i.qty+' | 單價：HK$'+i.price+'\n';
-    msg+='  小計：HK$'+sub;
-    if(disc>0)msg+=' (原價 HK$'+orig+'，-'+Math.round((1-discountTier.discount)*100)+'折)';
-    msg+='\n';
+    if(bogoDisc>0){
+      msg+='  小計：HK$'+(orig-bogoDisc)+' (原價 HK$'+orig+'，1+1優惠 -HK$'+bogoDisc+')\n';
+    }else if(disc>0){
+      msg+='  小計：HK$'+sub+' (原價 HK$'+orig+'，-'+Math.round((1-discountTier.discount)*100)+'折)\n';
+    }else{
+      msg+='  小計：HK$'+sub+'\n';
+    }
   });
   msg+='\n────────────────────\n';
   msg+='💰 金額明細\n';
   msg+='────────────────────\n';
-  if(discountTier){
-    msg+='商品原價：HK$'+total+'\n';
-    msg+='會員折扣：-HK$'+totalDiscount+' ('+Math.round((1-discountTier.discount)*100)+'折)\n';
+  if(totalBogoDisc>0||discountTier){
+    if(totalBogoDisc>0)msg+='商品原價：HK$'+total+'\n';
+    if(totalBogoDisc>0){
+      msg+='🌟 促銷優惠：-HK$'+totalBogoDisc+'\n';
+      total-=totalBogoDisc;
+    }
+    if(discountTier){
+      msg+='會員折扣：-HK$'+totalDiscount+' ('+Math.round((1-discountTier.discount)*100)+'折)\n';
+    }
     msg+='應付金額：HK$'+(total-totalDiscount)+'\n';
   }else{
     msg+='商品總額：HK$'+total+'\n';
