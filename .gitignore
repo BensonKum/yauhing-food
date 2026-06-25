@@ -21,6 +21,7 @@ __pycache__/
 
 # Firebase Admin SDK files (secrets)
 firebase-service-account.json
+serviceAccountKey.json
 change_jimmy_password.js
 create_yung_account.js
 remove_admin_pins.js
