@@ -1316,6 +1316,13 @@ function renderGrid(){
   });
   const grid=document.getElementById('pgrid');
   grid.innerHTML='';
+// Evening 1+1 promo banner
+    const promoBanner=document.createElement('div');
+    promoBanner.id='promoBanner';
+    promoBanner.style='text-align:center;padding:.3rem;background:#FFF9C4;color:#E65100;font-size:.75rem;font-weight:bold;border-radius:6px;margin-bottom:.4rem;display:none';
+    promoBanner.textContent='🌟 新鮮粉麵 5pm 後 1盒送1盒優惠生效中！';
+    if(isAfter5pm()) promoBanner.style.display='block';
+    document.getElementById('pgrid').prepend(promoBanner);
   filtered.forEach(p=>{
     const inv=inventory[p.name]||{};
     const stock=currentStore?(inv[currentStore]??'—'):'—';
@@ -1411,6 +1418,30 @@ function renderGrid(){
 }
 
 // --- Cart Logic ---
+
+// ── Evening 1+1 Promotion (Fresh Noodles after 5pm) ─────────────────
+const FRESH_NOODLE_NAMES_1PLUS1 = ['豆卜', '河粉', '瀨粉', '銀針粉'];
+
+function isAfter5pm(){
+  const h=new Date().getHours();
+  return h>=17;
+}
+
+function isFreshNoodle1Plus1(name){
+  if(!isAfter5pm()) return false;
+  return FRESH_NOODLE_NAMES_1PLUS1.some(n=>name.includes(n));
+}
+
+// For 1+1: paid qty = ceil(display qty / 2), line total = paid qty * price
+function calcLineTotal(qty, price, name){
+  if(isFreshNoodle1Plus1(name)){
+    const paidQty = Math.ceil(qty / 2);
+    return paidQty * price;
+  }
+  return qty * price;
+}
+
+
 function changeQty(cartKey,delta,p,selPack){
   // Allow if store is selected OR if user is logged in as employee (store inferred from email)
   if(!currentStore){
@@ -1451,10 +1482,15 @@ function renderCart(){
     return;
   }
   let total=0;let html='';let count=0;
+  let promoItems=[];
   keys.forEach(cartKey=>{
     const item=cart[cartKey];
-    const lineTotal=item.qty*(item.manualPrice||item.price);
-    total+=lineTotal;count+=item.qty;
+    const lineTotal=calcLineTotal(item.qty,(item.manualPrice||item.price),item.name);
+    total+=lineTotal;
+    // 1+1 indicator
+    if(isFreshNoodle1Plus1(item.name)&&isAfter5pm()&&item.qty>0){
+      promoItems.push(item.name+' ×'+item.qty+' → 免費多1盒！');
+    }count+=item.qty;
     const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
     html+=`<div class="cart-item">
       <div class="ci-info"><div class="ci-name">${displayName}</div><div class="ci-price">HK$${(item.manualPrice||item.price)}/件</div></div>
@@ -1483,9 +1519,9 @@ function confirmTransaction(){
   if(Object.keys(cart).length===0){toast('請先加入產品');return;}
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
   const items=Object.entries(cart).map(([name,d])=>
-    `${name} × ${d.qty} = HK$${d.qty*(d.manualPrice||d.price)}`
+    `${name} × ${d.qty}${isFreshNoodle1Plus1(d.name)&&isAfter5pm()&&d.qty>0?' (1+1優惠)':''} = HK$${calcLineTotal(d.qty,(d.manualPrice||d.price),d.name)}`
   ).join('\n');
-  const total=Object.values(cart).reduce((s,i)=>s+i.qty*(i.manualPrice||i.price),0);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0);
   document.getElementById('confirmTitle').textContent=
     currentMode==='sale'?'📤 確認銷售交易？':'📥 確認進貨記錄？';
   document.getElementById('confirmMsg').innerHTML=
@@ -1501,7 +1537,7 @@ async function doConfirm(){
   closeConfirm();
   const storeField=currentStore;
   const delta=currentMode==='sale'?-1:1;
-  const total=Object.values(cart).reduce((s,i)=>s+i.qty*(i.manualPrice||i.price),0);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0);
   const timestamp=Date.now();
   const txId='TX'+(''+timestamp).slice(-10);
 
