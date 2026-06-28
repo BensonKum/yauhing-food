@@ -806,6 +806,26 @@
     "sku": "YH802"
   },
   {
+    "cat": "餃子系列",
+    "name": "白菜鮮肉餃+麵",
+    "price": "HKD 20",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_dumpling_noodle.jpg",
+    "sku": "YH803"
+  },
+  {
+    "cat": "餃子系列",
+    "name": "麻辣鮮肉餃+麵",
+    "price": "HKD 20",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_dumpling_noodle.jpg",
+    "sku": "YH804"
+  },
+  {
     "cat": "贈品",
     "name": "贈品(麵)",
     "price": "0",
