@@ -1,0 +1,9 @@
+{
+  "classes": "p-card has-image",
+  "display": "flex",
+  "cardHeight": 402,
+  "addBtn": {
+    "height": 35,
+    "display": "flex"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "totalCards": 67,
+  "hidCount": 0,
+  "visibleCount": 67,
+  "targetExists": true,
+  "targetClasses": "p-card has-image",
+  "targetDisplay": "flex",
+  "targetHeight": 394,
+  "targetCat": "醬汁配料",
+  "targetInfoHeight": 192,
+  "targetInfoDisplay": "flex",
+  "targetAllInfoKids": [
+    {
+      "cls": "p-cat",
+      "text": "醬汁配料",
+      "h": 18,
+      "w": 196
+    },
+    {
+      "cls": "p-name",
+      "text": "醬油套裝",
+      "h": 22,
+      "w": 196
+    },
+    {
+      "cls": "p-note",
+      "text": "4件套",
+      "h": 19,
+      "w": 196
+    },
+    {
+      "cls": "p-price",
+      "text": "HKD 20",
+      "h": 30,
+      "w": 196
+    },
+    {
+      "cls": "add-cart-btn",
+      "text": "+ 加入購物車",
+      "h": 35,
+      "w": 196
+    }
+  ]
+}

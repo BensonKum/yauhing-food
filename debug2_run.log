@@ -1,0 +1,46 @@
+﻿Initial: {"totalCards":67,"hidCount":58,"visibleCount":9,"activeCat":"?衣掃暻?,"activeFilter":"in","rcText":"9 甈曄??}
+After click ?券: {
+  "totalCards": 67,
+  "hidCount": 0,
+  "visibleCount": 67,
+  "targetExists": true,
+  "targetClasses": "p-card has-image",
+  "targetDisplay": "flex",
+  "targetHeight": 394,
+  "targetCat": "?祆???",
+  "targetInfoHeight": 192,
+  "targetInfoDisplay": "flex",
+  "targetAllInfoKids": [
+    {
+      "cls": "p-cat",
+      "text": "?祆???",
+      "h": 18,
+      "w": 196
+    },
+    {
+      "cls": "p-name",
+      "text": "?祆硃憟?",
+      "h": 22,
+      "w": 196
+    },
+    {
+      "cls": "p-note",
+      "text": "4隞嗅?",
+      "h": 19,
+      "w": 196
+    },
+    {
+      "cls": "p-price",
+      "text": "HKD 20",
+      "h": 30,
+      "w": 196
+    },
+    {
+      "cls": "add-cart-btn",
+      "text": "+ ?鞈潛頠?,
+      "h": 35,
+      "w": 196
+    }
+  ]
+}
+Errors: 2

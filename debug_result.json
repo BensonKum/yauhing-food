@@ -1,0 +1,140 @@
+{
+  "targetCard": {
+    "cardHTML": "<div class=\"p-card has-image hid\" data-cat=\"醬汁配料\" data-stock=\"in\"><div class=\"p-img\"><span class=\"s-badge in\">有庫存</span><img src=\"images/醬油套裝.jpg\" alt=\"醬油套裝\" loading=\"lazy\"></div><div class=\"p-info\"><div class=\"p-cat\">醬汁配料</div><h3 class=\"p-name\">醬油套裝</h3><div class=\"p-note\" style=\"font-size:.8rem;color:var(--muted);margin:.3rem 0\">4件套</div><div class=\"p-price\">HKD 20</div><button class=\"add-cart-btn\" data-name=\"醬油套裝\" data-variant=\"\" data-price=\"20\" data-img=\"images/%E9%86%AC%E6%B2%B9%E5%A5%97%E8%A3%9D.jpg\">+ 加入購物車</button></div></div>",
+    "cardRect": {},
+    "cardHeight": 0,
+    "infoExists": true,
+    "infoChildrenCount": 5,
+    "infoChildrenHTML": [
+      {
+        "tag": "DIV",
+        "cls": "p-cat",
+        "text": "醬汁配料",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "H3",
+        "cls": "p-name",
+        "text": "醬油套裝",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "DIV",
+        "cls": "p-note",
+        "text": "4件套",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "DIV",
+        "cls": "p-price",
+        "text": "HKD 20",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "add-cart-btn",
+        "text": "+ 加入購物車",
+        "offsetHeight": 0,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1"
+      }
+    ],
+    "infoRect": {},
+    "infoHeight": 0,
+    "infoComputedHeight": "100%",
+    "infoComputedMinHeight": "0px",
+    "cardComputedAlignSelf": "auto",
+    "cardComputedHeight": "auto",
+    "cardDisplay": "none",
+    "cardFlexDir": "column",
+    "pNote": {
+      "text": "4件套",
+      "height": 0,
+      "computedHeight": "auto",
+      "margin": "4.8px 0px"
+    }
+  },
+  "refCard": {
+    "cardHTML": "<div class=\"p-card has-image hid\" data-cat=\"醬汁配料\" data-stock=\"in\"><div class=\"p-img\"><span class=\"s-badge in\">有庫存</span><img src=\"images/稻米油 150ml.jpg\" alt=\"稻米油\" loading=\"lazy\"></div><div class=\"p-info\"><div class=\"p-cat\">醬汁配料</div><h3 class=\"p-name\">稻米油</h3><div class=\"p-note\" style=\"font-size:.8rem;color:var(--muted);margin:.3rem 0\">150ml</div><div class=\"p-price\">HKD 10</div><button class=\"add-cart-btn\" data-name=\"稻米油\" data-variant=\"\" data-price=\"10\" data-img=\"images/%E7%A8%BB%E7%B1%B3%E6%B2%B9%20150ml.jpg\">+ 加入購物車</button></div></div>",
+    "cardRect": {},
+    "cardHeight": 0,
+    "infoExists": true,
+    "infoChildrenCount": 5,
+    "infoChildrenHTML": [
+      {
+        "tag": "DIV",
+        "cls": "p-cat",
+        "text": "醬汁配料",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "H3",
+        "cls": "p-name",
+        "text": "稻米油",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "DIV",
+        "cls": "p-note",
+        "text": "150ml",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "DIV",
+        "cls": "p-price",
+        "text": "HKD 10",
+        "offsetHeight": 0,
+        "display": "block",
+        "visibility": "visible",
+        "opacity": "1"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "add-cart-btn",
+        "text": "+ 加入購物車",
+        "offsetHeight": 0,
+        "display": "flex",
+        "visibility": "visible",
+        "opacity": "1"
+      }
+    ],
+    "infoRect": {},
+    "infoHeight": 0,
+    "infoComputedHeight": "100%",
+    "infoComputedMinHeight": "0px",
+    "cardComputedAlignSelf": "auto",
+    "cardComputedHeight": "auto",
+    "cardDisplay": "none",
+    "cardFlexDir": "column",
+    "pNote": {
+      "text": "150ml",
+      "height": 0,
+      "computedHeight": "auto",
+      "margin": "4.8px 0px"
+    }
+  },
+  "totalCards": 67,
+  "sameRowAsTarget": "p-card has-image hid"
+}

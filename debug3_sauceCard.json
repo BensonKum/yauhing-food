@@ -1,0 +1,70 @@
+{
+  "classes": "p-card has-image",
+  "display": "flex",
+  "cardHeight": 394,
+  "cardRect": {},
+  "img": {
+    "height": 200,
+    "rect": {}
+  },
+  "info": {
+    "height": 192,
+    "rect": {},
+    "computedHeight": "191.578px",
+    "paddingTop": "16px",
+    "paddingBottom": "20.8px",
+    "overflow": "visible",
+    "children": [
+      {
+        "tag": "DIV",
+        "className": "p-cat",
+        "text": "醬汁配料",
+        "height": 18,
+        "display": "block",
+        "visibility": "visible",
+        "rect": {}
+      },
+      {
+        "tag": "H3",
+        "className": "p-name",
+        "text": "醬油套裝",
+        "height": 22,
+        "display": "block",
+        "visibility": "visible",
+        "rect": {}
+      },
+      {
+        "tag": "DIV",
+        "className": "p-note",
+        "text": "4件套",
+        "height": 19,
+        "display": "block",
+        "visibility": "visible",
+        "rect": {}
+      },
+      {
+        "tag": "DIV",
+        "className": "p-price",
+        "text": "HKD 20",
+        "height": 30,
+        "display": "block",
+        "visibility": "visible",
+        "rect": {}
+      },
+      {
+        "tag": "BUTTON",
+        "className": "add-cart-btn",
+        "text": "+ 加入購物車",
+        "height": 35,
+        "display": "flex",
+        "visibility": "visible",
+        "rect": {}
+      }
+    ]
+  },
+  "addBtn": {
+    "height": 35,
+    "text": "+ 加入購物車",
+    "display": "flex"
+  }
+}
