@@ -867,9 +867,9 @@
   },
   {
     "cat": "醬汁配料",
-    "name": "稻米油 150ml",
+    "name": "稻米油",
     "price": "HKD 10",
-    "note": "",
+    "note": "150ml",
     "stock": 0,
     "image": "",
     "local_img": "稻米油 150ml.jpg",
