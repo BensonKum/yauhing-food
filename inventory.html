@@ -286,8 +286,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
   .cart-btn-mobile{display:flex !important}
 }
 .cart-btn-mobile{
-  display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:800;
-  background:var(--red);color:white;border:none;border-radius:50%;width:56px;height:56px;
+  display:none;background:var(--red);color:white;border:none;border-radius:50%;width:56px;height:56px;
   font-size:1.5rem;box-shadow:var(--sh2);cursor:pointer;
   align-items:center;justify-content:center;
 }
@@ -697,7 +696,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--txt)
 </div>
 
 <!-- Mobile Cart Button -->
+<div style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:800">
 <button class="cart-btn-mobile" onclick="toggleMobileCart()">🛒</button>
+</div>
 
 <!-- Store Select Dialog -->
 <div class="confirm-dialog" id="storeDialog">
@@ -1358,6 +1359,14 @@ function renderGrid(){
     name.className='pcard-name';
     name.textContent=p.name;
 
+    // SKU
+    if(p.sku){
+      const skuEl=document.createElement('div');
+      skuEl.style.cssText='font-size:.68rem;color:#888;font-weight:400;margin-bottom:.2rem';
+      skuEl.textContent=p.sku;
+      body.appendChild(skuEl);
+    }
+
     // Price
     const price=document.createElement('div');
     price.className='pcard-price';
@@ -1481,9 +1490,9 @@ function renderCart(){
     document.getElementById('cartTotal').textContent='HK$0';
     document.getElementById('cartCount').innerHTML='共 <span>0</span> 款產品';
     panel.classList.remove('open');
+    updateCartBadge();
     return;
   }
-  panel.classList.add('open');
   let total=0;let html='';let count=0;
   let promoItems=[];
   keys.forEach(cartKey=>{
@@ -1508,6 +1517,7 @@ function renderCart(){
   container.innerHTML=html;
   document.getElementById('cartTotal').textContent='HK$'+total;
   document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
+  updateCartBadge();
 }
 
 function removeItem(cartKey){delete cart[cartKey];renderCart();renderGrid();}
@@ -1769,6 +1779,22 @@ async function exportLogToExcel(){
 // --- Mobile Cart ---
 function toggleMobileCart(){
   document.getElementById('cartPanel').classList.toggle('open');
+}
+// Update floating cart button badge
+function updateCartBadge(){
+  const totalQty=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  let badge=document.getElementById('cartBadge');
+  if(totalQty>0){
+    if(!badge){
+      badge=document.createElement('span');
+      badge.id='cartBadge';
+      badge.style.cssText='position:absolute;top:-4px;right:-4px;background:#B71C1C;color:white;border-radius:50%;width:20px;height:20px;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid white';
+      document.querySelector('.cart-btn-mobile').appendChild(badge);
+    }
+    badge.textContent=totalQty>99?'99+':totalQty;
+  } else if(badge){
+    badge.remove();
+  }
 }
 // Close cart panel (works on both mobile & desktop)
 function closeCartPanel(){
@@ -2420,7 +2446,7 @@ function doLogout(){
   // Clear PIN inputs
   document.querySelectorAll('.pin-digit').forEach(d=>{d.value='';d.disabled=false;});
 }
-window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;window.closeCartPanel=closeCartPanel;
+window.changeQty=changeQty;window.removeItem=removeItem;window.clearCart=clearCart;window.closeCartPanel=closeCartPanel;window.updateCartBadge=updateCartBadge;
 window.confirmTransaction=confirmTransaction;window.doConfirm=doConfirm;window.closeReceipt=closeReceipt;
 window.setMode=setMode;window.showStoreSelect=showStoreSelect;window.selectStore=selectStore;
 window.authLogin=authLogin;window.toggleMobileCart=toggleMobileCart;window.switchTab=switchTab;
