@@ -1456,7 +1456,7 @@ function changeQty(cartKey,delta,p,selPack){
     }
   }
   if(!cart[cartKey]){
-    cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack};
+    cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack,sku:p.sku||''};
     // Manual price for YHM01 (現金收入) and YHM02 (外購)
     if(String(p.name||'').includes('現金')||String(p.name||'').includes('外購')){
       const mp=prompt('請輸入實際金額（'+p.name+'）\n（預設：'+cart[cartKey].price+'）','');
@@ -1495,8 +1495,9 @@ function renderCart(){
       promoItems.push(item.name+' ×'+item.qty+' → 免費多1盒！');
     }count+=item.qty;
     const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
+    const skuTag=item.sku?`<span style="font-size:.68rem;color:#888;font-weight:400">${item.sku}</span>`:'';
     html+=`<div class="cart-item">
-      <div class="ci-info"><div class="ci-name">${displayName}</div><div class="ci-price">HK$${(item.manualPrice||item.price)}/件</div></div>
+      <div class="ci-info"><div class="ci-name">${displayName} ${skuTag}</div><div class="ci-price">HK$${(item.manualPrice||item.price)}/件</div></div>
       <div class="ci-qty">×${item.qty}</div>
       <div class="ci-total">HK$${lineTotal}</div>
       <button class="ci-remove" onclick="removeItem('${cartKey.replace(/'/g,"\\'")}')">✕</button>
@@ -1549,7 +1550,7 @@ async function doConfirm(){
     await db.collection('inventory_transactions').add({
       txId, type:currentMode, store:storeField,
       items:Object.entries(cart).map(([cartKey,d])=>({
-        name:d.name, pack:d.pack||null, qty:d.qty, price:(d.manualPrice||d.price), lineTotal:d.qty*(d.manualPrice||d.price)
+        sku:d.sku||null, name:d.name, pack:d.pack||null, qty:d.qty, price:(d.manualPrice||d.price), lineTotal:d.qty*(d.manualPrice||d.price)
       })),
       total, user:currentUser.email,
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
