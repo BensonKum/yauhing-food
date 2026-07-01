@@ -241,10 +241,10 @@
     "stock": 0,
     "image": "E:\\Lum\\零售裝\\四個鮑魚罐頭.jpg",
     "img1": "鮑魚罐頭(細罐裝).jpg",
-    "img2": "飽魚(大罐裝).jpg",
+    "img2": "鮑魚罐頭(大罐裝).jpg",
     "label1": "細罐",
     "label2": "大罐",
-    "local_img": "飽魚(大罐裝).jpg",
+    "local_img": "鮑魚罐頭(大罐裝).jpg",
     "sku": "YH501"
   },
   {
@@ -495,7 +495,7 @@
     "stock": 0,
     "image": null,
     "local_img": "product_sauce_set.jpg",
-    "sku": "YH502"
+    "sku": "YH504"
   },
   {
     "cat": "罐頭/零售裝",
