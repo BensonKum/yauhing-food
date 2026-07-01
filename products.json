@@ -508,6 +508,26 @@
     "sku": "YH701A"
   },
   {
+    "cat": "罐頭/零售裝",
+    "name": "醬油套裝 (稻米油，豉油，雞精，鹽)",
+    "price": "HKD 20",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_sauce_set.jpg",
+    "sku": "YH502"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "稻米油 150ml",
+    "price": "HKD 10",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_rice_oil_150ml.jpg",
+    "sku": "YH503"
+  },
+  {
     "cat": "醬汁配料",
     "name": "秘製菌王醬",
     "price": "HKD 40",
