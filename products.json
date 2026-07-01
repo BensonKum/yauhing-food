@@ -262,6 +262,34 @@
     "sku": "YH501A"
   },
   {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)",
+    "price": "HKD 80",
+    "note": "大罐 425g",
+    "stock": 0,
+    "image": null,
+    "img1": "鮑魚罐頭(大罐裝).jpg",
+    "img2": null,
+    "label1": "大罐",
+    "label2": null,
+    "local_img": "鮑魚罐頭(大罐裝).jpg",
+    "sku": "YH502"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)(四罐裝)",
+    "price": "HKD 300",
+    "note": "大罐×4",
+    "stock": 0,
+    "image": null,
+    "img1": "四個鮑魚罐頭.jpg",
+    "img2": null,
+    "label1": "大罐×4",
+    "label2": null,
+    "local_img": "四個鮑魚罐頭.jpg",
+    "sku": "YH502A"
+  },
+  {
     "cat": "蝦籽麵",
     "name": "低鈉蝦籽麵 (幼麵) 6個裝",
     "price": "HKD 60",
