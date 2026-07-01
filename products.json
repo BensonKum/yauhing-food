@@ -262,26 +262,6 @@
     "sku": "YH501A"
   },
   {
-    "cat": "罐頭/零售裝",
-    "name": "醬油套裝 (稻米油，豉油，雞精)",
-    "price": "HKD 20",
-    "note": "稻米油 + 豉油 + 雞精 + 鹽",
-    "stock": 0,
-    "image": null,
-    "local_img": "product_sauce_set.jpg",
-    "sku": "YH502"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "稻米油 150ml",
-    "price": "HKD 10",
-    "note": "",
-    "stock": 0,
-    "image": null,
-    "local_img": "product_rice_oil_150ml.jpg",
-    "sku": "YH503"
-  },
-  {
     "cat": "蝦籽麵",
     "name": "低鈉蝦籽麵 (幼麵) 6個裝",
     "price": "HKD 60",
