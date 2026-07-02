@@ -241,10 +241,10 @@
     "stock": 0,
     "image": "E:\\Lum\\零售裝\\四個鮑魚罐頭.jpg",
     "img1": "鮑魚罐頭(細罐裝).jpg",
-    "img2": "飽魚(大罐裝).jpg",
+    "img2": "鮑魚罐頭(大罐裝).jpg",
     "label1": "細罐",
     "label2": "大罐",
-    "local_img": "飽魚(大罐裝).jpg",
+    "local_img": "鮑魚罐頭(大罐裝).jpg",
     "sku": "YH501"
   },
   {
@@ -260,6 +260,34 @@
     "label2": "大罐×4",
     "local_img": "四個鮑魚罐頭.jpg",
     "sku": "YH501A"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)",
+    "price": "HKD 80",
+    "note": "大罐 425g",
+    "stock": 0,
+    "image": null,
+    "img1": "鮑魚罐頭(大罐裝).jpg",
+    "img2": null,
+    "label1": "大罐",
+    "label2": null,
+    "local_img": "鮑魚罐頭(大罐裝).jpg",
+    "sku": "YH502"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)(四罐裝)",
+    "price": "HKD 300",
+    "note": "大罐×4",
+    "stock": 0,
+    "image": null,
+    "img1": "四個鮑魚罐頭.jpg",
+    "img2": null,
+    "label1": "大罐×4",
+    "label2": null,
+    "local_img": "四個鮑魚罐頭.jpg",
+    "sku": "YH502A"
   },
   {
     "cat": "蝦籽麵",
@@ -486,6 +514,26 @@
     "label2": "大樽裝",
     "local_img": "秘製紅蔥油 大樽裝.jpg",
     "sku": "YH701A"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "醬油套裝 (稻米油，豉油，雞精，鹽)",
+    "price": "HKD 20",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_sauce_set.jpg",
+    "sku": "YH504"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "稻米油 150ml",
+    "price": "HKD 10",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_rice_oil_150ml.jpg",
+    "sku": "YH503"
   },
   {
     "cat": "醬汁配料",
