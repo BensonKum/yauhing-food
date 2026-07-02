@@ -781,7 +781,7 @@ let pinLockedUntil = 0;
 
 // --- Load Products from products.json ---
 fetch('products.json').then(r=>r.json()).then(data=>{
-  products = data;
+  products = data.filter(p => !p.hidden);
   renderCatBar();
   renderGrid();
 }).catch(e=>console.error('products.json load failed:',e));

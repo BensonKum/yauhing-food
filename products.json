@@ -273,7 +273,8 @@
     "label1": "大罐",
     "label2": null,
     "local_img": "鮑魚罐頭(大罐裝).jpg",
-    "sku": "YH502"
+    "sku": "YH502",
+    "hidden": true
   },
   {
     "cat": "罐頭/零售裝",
@@ -287,7 +288,8 @@
     "label1": "大罐×4",
     "label2": null,
     "local_img": "四個鮑魚罐頭.jpg",
-    "sku": "YH502A"
+    "sku": "YH502A",
+    "hidden": true
   },
   {
     "cat": "蝦籽麵",
