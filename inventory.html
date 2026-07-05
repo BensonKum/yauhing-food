@@ -2380,7 +2380,7 @@ async function handleInvoiceUpload(file) {
       let code = '';
       for (let c = 0; c <= 5; c++) {
         const v = String(row[c] || '').trim();
-        if (/^YH\d/i.test(v)) { code = v.toUpperCase(); break; }
+        if (/^YH/i.test(v)) { code = v.toUpperCase(); break; }
       }
       if (!code) continue;
       const qty = parseFloat(row[12]) || 0;
