@@ -3,7 +3,7 @@
  * 提供離線緩存功能
  */
 
-const CACHE_NAME = 'yauhing-inventory-v2';
+const CACHE_NAME = 'yauhing-inventory-v3';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
@@ -36,36 +36,40 @@ self.addEventListener('install', event => {
  * 攔截請求：優先使用緩存
  */
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  // Network-first for HTML pages so admin fixes deploy instantly (no stale cache)
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+  // Cache-first for static assets (JS libs etc.)
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // 如果緩存中有，返回緩存；否則從網絡獲取
         if (response) {
-          console.log('[Service Worker] Serving from cache:', event.request.url);
           return response;
         }
-
-        // 從網絡獲取，並緩存新資源
         return fetch(event.request).then(response => {
-          // 檢查是否返回有效響應
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
-
-          // 複製響應（因為 response 只能讀一次）
           const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseToCache));
           return response;
         });
       })
       .catch(error => {
         console.error('[Service Worker] Fetch failed:', error);
-        // 可以返回一個離線 Fallback 頁面
       })
   );
 });

@@ -1743,6 +1743,11 @@ async function exportLogToExcel(){
       });
     });
 
+    // Defensive: drop any line item with no SKU AND no name (prevents ghost/blank rows)
+    const cleanRows = dataRows.filter(r => (r[3] && String(r[3]).trim() !== '') || (r[4] && String(r[4]).trim() !== ''));
+    dataRows.length = 0;
+    Array.prototype.push.apply(dataRows, cleanRows);
+
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(header);
 
