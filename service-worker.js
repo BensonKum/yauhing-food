@@ -20,7 +20,7 @@ const urlsToCache = [
  * 安裝事件：緩存靜態資源
  */
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Install');
+  console.log('[Service Worker] Install v4');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -31,6 +31,8 @@ self.addEventListener('install', event => {
         console.error('[Service Worker] Cache failed:', error);
       })
   );
+  // 立即接管，不等舊 SW 嘅 clients 關晒
+  self.skipWaiting();
 });
 
 /**
