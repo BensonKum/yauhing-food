@@ -5,6 +5,24 @@
   },
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.bat", "**/*.exe", "**/*.sh", "**/*.cmd", "**/*.ps1", "**/*.dll", "**/*.msi", "**/*.py", "backup/**"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.bat", "**/*.exe", "**/*.sh", "**/*.cmd", "**/*.ps1", "**/*.dll", "**/*.msi", "**/*.py", "backup/**"],
+    "headers": [
+      {
+        "source": "**/*.html",
+        "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+      },
+      {
+        "source": "**/service-worker.js",
+        "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+      },
+      {
+        "source": "**/sw-frontend.js",
+        "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+      },
+      {
+        "source": "**/manifest-*.json",
+        "headers": [{"key": "Cache-Control", "value": "no-cache"}]
+      }
+    ]
   }
 }
