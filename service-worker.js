@@ -3,7 +3,7 @@
  * 提供離線緩存功能
  */
 
-const CACHE_NAME = 'yauhing-inventory-v1';
+const CACHE_NAME = 'yauhing-inventory-v2';
 
 // 需要緩存的靜態資源
 const urlsToCache = [

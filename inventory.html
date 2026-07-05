@@ -2351,7 +2351,8 @@ window.deleteTransaction = function(id) {
 async function handleInvoiceUpload(file) {
   if (!file) return;
   if (!currentUser) { alert('請先登入'); return; }
-  if (!confirm('確認上載發票「' + file.name + '」？\n將自動新增進貨記錄。')) return;
+  if (!currentStore) { alert('請先選擇分店'); return; }
+  if (!confirm('確認上載發票「' + file.name + '」？\n將自動新增進貨記錄並更新庫存。')) return;
 
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -2360,8 +2361,7 @@ async function handleInvoiceUpload(file) {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(sheet, {header: 1, defval: ''});
 
-
-    // Extract invoice date from header (look for date pattern like 2026/06/06 near top rows)
+    // Extract invoice date from header
     let invoiceDate = null;
     for (let r = 0; r < Math.min(15, rows.length); r++) {
       const rowStr = String(rows[r] || []).join(' ');
@@ -2369,36 +2369,57 @@ async function handleInvoiceUpload(file) {
       if (m) { invoiceDate = new Date(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3])); break; }
     }
 
-    // Parse invoice products (rows with YH code in col B index 1)
-    const products = [];
+    // SKU -> Chinese name lookup (from local products.json)
+    const skuNameMap = {};
+    products.forEach(p => { if (p.sku) skuNameMap[String(p.sku).toUpperCase()] = p.name; });
+
+    // Parse invoice products: scan leading columns (col A=index 0 .. col F) for YH code
+    const parsed = [];
     for (let r = 0; r < rows.length; r++) {
       const row = rows[r];
-      const code = String(row[1] || '').trim();
-      if (code && code.startsWith('YH')) {
-        const qty = parseFloat(row[12]) || 0;
-        const price = parseFloat(row[16]) || 0;
-        const amount = parseFloat(row[23]) || 0;
-        if (qty > 0) {
-          products.push({code, qty, price, amount});
-        }
+      let code = '';
+      for (let c = 0; c <= 5; c++) {
+        const v = String(row[c] || '').trim();
+        if (/^YH\d/i.test(v)) { code = v.toUpperCase(); break; }
+      }
+      if (!code) continue;
+      const qty = parseFloat(row[12]) || 0;
+      const price = parseFloat(row[16]) || 0;
+      const amount = parseFloat(row[23]) || 0;
+      if (qty > 0) {
+        const name = skuNameMap[code] || String(row[5] || '').trim() || code;
+        parsed.push({ sku: code, name, qty, unitPrice: price, amount });
       }
     }
 
-    if (products.length === 0) {
-      alert('找不到任何產品記錄（請確認檔案格式）');
+    if (parsed.length === 0) {
+      alert('找不到任何產品記錄（請確認檔案格式：YH 編號需在前 6 欄內）');
       return;
     }
 
-    // Build items array for Firestore
-    const items = products.map(p => ({
-      name: p.code,
+    // Build transaction items (unit price after discount = amount / qty)
+    const items = parsed.map(p => ({
+      sku: p.sku,
+      name: p.name,
       qty: p.qty,
       price: p.amount / p.qty,
       lineTotal: p.amount
     }));
+    const total = parsed.reduce((s, p) => s + p.amount, 0);
 
-    // Save to Firestore as purchase transaction
-    const total = products.reduce((s, p) => s + p.amount, 0);
+    // Update inventory stock (+qty for 進貨), grouped by product name
+    const batch = db.batch();
+    const byProduct = {};
+    for (const p of parsed) {
+      if (!byProduct[p.name]) byProduct[p.name] = 0;
+      byProduct[p.name] += p.qty;
+    }
+    for (const [pName, qty] of Object.entries(byProduct)) {
+      const ref = db.collection('inventory').doc(pName);
+      batch.set(ref, {[currentStore]: firebase.firestore.FieldValue.increment(qty)}, {merge: true});
+    }
+
+    // Save transaction
     const txn = {
       type: 'purchase',
       store: currentStore,
@@ -2411,7 +2432,9 @@ async function handleInvoiceUpload(file) {
     };
 
     await db.collection('inventory_transactions').add(txn);
-    toast('✅ 發票已上載！共 ' + products.length + ' 項，HK$' + total.toLocaleString());
+    await batch.commit();
+    await loadInventory();
+    toast('✅ 發票已上載！共 ' + parsed.length + ' 項，HK$' + total.toLocaleString() + '（庫存已更新）');
     document.getElementById('invoiceFileInput').value = '';
   } catch(e) {
     alert('上載失敗：' + e.message);
