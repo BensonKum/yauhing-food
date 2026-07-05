@@ -3,13 +3,14 @@
  * 提供離線緩存功能
  */
 
-const CACHE_NAME = 'yauhing-inventory-v3';
+const CACHE_NAME = 'yauhing-inventory-v4';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
-  '/',
   '/inventory.html',
-  '/',
+  '/manifest-inventory.json',
+  '/icon-warehouse-192.png',
+  '/icon-warehouse-512.png',
   'https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js',
   'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js'
