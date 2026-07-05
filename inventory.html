@@ -1713,8 +1713,9 @@ async function exportLogToExcel(){
       let lineItems = [];
       if(t.items && t.items.length > 0){
         lineItems = t.items.map(i => {
-          const rawSku = i.name || '';
-          const resolvedName = i.productName || (rawSku && skuNames[rawSku] ? skuNames[rawSku] : rawSku);
+          // SKU column = YH code (i.sku); product name column = Chinese name (i.name)
+          const rawSku = i.sku || i.productCode || '';
+          const resolvedName = i.name || i.productName || (rawSku && skuNames[rawSku] ? skuNames[rawSku] : rawSku);
           return {
             sku: rawSku,
             name: resolvedName,
