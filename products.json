@@ -61,6 +61,16 @@
   },
   {
     "cat": "手工麵",
+    "name": "山藥麵 (手工麵)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": 0,
+    "image": "product_yam_noodle.jpg",
+    "local_img": "product_yam_noodle.jpg",
+    "sku": "YH007"
+  },
+  {
+    "cat": "手工麵",
     "name": "豆乳幼麵 (手工麵)",
     "price": "HKD 10",
     "note": "",
