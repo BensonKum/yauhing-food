@@ -3,7 +3,7 @@
  * 提供離線緩存功能（PWA）
  */
 
-const CACHE_NAME = 'yauhing-frontend-v1';
+const CACHE_NAME = 'yauhing-frontend-v2';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
@@ -24,10 +24,20 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('[SW Frontend] Caching all');
-        return cache.addAll(urlsToCache);
+        // 逐條加入，避免一條失敗全部reject
+        return Promise.all(
+          urlsToCache.map(url =>
+            fetch(url, { mode: 'cors' })
+              .then(resp => {
+                if (resp.ok) return cache.put(url, resp);
+              })
+              .catch(err => console.warn('[SW] Cache skip:', url, err))
+          )
+        );
       })
+      .then(() => console.log('[SW Frontend] Cache ready'))
       .catch(error => {
-        console.error('[SW Frontend] Cache failed:', error);
+        console.warn('[SW Frontend] Cache partial fail (non-fatal):', error);
       })
   );
 });

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    // 自動將無 .html 的路徑加上 .html
+    var path = location.pathname;
+    if (path.endsWith('/inventory')) {
+      location.replace(path + '.html');
+    } else if (path.endsWith('/verify')) {
+      location.replace(path + '.html');
+    } else if (path.endsWith('/')) {
+      location.replace(path + 'index.html');
+    } else {
+      // 其他 404，預設返回首頁
+      location.replace('/index.html');
+    }
+  </script>
+</head>
+<body>
+  <p>跳轉中...</p>
+</body>
+</html>
