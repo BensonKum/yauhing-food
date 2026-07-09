@@ -3,7 +3,7 @@
  * 提供離線緩存功能
  */
 
-const CACHE_NAME = 'yauhing-inventory-v6';
+const CACHE_NAME = 'yauhing-inventory-v7';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
@@ -21,7 +21,7 @@ const urlsToCache = [
  * 安裝事件：緩存靜態資源
  */
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Install v6');
+  console.log('[Service Worker] Install v7');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -41,12 +41,16 @@ self.addEventListener('install', event => {
  */
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  // Network-first for HTML pages so admin fixes deploy instantly (no stale cache)
-  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+  const isHtml = event.request.mode === 'navigate' || url.pathname.endsWith('.html');
+  const isProducts = url.pathname.endsWith('products.json');
+
+  // Network-first for HTML pages AND products.json（產品目錄經常改，唔可以 cache 舊版）
+  if (isHtml || isProducts) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, isProducts ? {cache:'no-store'} : undefined)
         .then(response => {
-          if (response && response.status === 200) {
+          // HTML 可 cache 作離線用；products.json 永遠唔 cache（避免 SW 派發舊版）
+          if (response && response.status === 200 && !isProducts) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
           }
