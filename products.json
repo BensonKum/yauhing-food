@@ -936,6 +936,26 @@
     "sku": "YH503"
   },
   {
+    "cat": "優惠套餐",
+    "name": "優惠套餐 A",
+    "price": "HKD 待定",
+    "note": "（相片及價錢待更新）",
+    "stock": 0,
+    "image": null,
+    "local_img": null,
+    "sku": "YH505"
+  },
+  {
+    "cat": "優惠套餐",
+    "name": "優惠套餐 B",
+    "price": "HKD 待定",
+    "note": "（相片及價錢待更新）",
+    "stock": 0,
+    "image": null,
+    "local_img": null,
+    "sku": "YH506"
+  },
+  {
     "cat": "醬汁配料",
     "name": "醬油套裝",
     "price": "HKD 20",
@@ -945,4 +965,4 @@
     "local_img": "醬油套裝.jpg",
     "sku": "YH504"
   }
-]
+}
