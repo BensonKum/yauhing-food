@@ -42,7 +42,7 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   const isHtml = event.request.mode === 'navigate' || url.pathname.endsWith('.html');
-  const isProducts = url.pathname.endsWith('products.json');
+  const isProducts = url.pathname.endsWith('products_v2.json');
 
   // Network-first for HTML pages AND products.json（產品目錄經常改，唔可以 cache 舊版）
   if (isHtml || isProducts) {

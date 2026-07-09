@@ -9,7 +9,7 @@ const CACHE_NAME = 'yauhing-frontend-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/products.json',
+  '/products_v2.json',
   '/icons/icon-192x192.png',
   '/icons/logo.png',
   '/manifest.json'

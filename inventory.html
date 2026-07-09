@@ -781,11 +781,11 @@ let pinLockedUntil = 0;
 
 // --- Load Products from products.json ---
 // ?_=Date.now() 破 CDN 緩存，確保每次攞到最新產品資料（Fastly max-age=3600 會派發舊版）
-fetch('products.json?_=' + Date.now()).then(r=>r.json()).then(data=>{
+fetch('products_v2.json?_=' + Date.now()).then(r=>r.json()).then(data=>{
   products = data.filter(p => !p.hidden);
   renderCatBar();
   renderGrid();
-}).catch(e=>console.error('products.json load failed:',e));
+}).catch(e=>console.error('products_v2.json load failed:',e));
 
 // --- Auth ---
 auth.onAuthStateChanged(user=>{
