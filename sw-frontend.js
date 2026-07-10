@@ -3,7 +3,7 @@
  * 提供離線緩存功能（PWA）
  */
 
-const CACHE_NAME = 'yauhing-frontend-v2';
+const CACHE_NAME = 'yauhing-frontend-v3';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
@@ -62,39 +62,34 @@ self.addEventListener('activate', event => {
 });
 
 /**
- * 攔截請求：優先使用緩存
+ * 攔截請求：網絡優先（新策略）
+ * - 先 fetch 最新版本
+ * - 如果成功，cache 起來
+ * - 如果失敗，fallback 到 cache
  */
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        // 如果緩存中有，返回緩存；否則從網絡獲取
-        if (response) {
-          console.log('[SW Frontend] Serving from cache:', event.request.url);
-          return response;
-        }
-
-        // 從網絡獲取，並緩存新資源
-        return fetch(event.request).then(response => {
-          // 檢查是否返回有效響應
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // 複製響應（流只能讀一次）
+        // 網絡成功，cache起來
+        if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        console.log('[SW Frontend] Network fetch OK:', event.request.url);
+        return response;
       })
-      .catch(error => {
-        console.error('[SW Frontend] Fetch failed:', error);
-        // 可以返回離線頁面
+      .catch(() => {
+        // 網絡失敗，fallback 到 cache
+        return caches.match(event.request).then(cached => {
+          if (cached) {
+            console.log('[SW Frontend] Serving from cache (offline):', event.request.url);
+            return cached;
+          }
+          console.warn('[SW Frontend] No cache for:', event.request.url);
+        });
       })
   );
 });
