@@ -1429,8 +1429,9 @@ function renderGrid(){
 
 // --- Cart Logic ---
 
-// ── Evening 1+1 Promotion (Fresh Noodles after 5pm) ─────────────────
+// ── Evening 1+1 Promotion (Fresh Noodles + Dumplings after 5pm) ─────────────────
 const FRESH_NOODLE_NAMES_1PLUS1 = ['豆卜', '河粉', '瀨粉', '銀針粉', '上海麵', '生幼麵', '生粗麵', '油麵', '水餃皮', '雲吞皮', '齋腸粉', '蝦米腸粉'];
+const DUMPLING_NAMES_1PLUS1 = ['白菜鮮肉餃 (8隻裝)', '玉米鮮肉餃 (8隻裝)', '白菜鮮肉餃+麵', '玉米鮮肉餃+麵'];
 
 function isAfter5pm(){
   const h=new Date().getHours();
@@ -1442,9 +1443,14 @@ function isFreshNoodle1Plus1(name){
   return FRESH_NOODLE_NAMES_1PLUS1.some(n=>name.includes(n));
 }
 
+function isDumpling1Plus1(name){
+  if(!isAfter5pm()) return false;
+  return DUMPLING_NAMES_1PLUS1.some(n=>name.includes(n));
+}
+
 // For 1+1: paid qty = ceil(display qty / 2), line total = paid qty * price
 function calcLineTotal(qty, price, name){
-  if(isFreshNoodle1Plus1(name)){
+  if(isFreshNoodle1Plus1(name)||isDumpling1Plus1(name)){
     const paidQty = Math.ceil(qty / 2);
     return paidQty * price;
   }
@@ -1501,7 +1507,7 @@ function renderCart(){
     const lineTotal=calcLineTotal(item.qty,(item.manualPrice||item.price),item.name);
     total+=lineTotal;
     // 1+1 indicator
-    if(isFreshNoodle1Plus1(item.name)&&isAfter5pm()&&item.qty>0){
+    if((isFreshNoodle1Plus1(item.name)||isDumpling1Plus1(item.name))&&item.qty>0){
       promoItems.push(item.name+' ×'+item.qty+' → 免費多1盒！');
     }count+=item.qty;
     const displayName=item.pack?`${item.name}（${item.pack}）`:item.name;
@@ -1534,7 +1540,7 @@ function confirmTransaction(){
   if(Object.keys(cart).length===0){toast('請先加入產品');return;}
   if(!currentStore){toast('請先選擇分店');showStoreSelect();return;}
   const items=Object.entries(cart).map(([name,d])=>
-    `${name} × ${d.qty}${isFreshNoodle1Plus1(d.name)&&isAfter5pm()&&d.qty>0?' (1+1優惠)':''} = HK$${calcLineTotal(d.qty,(d.manualPrice||d.price),d.name)}`
+    `${name} × ${d.qty}${(isFreshNoodle1Plus1(d.name)||isDumpling1Plus1(d.name))&&d.qty>0?' (1+1優惠)':''} = HK$${calcLineTotal(d.qty,(d.manualPrice||d.price),d.name)}`
   ).join('\n');
   const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0);
   document.getElementById('confirmTitle').textContent=
