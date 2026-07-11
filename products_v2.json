@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "cat": "手工麵",
     "name": "半熟幼麵 (乾)",
@@ -964,5 +964,25 @@
     "image": "",
     "local_img": "醬油套裝.jpg",
     "sku": "YH504"
+  },
+  {
+    "cat": "凍品",
+    "name": "咖喱魚蛋 (8粒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "local_img": "",
+    "sku": "YM901"
+  },
+  {
+    "cat": "凍品",
+    "name": "白魚蛋 (8粒裝)",
+    "price": "HKD 12",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "local_img": "",
+    "sku": "YM902"
   }
 ]
