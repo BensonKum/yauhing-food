@@ -984,5 +984,35 @@
     "image": "",
     "local_img": "",
     "sku": "YH902"
+  },
+  {
+    "cat": "凍品",
+    "name": "港式燒賣 (8粒裝)",
+    "price": "HKD 10",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "local_img": "",
+    "sku": "YH903"
+  },
+  {
+    "cat": "凍品",
+    "name": "墨魚丸 (4粒裝)",
+    "price": "HKD 12",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "local_img": "",
+    "sku": "YH904"
+  },
+  {
+    "cat": "凍品",
+    "name": "台灣貢丸 (4粒裝)",
+    "price": "HKD 12",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "local_img": "",
+    "sku": "YH905"
   }
 ]
