@@ -19,10 +19,13 @@ const urlsToCache = [
 ];
 
 /**
- * 安裝事件：緩存靜態資源
+ * 安裝事件：緩存靜態資源 + 強制更新
  */
 self.addEventListener('install', event => {
   console.log('[SW Frontend] Install');
+  // 強制立即激活新 SW，唔等舊 tab 關閉
+  self.skipWaiting();
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -30,7 +33,7 @@ self.addEventListener('install', event => {
         // 逐條加入，避免一條失敗全部reject
         return Promise.all(
           urlsToCache.map(url =>
-            fetch(url, { mode: 'cors' })
+            fetch(url, { mode: 'cors', cache: 'no-cache' })
               .then(resp => {
                 if (resp.ok) return cache.put(url, resp);
               })
@@ -46,22 +49,33 @@ self.addEventListener('install', event => {
 });
 
 /**
- * 激活事件：清理舊緩存
+ * 激活事件：清理舊緩存 + 接管所有客戶端
  */
 self.addEventListener('activate', event => {
   console.log('[SW Frontend] Activate');
+  // 立即接管所有客戶端（唔使等舊 tab 關閉）
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[SW Frontend] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      self.clients.claim(),
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('[SW Frontend] Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+    ])
   );
+  
+  // 通知所有客戶端 SW 已更新
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage({ type: 'SW_UPDATED', version: CACHE_NAME });
+    });
+  });
 });
 
 /**

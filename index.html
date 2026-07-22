@@ -1731,13 +1731,43 @@ async function saveOrder(orderData){
 
 <!-- Service Worker Registration (PWA) -->
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw-frontend.js')
-        .then(reg => console.log('[SW Frontend] Registered:', reg.scope))
-        .catch(err => console.log('[SW Frontend] Registration failed:', err));
+  // PWA Service Worker 註冊 + 自動更新提示
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw-frontend.js')
+      .then(reg => {
+        console.log('[SW Frontend] Registered:', reg.scope);
+        
+        // 監聽 SW 更新
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // 有新版本，顯示更新提示
+              showUpdateNotification();
+            }
+          });
+        });
+      })
+      .catch(err => console.log('[SW Frontend] Registration failed:', err));
+    
+    // 監聽 SW 發來的訊息
+    navigator.serviceWorker.addEventListener('message', event => {
+      if (event.data && event.data.type === 'SW_UPDATED') {
+        console.log('[SW Frontend] Updated to:', event.data.version);
+        showUpdateNotification();
+      }
     });
-  }
+  });
+}
+
+// 顯示更新提示（自動刷新頁面）
+function showUpdateNotification() {
+  // 簡單做法：直接刷新頁面載入新版本
+  // 如果想用戶確認，可以改做顯示一個 toast 提示
+  console.log('[SW Frontend] Auto-reloading for update...');
+  window.location.reload();
+}
 </script>
 
 </body></html>
