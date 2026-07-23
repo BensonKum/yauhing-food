@@ -937,6 +937,26 @@
   },
   {
     "cat": "餃子系列",
+    "name": "椰菜鮮肉餃 (8隻裝)",
+    "price": "HKD 25",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_cabbage_dumpling.jpg",
+    "sku": "YH805"
+  },
+  {
+    "cat": "餃子系列",
+    "name": "椰菜鮮肉餃+麵",
+    "price": "HKD 20",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_dumpling_noodle.jpg",
+    "sku": "YH805A"
+  },
+  {
+    "cat": "餃子系列",
     "name": "椰菜鮮肉餃",
     "price": "HKD 25 | +麵 HKD 20",
     "note": "8隻 / +麵",
