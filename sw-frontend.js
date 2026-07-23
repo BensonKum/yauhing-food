@@ -3,7 +3,7 @@
  * 提供離線緩存功能（PWA）
  */
 
-const CACHE_NAME = 'yauhing-frontend-v8';
+const CACHE_NAME = 'yauhing-frontend-v9';
 
 // 需要緩存的靜態資源
 const urlsToCache = [
