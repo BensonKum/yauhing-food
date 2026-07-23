@@ -1303,37 +1303,75 @@ function getPackImg(p,packLabel){
 }
 
 function renderGrid(){
-  // Build set of SKUs that are covered by multi-pack cards (hide standalone cards)
-  const multiPackSkus=new Set();
+  // Build SKU pair map: baseSku -> {baseProduct, variantProduct}
+  const skuPairs=new Map(); // baseSku -> {base:product, variant:product}
+  const processedSkus=new Set();
+  
   products.forEach(p=>{
-    if(p.label1&&p.sku&&p.sku.endsWith('A')){
+    if(p.sku&&p.sku.endsWith('A')){
       const baseSku=p.sku.slice(0,-1);
-      multiPackSkus.add(baseSku);
+      const baseProduct=products.find(x=>x.sku===baseSku);
+      if(baseProduct){
+        skuPairs.set(baseSku,{base:baseProduct,variant:p});
+        processedSkus.add(baseSku);
+        processedSkus.add(p.sku);
+      }
     }
   });
-  const filtered=(currentCat==='全部'?products:products.filter(p=>p.cat===currentCat)).filter(p=>{
-    // Hide standalone SKU if it's already a pack option in a multi-pack card
-    if(p.sku&&multiPackSkus.has(p.sku)&&!p.label1) return false;
+  
+  // Filter products: show base products of pairs, and standalone products
+  let filtered=(currentCat==='全部'?products:products.filter(p=>p.cat===currentCat)).filter(p=>{
+    // Hide variant SKUs (they'll be shown as pack options)
+    if(p.sku&&p.sku.endsWith('A')&&skuPairs.has(p.sku.slice(0,-1))) return false;
     return true;
   });
+  
   const grid=document.getElementById('pgrid');
   grid.innerHTML='';
-// Evening 1+1 promo banner
-    const promoBanner=document.createElement('div');
-    promoBanner.id='promoBanner';
-    promoBanner.style='text-align:center;padding:.3rem;background:#FFF9C4;color:#E65100;font-size:.75rem;font-weight:bold;border-radius:6px;margin-bottom:.4rem;display:none';
-    promoBanner.textContent='🌟 新鮮粉麵 5pm 後 1盒送1盒優惠生效中！';
-    if(isAfter5pm()) promoBanner.style.display='block';
-    document.getElementById('pgrid').prepend(promoBanner);
+  
+  // Evening 1+1 promo banner
+  const promoBanner=document.createElement('div');
+  promoBanner.id='promoBanner';
+  promoBanner.style='text-align:center;padding:.3rem;background:#FFF9C4;color:#E65100;font-size:.75rem;font-weight:bold;border-radius:6px;margin-bottom:.4rem;display:none';
+  promoBanner.textContent='🌟 新鮮粉麵 5pm 後 1盒送1盒優惠生效中！';
+  if(isAfter5pm()) promoBanner.style.display='block';
+  document.getElementById('pgrid').prepend(promoBanner);
+  
   filtered.forEach(p=>{
-    const inv=inventory[p.name]||{};
+    // Check if this product has a SKU pair (YH805 + YH805A)
+    const pair=skuPairs.get(p.sku);
+    const isPair=!!pair;
+    
+    // For SKU pairs, build pack options from the pair
+    let packOpts=null;
+    let displayName=p.name;
+    let displaySku=p.sku;
+    
+    if(isPair){
+      // Extract base name (remove " (8隻裝)" suffix)
+      displayName=p.name.replace(/\s*\([^)]+\)$/,'');
+      // Build pack options
+      const baseLabel=p.name.match(/\(([^)]+)\)$/)?.[1]||'8隻裝';
+      const variantLabel=pair.variant.name.match(/\+(.+)$/)?.[1]||'麵';
+      packOpts=[
+        {label:baseLabel,img:p.local_img,price:parsePrice(p.price),product:p},
+        {label:'+'+variantLabel,img:pair.variant.local_img,price:parsePrice(pair.variant.price),product:pair.variant}
+      ];
+    } else {
+      packOpts=getPackOptions(p);
+    }
+    
+    const selPack=getSelectedPack(p,packOpts);
+    const selectedOpt=packOpts?.find(o=>o.label===selPack)||packOpts?.[0];
+    const activeProduct=selectedOpt?.product||p;
+    
+    const inv=inventory[activeProduct.name]||{};
     const stock=currentStore?(inv[currentStore]??'—'):'—';
     const stockClass=typeof stock==='number'?(stock===0?'zero':stock<5?'low':''):'';
-    const packOpts=getPackOptions(p);
-    const selPack=getSelectedPack(p);
-    const cartKey=selPack?p.name+'|'+selPack:p.name;
-    const inCart=cart[cartKey]||{qty:0,price:getPackPrice(p,selPack),cat:p.cat,pack:selPack};
-    const packImg=getPackImg(p,selPack);
+    
+    const cartKey=selPack?activeProduct.name+'|'+selPack:activeProduct.name;
+    const inCart=cart[cartKey]||{qty:0,price:selectedOpt?.price||parsePrice(p.price),cat:p.cat,pack:selPack};
+    const packImg=selectedOpt?.img||p.local_img;
 
     const card=document.createElement('div');
     card.className='pcard';
@@ -1358,10 +1396,15 @@ function renderGrid(){
 
     const name=document.createElement('div');
     name.className='pcard-name';
-    name.textContent=p.name;
+    name.textContent=displayName;
 
-    // SKU
-    if(p.sku){
+    // SKU (show both for pairs)
+    if(isPair){
+      const skuEl=document.createElement('div');
+      skuEl.style.cssText='font-size:.68rem;color:#888;font-weight:400;margin-bottom:.2rem';
+      skuEl.textContent=`${p.sku} / ${pair.variant.sku}`;
+      body.appendChild(skuEl);
+    } else if(p.sku){
       const skuEl=document.createElement('div');
       skuEl.style.cssText='font-size:.68rem;color:#888;font-weight:400;margin-bottom:.2rem';
       skuEl.textContent=p.sku;
@@ -1371,7 +1414,7 @@ function renderGrid(){
     // Price
     const price=document.createElement('div');
     price.className='pcard-price';
-    price.textContent=p.price;
+    price.textContent=isPair?`HKD ${packOpts[0].price} / HKD ${packOpts[1].price}`:p.price;
 
     // Stock
     const stockDiv=document.createElement('div');
@@ -1406,7 +1449,7 @@ function renderGrid(){
     const minus=document.createElement('button');
     minus.className='qty-btn'+(currentMode==='purchase'?' green':'');
     minus.textContent='−';
-    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,p,selPack);};
+    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,activeProduct,selPack);};
 
     const num=document.createElement('span');
     num.className='qty-num';
@@ -1415,7 +1458,7 @@ function renderGrid(){
     const plus=document.createElement('button');
     plus.className='qty-btn';
     plus.textContent='+';
-    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,p,selPack);};
+    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,activeProduct,selPack);};
 
     qtyCtrl.appendChild(minus);
     qtyCtrl.appendChild(num);
@@ -1425,6 +1468,19 @@ function renderGrid(){
     card.appendChild(body);
     grid.appendChild(card);
   });
+}
+
+// Helper: parse price from string like "HKD 25"
+function parsePrice(priceStr){
+  const match=String(priceStr).match(/(\d+)/);
+  return match?parseInt(match[1]):0;
+}
+
+// Override getSelectedPack to accept packOpts parameter
+function getSelectedPack(p,packOpts){
+  const saved=selectedPack[p.name];
+  if(!packOpts) return null;
+  return saved&&packOpts.find(o=>o.label===saved)?saved:packOpts[0]?.label;
 }
 
 // --- Cart Logic ---
