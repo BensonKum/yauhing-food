@@ -1,0 +1,10 @@
+const fs = require('fs');
+let c = fs.readFileSync('service-worker.js', 'utf8');
+const m = c.match(/CACHE_NAME = 'yauhing-inventory-v(\d+)'/);
+const oldV = m ? parseInt(m[1]) : 8;
+const newV = oldV + 1;
+const newName = `yauhing-inventory-v${newV}`;
+c = c.replace(m[0], `CACHE_NAME = '${newName}'`);
+console.log(`Upgrading SW cache: v${oldV} -> v${newV}`);
+fs.writeFileSync('service-worker.js', c, 'utf8');
+console.log('Done. New CACHE_NAME:', newName);
