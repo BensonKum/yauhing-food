@@ -2614,7 +2614,7 @@ window.renderReport=renderReport;window.renderLog=renderLog;
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js?v=10')
+          navigator.serviceWorker.register('/service-worker.js?v=11')
             .then(registration => {
               console.log('SW registered:', registration);
               if (registration.waiting) {
