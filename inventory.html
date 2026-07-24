@@ -1528,7 +1528,7 @@ function changeQty(cartKey,delta,p,selPack){
     }
   }
   if(!cart[cartKey]){
-    cart[cartKey]={qty:0,price:getPackPrice(p,selPack),cat:p.cat,name:p.name,pack:selPack,sku:p.sku||''};
+    cart[cartKey]={qty:0,price:parsePrice(p.price),cat:p.cat,name:p.name,pack:selPack,sku:p.sku||''};
     // Manual price for YHM01 (現金收入) and YHM02 (外購)
     if(String(p.name||'').includes('現金')||String(p.name||'').includes('外購')){
       const mp=prompt('請輸入實際金額（'+p.name+'）\n（預設：'+cart[cartKey].price+'）','');
