@@ -1489,6 +1489,23 @@ function getSelectedPack(p,packOpts){
 const FRESH_NOODLE_NAMES_1PLUS1 = ['豆卜', '河粉', '瀨粉', '銀針粉', '上海麵', '生幼麵', '生粗麵', '油麵', '水餃皮', '雲吞皮', '齋腸粉', '蝦米腸粉'];
 const DUMPLING_NAMES_1PLUS1 = []; // 2026-07-11: Ben 要求取消 YH801-YH804 餃子 1+1 優惠
 
+// 2026-07-25: 3款8隻裝餃子優惠（YH805椰菜/YH806韭菜/YH807素菜）
+// 買1盒$25、2盒$35、3盒$45（可混搭），最多3盒
+const DUMPLING_PROMO_SKUS = ['YH805','YH806','YH807'];
+const DUMPLING_PROMO_PRICE = {1:25, 2:35, 3:45};
+function getDumplingPromoQty(cart){
+  let q=0;
+  Object.values(cart).forEach(i=>{ if(DUMPLING_PROMO_SKUS.includes(i.sku)) q+=i.qty; });
+  return q;
+}
+function calcDumplingPromoDiscount(cart){
+  const q=getDumplingPromoQty(cart);
+  if(q<=0) return 0;
+  const original=q*25;
+  const promo=DUMPLING_PROMO_PRICE[Math.min(q,3)]||45;
+  return original-promo;
+}
+
 function isAfter5pm(){
   const h=new Date().getHours();
   return h>=17;
@@ -1538,6 +1555,11 @@ function changeQty(cartKey,delta,p,selPack){
       }
     }
   }
+  // 餃子優惠：最多3盒
+  const promoSku=cart[cartKey].sku||(p.sku||'');
+  if(delta>0 && DUMPLING_PROMO_SKUS.includes(promoSku) && getDumplingPromoQty(cart)+delta>3){
+    toast('餃子優惠：最多買3盒'); return;
+  }
   cart[cartKey].qty+=delta;
   if(cart[cartKey].qty<=0){delete cart[cartKey];}
   renderCart();
@@ -1558,6 +1580,8 @@ function renderCart(){
   }
   let total=0;let html='';let count=0;
   let promoItems=[];
+  const dumplingDiscount=calcDumplingPromoDiscount(cart);
+  const dumplingQty=getDumplingPromoQty(cart);
   keys.forEach(cartKey=>{
     const item=cart[cartKey];
     const lineTotal=calcLineTotal(item.qty,(item.manualPrice||item.price),item.name);
@@ -1577,8 +1601,12 @@ function renderCart(){
   });
   // Add close button after cart items (works on both mobile & desktop)
   html+=`<div style="text-align:center;margin-top:.8rem"><button class="cart-back-btn" onclick="closeCartPanel()">🏠 返回主頁</button></div>`;
+  // 餃子優惠行
+  if(dumplingDiscount>0){
+    html+=`<div style="background:#fff0f5;border-radius:8px;padding:.5rem .7rem;margin-top:.6rem;font-size:.78rem;color:#e91e63">餃子優惠（${dumplingQty}盒） -HK$${dumplingDiscount}</div>`;
+  }
   container.innerHTML=html;
-  document.getElementById('cartTotal').textContent='HK$'+total;
+  document.getElementById('cartTotal').textContent='HK$'+(total-dumplingDiscount);
   document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
   updateCartBadge();
 }
@@ -1598,11 +1626,12 @@ function confirmTransaction(){
   const items=Object.entries(cart).map(([name,d])=>
     `${name} × ${d.qty}${(isFreshNoodle1Plus1(d.name)||isDumpling1Plus1(d.name))&&d.qty>0?' (1+1優惠)':''} = HK$${calcLineTotal(d.qty,(d.manualPrice||d.price),d.name)}`
   ).join('\n');
-  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0);
+  const dumplingDiscount=calcDumplingPromoDiscount(cart);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-dumplingDiscount;
   document.getElementById('confirmTitle').textContent=
     currentMode==='sale'?'📤 確認銷售交易？':'📥 確認進貨記錄？';
   document.getElementById('confirmMsg').innerHTML=
-    `<div style="text-align:left;font-size:.8rem;background:#f5f5f5;border-radius:8px;padding:.6rem;margin-bottom:.5rem">${items.replace(/\n/g,'<br>')}</div><strong>合計：HK$${total}</strong><br><span style="font-size:.72rem;color:var(--muted)">分店：${currentStore==='central'?'中環店':'始創店'}</span>`;
+    `<div style="text-align:left;font-size:.8rem;background:#f5f5f5;border-radius:8px;padding:.6rem;margin-bottom:.5rem">${items.replace(/\n/g,'<br>')}</div><strong>合計：HK$${total}</strong>${dumplingDiscount>0?` <span style="color:#e91e63">（餃子優惠 -HK$${dumplingDiscount}）</span>`:''}<br><span style="font-size:.72rem;color:var(--muted)">分店：${currentStore==='central'?'中環店':'始創店'}</span>`;
   document.getElementById('confirmDialog').classList.add('show');
 }
 
@@ -1614,7 +1643,7 @@ async function doConfirm(){
   closeConfirm();
   const storeField=currentStore;
   const delta=currentMode==='sale'?-1:1;
-  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-calcDumplingPromoDiscount(cart);
   const timestamp=Date.now();
   const txId='TX'+(''+timestamp).slice(-10);
 
@@ -1660,6 +1689,10 @@ async function doConfirm(){
       <span style="flex:1">${displayName}<br><span style="font-size:.7rem;color:var(--muted)">HK$${item.price} × ${item.qty}</span></span>
       <span>HK$${item.qty*item.price}</span>
     </div>`;
+  }
+  // 餃子優惠行（receipt）
+  if(calcDumplingPromoDiscount(cart)>0){
+    rh+=`<div class="receipt-row" style="color:#e91e63;font-weight:600"><span>餃子優惠（${getDumplingPromoQty(cart)}盒）</span><span>-HK$${calcDumplingPromoDiscount(cart)}</span></div>`;
   }
   document.getElementById('receiptItems').innerHTML=rh;
   document.getElementById('receiptSub').textContent=
