@@ -3,7 +3,7 @@
  * 提供離線緩存功能
  */
 
-const CACHE_NAME = 'yauhing-inventory-v10'; // v8: skipWaiting+clients.claim; v9: SW URL cache-bust + CACHE bump
+const CACHE_NAME = 'yauhing-inventory-v11'; // v8: skipWaiting+clients.claim; v9: SW URL cache-bust + CACHE bump
 
 // 需要緩存的靜態資源
 const urlsToCache = [
