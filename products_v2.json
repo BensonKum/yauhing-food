@@ -1050,5 +1050,39 @@
     "image": null,
     "local_img": "product_dumpling_noodle.jpg",
     "sku": "YH806A"
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (細罐)",
+    "price": "HKD 28",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "img1": "鮑魚罐頭(細罐裝).jpg",
+    "img2": "四個鮑魚罐頭細罐裝.jpg",
+    "label1": "細罐",
+    "label2": "四罐優惠",
+    "local_img": "",
+    "sku": "YH501",
+    "sku_base": "YH501",
+    "is_multi": false,
+    "has_ab": false
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (細罐)(四罐優惠)",
+    "price": "HKD 100",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "img1": "鮑魚罐頭(細罐裝).jpg",
+    "img2": "四個鮑魚罐頭細罐裝.jpg",
+    "label1": "細罐",
+    "label2": "四罐優惠",
+    "local_img": "",
+    "sku": "YH501A",
+    "sku_base": "YH501",
+    "is_multi": true,
+    "has_ab": true
   }
 ]
