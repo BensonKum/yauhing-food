@@ -1084,5 +1084,39 @@
     "sku_base": "YH501",
     "is_multi": true,
     "has_ab": true
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)",
+    "price": "HKD 80",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "img1": "",
+    "img2": "",
+    "label1": "大罐",
+    "label2": "四罐優惠",
+    "local_img": "",
+    "sku": "YH502",
+    "sku_base": "YH502",
+    "is_multi": false,
+    "has_ab": false
+  },
+  {
+    "cat": "罐頭/零售裝",
+    "name": "鮑魚罐頭 (大罐)+四罐優惠",
+    "price": "HKD 300",
+    "note": "",
+    "stock": 0,
+    "image": "",
+    "img1": "",
+    "img2": "",
+    "label1": "大罐",
+    "label2": "四罐優惠",
+    "local_img": "",
+    "sku": "YH502A",
+    "sku_base": "YH502",
+    "is_multi": true,
+    "has_ab": true
   }
 ]
