@@ -1000,16 +1000,6 @@
     "sku": "YHM02"
   },
   {
-    "cat": "醬汁配料",
-    "name": "稻米油",
-    "price": "HKD 10",
-    "note": "150ml",
-    "stock": 0,
-    "image": "",
-    "local_img": "稻米油 150ml.jpg",
-    "sku": "YH503"
-  },
-  {
     "cat": "優惠套餐",
     "name": "優惠套餐 A",
     "price": "HKD 待定",
