@@ -1510,13 +1510,14 @@ function calcDumplingPromoDiscount(cart){
 const STORE_DISCOUNT_THRESHOLD = 100;   // 合資格產品小計滿此金額
 const STORE_DISCOUNT_RATE = 0.15;       // 8.5折 = 減15%
 const STORE_DISCOUNT_EXCLUDED_CATS = ['新鮮粉麵','餃子系列','贈品','雜項'];
-const STORE_DISCOUNT_BLACKOUT_DATES = ['2026-08-05','2026-08-13','2026-08-19','2026-08-27'];
+// 只有這幾日才做折扣（白名單）
+const STORE_DISCOUNT_ACTIVE_DATES = ['2026-08-05','2026-08-13','2026-08-19','2026-08-27'];
 function todayDateStr(){
   const d=new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-function isStoreDiscountBlackout(){
-  return STORE_DISCOUNT_BLACKOUT_DATES.includes(todayDateStr());
+function isStoreDiscountActiveDay(){
+  return STORE_DISCOUNT_ACTIVE_DATES.includes(todayDateStr());
 }
 // 合資格小計（排除指定分類）
 function getStoreDiscountEligibleSubtotal(cart){
@@ -1528,7 +1529,7 @@ function getStoreDiscountEligibleSubtotal(cart){
   return sub;
 }
 function calcStoreDiscount(cart){
-  if(isStoreDiscountBlackout()) return 0;
+  if(!isStoreDiscountActiveDay()) return 0;
   const eligible=getStoreDiscountEligibleSubtotal(cart);
   if(eligible<STORE_DISCOUNT_THRESHOLD) return 0;
   return Math.round(eligible*STORE_DISCOUNT_RATE);
