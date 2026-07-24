@@ -1348,22 +1348,14 @@ function renderGrid(){
     let displaySku=p.sku;
     
     if(isPair){
-      // Strip trailing "(xxx)" from base display name
-      displayName=p.name.replace(/\s*\([^)]+\)\s*$/,'').trim();
-      // Priority: use label1/label2 if present, else fallback to name regex (legacy 餃子)
-      let baseLabel, variantLabel, variantPrefix;
-      if(p.label1){
-        baseLabel=p.label1;
-        variantLabel=pair.variant.label1||p.label2||'';
-        variantPrefix=''; // no '+' prefix when explicit labels
-      } else {
-        baseLabel=p.name.match(/\(([^)]+)\)$/)?.[1]||'8隻裝';
-        variantLabel=pair.variant.name.match(/\+(.+)$/)?.[1]||'麵';
-        variantPrefix='+';
-      }
+      // Extract base name (remove " (8隻裝)" suffix)
+      displayName=p.name.replace(/\s*\([^)]+\)$/,'');
+      // Build pack options
+      const baseLabel=p.name.match(/\(([^)]+)\)$/)?.[1]||'8隻裝';
+      const variantLabel=pair.variant.name.match(/\+(.+)$/)?.[1]||'麵';
       packOpts=[
-        {label:baseLabel,img:p.local_img||p.img1,price:parsePrice(p.price),product:p},
-        {label:variantPrefix+variantLabel,img:pair.variant.local_img||pair.variant.img1,price:parsePrice(pair.variant.price),product:pair.variant}
+        {label:baseLabel,img:p.local_img,price:parsePrice(p.price),product:p},
+        {label:'+'+variantLabel,img:pair.variant.local_img,price:parsePrice(pair.variant.price),product:pair.variant}
       ];
     } else {
       packOpts=getPackOptions(p);
