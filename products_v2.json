@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "cat": "手工麵",
     "name": "半熟幼麵 (乾)",
@@ -242,64 +242,6 @@
     "image": "E:\\Lum\\禮盒_套裝\\鮑魚禮盒.jpg",
     "local_img": "product_30.jpg",
     "sku": "YH310"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭",
-    "price": "HKD 28 (細罐) / HKD 80 (大罐)",
-    "note": "細罐 HKD 28 / 大罐 HKD 80",
-    "stock": 0,
-    "image": "E:\\Lum\\零售裝\\四個鮑魚罐頭.jpg",
-    "img1": "鮑魚罐頭(細罐裝).jpg",
-    "img2": "鮑魚罐頭(大罐裝).jpg",
-    "label1": "細罐",
-    "label2": "大罐",
-    "local_img": "鮑魚罐頭(大罐裝).jpg",
-    "sku": "YH501"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭 (四罐優惠)",
-    "price": "HKD 100 (細罐×4) / HKD 300 (大罐×4)",
-    "note": "細罐×4 HKD 100 / 大罐×4 HKD 300",
-    "stock": 0,
-    "image": "E:\\Lum\\零售裝\\四個鮑魚罐頭細罐裝.jpg",
-    "img1": "四個鮑魚罐頭細罐裝.jpg",
-    "img2": "四個鮑魚罐頭.jpg",
-    "label1": "細罐×4",
-    "label2": "大罐×4",
-    "local_img": "四個鮑魚罐頭.jpg",
-    "sku": "YH501A"
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭 (大罐)",
-    "price": "HKD 80",
-    "note": "大罐 425g",
-    "stock": 0,
-    "image": null,
-    "img1": "鮑魚罐頭(大罐裝).jpg",
-    "img2": null,
-    "label1": "大罐",
-    "label2": null,
-    "local_img": "鮑魚罐頭(大罐裝).jpg",
-    "sku": "YH502",
-    "hidden": true
-  },
-  {
-    "cat": "罐頭/零售裝",
-    "name": "鮑魚罐頭 (大罐)(四罐裝)",
-    "price": "HKD 300",
-    "note": "大罐×4",
-    "stock": 0,
-    "image": null,
-    "img1": "四個鮑魚罐頭.jpg",
-    "img2": null,
-    "label1": "大罐×4",
-    "label2": null,
-    "local_img": "四個鮑魚罐頭.jpg",
-    "sku": "YH502A",
-    "hidden": true
   },
   {
     "cat": "蝦籽麵",
