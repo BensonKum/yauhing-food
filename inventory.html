@@ -1348,14 +1348,15 @@ function renderGrid(){
     let displaySku=p.sku;
     
     if(isPair){
-      // Extract base name (remove " (8隻裝)" suffix)
-      displayName=p.name.replace(/\s*\([^)]+\)$/,'');
+      // Extract base name (remove " (8隻裝)" or trailing "N個裝" suffix)
+      displayName=p.name.replace(/\s*\([^)]+\)$/,'').replace(/\s*\d+個裝$/,'');
       // Build pack options
-      const baseLabel=p.name.match(/\(([^)]+)\)$/)?.[1]||'8隻裝';
-      const variantLabel=pair.variant.name.match(/\+(.+)$/)?.[1]||'麵';
+      const baseLabel=p.name.match(/\(([^)]+)\)$/)?.[1]||p.name.match(/(\d+個裝)$/)?.[1]||'8隻裝';
+      const vMatch=pair.variant.name.match(/\+(.+)$/);
+      const variantLabel=vMatch?('+'+vMatch[1]):(String(pair.variant.price||'').includes('單包')?'單包':'+麵');
       packOpts=[
         {label:baseLabel,img:p.local_img,price:parsePrice(p.price),product:p},
-        {label:'+'+variantLabel,img:pair.variant.local_img,price:parsePrice(pair.variant.price),product:pair.variant}
+        {label:variantLabel,img:pair.variant.local_img,price:parsePrice(pair.variant.price),product:pair.variant}
       ];
     } else {
       packOpts=getPackOptions(p);
