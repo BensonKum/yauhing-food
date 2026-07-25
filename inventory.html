@@ -1493,7 +1493,7 @@ const DUMPLING_NAMES_1PLUS1 = []; // 2026-07-11: Ben 要求取消 YH801-YH804 �
 // 2026-07-25: 3款8隻裝餃子優惠（YH805椰菜/YH806韭菜/YH807素菜）
 // 買1盒$25、2盒$35、3盒$45（可混搭），最多3盒
 const DUMPLING_PROMO_SKUS = ['YH805','YH806','YH807'];
-const DUMPLING_PROMO_PRICE = {1:25, 2:35, 3:45};
+const DUMPLING_PROMO_PRICE = {1:25, 2:35, 3:50};
 function getDumplingPromoQty(cart){
   let q=0;
   Object.values(cart).forEach(i=>{ if(DUMPLING_PROMO_SKUS.includes(i.sku)) q+=i.qty; });
