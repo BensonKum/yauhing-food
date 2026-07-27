@@ -1450,7 +1450,7 @@ function renderGrid(){
     const minus=document.createElement('button');
     minus.className='qty-btn'+(currentMode==='purchase'?' green':'');
     minus.textContent='−';
-    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,activeProduct,selPack);};
+    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,selectedOpt.product,selPack);};
 
     const num=document.createElement('span');
     num.className='qty-num';
@@ -1459,7 +1459,7 @@ function renderGrid(){
     const plus=document.createElement('button');
     plus.className='qty-btn';
     plus.textContent='+';
-    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,activeProduct,selPack);};
+    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,selectedOpt.product,selPack);};
 
     qtyCtrl.appendChild(minus);
     qtyCtrl.appendChild(num);
