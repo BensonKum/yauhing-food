@@ -1909,20 +1909,20 @@ async function exportLogToExcel(){
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(header);
 
-    if(dataRows.length > 0){
-      XLSX.utils.sheet_add_aoa(ws, dataRows, {origin: 6});
-    }
-
-    // Format columns: F=qty, G=unitPrice, H=lineTotal
-    const lastRow = 5 + dataRows.length;
-    for(let r = 6; r <= lastRow; r++){
-      const idx = r - 6;
-      if(idx < dataRows.length){
-        ws['F' + r] = { t:'n', v: dataRows[idx][5], z: '#,##0' };
-        ws['G' + r] = { t:'n', v: dataRows[idx][6], z: '$#,##0.00' };
-        ws['H' + r] = { t:'n', v: dataRows[idx][7], z: '$#,##0.00' };
-      }
-    }
+    // Write each row with sheet_add_json to ensure all 8 columns land in the same row
+    // (sheet_add_aoa skips undefined leading cells, causing text & numbers to split rows)
+    dataRows.forEach((row, idx) => {
+      const r = idx + 6;
+      const [dtStr, typeLabel, storeLabel, sku, name, qty, unitPrice, lineTotal] = row;
+      ws['A' + r] = { t: 's', v: dtStr || '' };
+      ws['B' + r] = { t: 's', v: typeLabel || '' };
+      ws['C' + r] = { t: 's', v: storeLabel || '' };
+      ws['D' + r] = { t: 's', v: sku || '' };
+      ws['E' + r] = { t: 's', v: name || '' };
+      ws['F' + r] = { t: 'n', v: qty || 0,  z: '#,##0' };
+      ws['G' + r] = { t: 'n', v: unitPrice || 0, z: '$#,##0.00' };
+      ws['H' + r] = { t: 'n', v: lineTotal || 0, z: '$#,##0.00' };
+    });
 
     // Column widths
     ws['!cols'] = [
