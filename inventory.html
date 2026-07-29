@@ -1815,14 +1815,22 @@ function exportReportToExcel(){
 
 async function exportLogToExcel(){
   try {
+    toast('⏳ 開始匯出...');
     const store = document.getElementById('logStore').value;
     const from = document.getElementById('logFromDate').value;
     const to = document.getElementById('logToDate').value;
 
-    // Query Firestore directly (same filters as renderLog)
-    const snap = await db.collection('inventory_transactions').orderBy('createdAt','desc').limit(200).get();
+    // Query Firestore (no orderBy to avoid index requirement)
+    const snap = await db.collection('inventory_transactions').limit(500).get();
     let txns = [];
     snap.forEach(d => txns.push({id: d.id, ...d.data()}));
+
+    // Sort by createdAt desc (in-memory)
+    txns.sort((a,b) => {
+      const ta = a.createdAt ? a.createdAt.toDate().getTime() : 0;
+      const tb = b.createdAt ? b.createdAt.toDate().getTime() : 0;
+      return tb - ta;
+    });
 
     // Apply date filter
     let fromDate = null, toDate = null;
@@ -1846,50 +1854,64 @@ async function exportLogToExcel(){
       return true;
     });
 
-    // Header
-    const header = [
-      ['祐興食品 - 交易記錄', '', '', '', '', '', '', ''],
-      ['分店', store==='all'?'全部':store==='central'?'中環店':'始創店', '', '', '', '', ''],
-      ['日期範圍', from && to ? from + ' 至 ' + to : '全部', '', '', '', '', ''],
+    // SKU -> name lookup from products_v2.json (Firestore products collection is empty)
+    const skuNames = {};
+    try {
+      const r = await fetch('products_v2.json?_=' + Date.now());
+      const products = await r.json();
+      products.forEach(p => { if(p.sku && p.name && !p.hidden) skuNames[p.sku] = p.name; });
+    } catch(e){ console.warn('products_v2.json load failed:', e); }
+
+    // Build data rows: header lines + 1 row per line item
+    const dataRows = [
+      ['祐興食品 - 交易記錄'],
+      ['分店', store==='all'?'全部':store==='central'?'中環店':'始創店'],
+      ['日期範圍', from && to ? from + ' 至 ' + to : '全部'],
       [],
       ['時間', '類型', '分店', 'SKU', '產品名稱', '數量', '單價', '金額']
     ];
 
-    // Build SKU -> name lookup from products.json (inline map for invoice uploads)
-    // Invoice uploads store SKU in items[].name; we need Chinese names
-    const skuNames = {};
-    try { await db.collection('products').limit(100).get().then(s=>s.forEach(d=>{const p=d.data();if(p.sku&&p.name)skuNames[p.sku]=p.name;})); } catch(e){}
-    
-    // Build one row per line item
-    const dataRows = [];
     txns.forEach(t => {
-      const dt = t.createdAt ? new Date(t.createdAt.toDate()) : new Date();
-      const dtStr = dt.toLocaleString('zh-HK',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-      const typeLabel = t.type === 'sale' ? '📤 銷售' : '📥 進貨';
-      const storeLabel = t.store === 'central' ? '中環' : '始創';
+      const dt = t.createdAt ? t.createdAt.toDate() : new Date();
+      const dtStr = dt.toLocaleString('zh-HK',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const typeLabel = t.type === 'sale' ? '銷售' : t.type === 'purchase' ? '進貨' : (t.type || '');
+      const storeLabel = t.store === 'central' ? '中環' : t.store === 'pioneer' ? '始創' : (t.store || '');
 
       let lineItems = [];
       if(t.items && t.items.length > 0){
-        lineItems = t.items.map(i => {
-          // SKU column = YH code (i.sku); product name column = Chinese name (i.name)
-          const rawSku = i.sku || i.productCode || '';
-          const resolvedName = i.name || i.productName || (rawSku && skuNames[rawSku] ? skuNames[rawSku] : rawSku);
-          return {
-            sku: rawSku,
-            name: resolvedName,
-            qty: i.qty || 1,
+        t.items.forEach(i => {
+          // If i.name is broken (e.g. "??") use skuNames lookup
+          let nm = i.name || i.productName || '';
+          if((!nm || nm.indexOf('?')>=0) && i.sku && skuNames[i.sku]) nm = skuNames[i.sku];
+          if(!nm) nm = i.sku || i.productCode || '';
+          lineItems.push({
+            sku: i.sku || i.productCode || '',
+            name: nm,
+            qty: Number(i.qty) || 0,
             unitPrice: Number(i.price) || 0,
             lineTotal: Number(i.lineTotal) || (Number(i.qty||0) * Number(i.price||0))
-          };
+          });
         });
       } else if(t.productName){
-        lineItems = [{
+        let nm = t.productName;
+        if((!nm || nm.indexOf('?')>=0) && t.productCode && skuNames[t.productCode]) nm = skuNames[t.productCode];
+        lineItems.push({
           sku: t.productCode || '',
-          name: t.productName,
-          qty: t.qty || 1,
+          name: nm,
+          qty: Number(t.qty) || 1,
           unitPrice: Number(t.price) || 0,
           lineTotal: (Number(t.qty)||1) * (Number(t.price)||0)
-        }];
+        });
+      } else if(t.productCode || t.sku){
+        // invoice upload - flat record
+        const sku = t.productCode || t.sku || '';
+        lineItems.push({
+          sku: sku,
+          name: skuNames[sku] || sku,
+          qty: Number(t.qty) || 1,
+          unitPrice: Number(t.price) || 0,
+          lineTotal: (Number(t.qty)||1) * (Number(t.price)||0)
+        });
       }
 
       lineItems.forEach(item => {
@@ -1901,37 +1923,20 @@ async function exportLogToExcel(){
       });
     });
 
-    // Defensive: drop any line item with no SKU AND no name (prevents ghost/blank rows)
-    const cleanRows = dataRows.filter(r => (r[3] && String(r[3]).trim() !== '') || (r[4] && String(r[4]).trim() !== ''));
-    dataRows.length = 0;
-    Array.prototype.push.apply(dataRows, cleanRows);
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(header);
-
-    // Write each row with sheet_add_json to ensure all 8 columns land in the same row
-    // (sheet_add_aoa skips undefined leading cells, causing text & numbers to split rows)
-    dataRows.forEach((row, idx) => {
-      const r = idx + 6;
-      const [dtStr, typeLabel, storeLabel, sku, name, qty, unitPrice, lineTotal] = row;
-      ws['A' + r] = { t: 's', v: dtStr || '' };
-      ws['B' + r] = { t: 's', v: typeLabel || '' };
-      ws['C' + r] = { t: 's', v: storeLabel || '' };
-      ws['D' + r] = { t: 's', v: sku || '' };
-      ws['E' + r] = { t: 's', v: name || '' };
-      ws['F' + r] = { t: 'n', v: qty || 0,  z: '#,##0' };
-      ws['G' + r] = { t: 'n', v: unitPrice || 0, z: '$#,##0.00' };
-      ws['H' + r] = { t: 'n', v: lineTotal || 0, z: '$#,##0.00' };
-    });
+    // Use aoa_to_sheet on the FULL array (header + data) - simplest, most reliable
+    const ws = XLSX.utils.aoa_to_sheet(dataRows);
 
     // Column widths
     ws['!cols'] = [
-      {wch:18},{wch:10},{wch:8},{wch:12},{wch:32},{wch:8},{wch:12},{wch:12}
+      {wch:18},{wch:8},{wch:8},{wch:12},{wch:32},{wch:8},{wch:12},{wch:12}
     ];
 
+    const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
     XLSX.writeFile(wb, '交易記錄_' + new Date().toISOString().split('T')[0] + '.xlsx');
-    toast('✅ 記錄已匯出（' + dataRows.length + ' 項明細）');
+
+    const dataItemCount = dataRows.length - 5; // minus header lines
+    toast('✅ 已匯出 ' + dataItemCount + ' 項 (從 ' + txns.length + ' 筆交易)');
   } catch(e) {
     console.error('Export log error:', e);
     toast('❌ 匯出失敗：' + e.message);
