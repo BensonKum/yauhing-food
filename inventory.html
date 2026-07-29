@@ -1516,7 +1516,36 @@ function getFreshNoodlePromoQty(cart){
 }
 function calcFreshNoodlePromoDiscount(cart){
   if(!isAfter5pm()) return 0;
-  return Math.floor(getFreshNoodlePromoQty(cart)/2)*FRESH_NOODLE_PROMO_PER_PAIR;
+  // 換購優惠鎖定咗嘅粉麵唔計入每2盒減$10（避免雙重折扣，第N+1件粉麵先另計）
+  const nonCombo = Math.max(0, getFreshNoodlePromoQty(cart) - getComboCount(cart));
+  return Math.floor(nonCombo/2)*FRESH_NOODLE_PROMO_PER_PAIR;
+}
+
+// ===== 凍品+新鮮粉麵 換購優惠（2026-07-29）=====
+// 買任何凍品，可加$5換購新鮮粉麵1件；凍品件數=N，首N件粉麵計$5，第N+1件起另計
+const COMBO_PROMO_FRESH_PRICE = 5; // 換購價
+function getFrozenQty(cart){
+  let q=0;
+  Object.values(cart).forEach(i=>{ if(i.cat==='凍品') q+=i.qty; });
+  return q;
+}
+function getComboCount(cart){
+  return Math.min(getFrozenQty(cart), getFreshNoodlePromoQty(cart));
+}
+function calcComboPromoDiscount(cart){
+  const combo=getComboCount(cart);
+  if(combo<=0) return 0;
+  let remaining=combo, discount=0;
+  Object.values(cart).forEach(i=>{
+    if(remaining<=0) return;
+    if(i.cat!=='新鮮粉麵') return;
+    const price=(i.manualPrice||i.price);
+    const c=Math.min(i.qty, remaining);
+    // 只當原價高過$5才減（原價低過$5唔會變相加價）
+    if(c>0 && price>COMBO_PROMO_FRESH_PRICE) discount += c*(price-COMBO_PROMO_FRESH_PRICE);
+    remaining-=c;
+  });
+  return discount;
 }
 
 // ===== 全店滿$100享8.5折（排除新鮮粉麵、餃子系列、指定日期）=====
@@ -1624,6 +1653,8 @@ function renderCart(){
   let promoItems=[];
   const dumplingDiscount=calcDumplingPromoDiscount(cart);
   const dumplingQty=getDumplingPromoQty(cart);
+  const comboDiscount=calcComboPromoDiscount(cart);
+  const comboCount=getComboCount(cart);
   keys.forEach(cartKey=>{
     const item=cart[cartKey];
     const lineTotal=calcLineTotal(item.qty,(item.manualPrice||item.price),item.name);
@@ -1652,13 +1683,17 @@ function renderCart(){
   if(storeDiscount>0){
     html+=`<div style="background:#e8f5e9;border-radius:8px;padding:.5rem .7rem;margin-top:.6rem;font-size:.78rem;color:#2e7d32">全店滿$100 85折 -HK$${storeDiscount}</div>`;
   }
-  // 新鮮粉麵每2盒減$10
+  // 新鮮粉麵每2盒減$10（已減去換購鎖定嘅粉麵件數）
   const freshDiscount=calcFreshNoodlePromoDiscount(cart);
   if(freshDiscount>0){
-    html+=`<div style="background:#e3f2fd;border-radius:8px;padding:.5rem .7rem;margin-top:.6rem;font-size:.78rem;color:#1565c0">新鮮粉麵優惠（${getFreshNoodlePromoQty(cart)}盒） -HK$${freshDiscount}</div>`;
+    html+=`<div style="background:#e3f2fd;border-radius:8px;padding:.5rem .7rem;margin-top:.6rem;font-size:.78rem;color:#1565c0">新鮮粉麵優惠（${getFreshNoodlePromoQty(cart)-getComboCount(cart)}盒） -HK$${freshDiscount}</div>`;
+  }
+  // 凍品換購新鮮粉麵（加$5換購）
+  if(comboDiscount>0){
+    html+=`<div style="background:#fff3e0;border-radius:8px;padding:.5rem .7rem;margin-top:.6rem;font-size:.78rem;color:#e65100">凍品換購新鮮粉麵（${comboCount}件 @$5） -HK$${comboDiscount}</div>`;
   }
   container.innerHTML=html;
-  document.getElementById('cartTotal').textContent='HK$'+(total-dumplingDiscount-storeDiscount-freshDiscount);
+  document.getElementById('cartTotal').textContent='HK$'+(total-dumplingDiscount-storeDiscount-freshDiscount-comboDiscount);
   document.getElementById('cartCount').innerHTML=`共 <span>${count}</span> 件產品，<span>${keys.length}</span> 款`;
   updateCartBadge();
 }
@@ -1681,11 +1716,12 @@ function confirmTransaction(){
   const dumplingDiscount=calcDumplingPromoDiscount(cart);
   const storeDiscount=calcStoreDiscount(cart);
   const freshDiscount=calcFreshNoodlePromoDiscount(cart);
-  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-dumplingDiscount-storeDiscount-freshDiscount;
+  const comboDiscount=calcComboPromoDiscount(cart);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-dumplingDiscount-storeDiscount-freshDiscount-comboDiscount;
   document.getElementById('confirmTitle').textContent=
     currentMode==='sale'?'📤 確認銷售交易？':'📥 確認進貨記錄？';
   document.getElementById('confirmMsg').innerHTML=
-    `<div style="text-align:left;font-size:.8rem;background:#f5f5f5;border-radius:8px;padding:.6rem;margin-bottom:.5rem">${items.replace(/\n/g,'<br>')}</div><strong>合計：HK$${total}</strong>${dumplingDiscount>0?` <span style="color:#e91e63">（餃子優惠 -HK$${dumplingDiscount}）</span>`:''}${storeDiscount>0?` <span style="color:#2e7d32">（全店 85折 -HK$${storeDiscount}）</span>`:''}${freshDiscount>0?` <span style="color:#1565c0">（新鮮粉麵優惠 -HK$${freshDiscount}）</span>`:''}<br><span style="font-size:.72rem;color:var(--muted)">分店：${currentStore==='central'?'中環店':'始創店'}</span>`;
+    `<div style="text-align:left;font-size:.8rem;background:#f5f5f5;border-radius:8px;padding:.6rem;margin-bottom:.5rem">${items.replace(/\n/g,'<br>')}</div><strong>合計：HK$${total}</strong>${dumplingDiscount>0?` <span style="color:#e91e63">（餃子優惠 -HK$${dumplingDiscount}）</span>`:''}${storeDiscount>0?` <span style="color:#2e7d32">（全店 85折 -HK$${storeDiscount}）</span>`:''}${freshDiscount>0?` <span style="color:#1565c0">（新鮮粉麵優惠 -HK$${freshDiscount}）</span>`:''}${comboDiscount>0?` <span style="color:#e65100">（凍品換購 -HK$${comboDiscount}）</span>`:''}<br><span style="font-size:.72rem;color:var(--muted)">分店：${currentStore==='central'?'中環店':'始創店'}</span>`;
   document.getElementById('confirmDialog').classList.add('show');
 }
 
@@ -1697,7 +1733,7 @@ async function doConfirm(){
   closeConfirm();
   const storeField=currentStore;
   const delta=currentMode==='sale'?-1:1;
-  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-calcDumplingPromoDiscount(cart)-calcStoreDiscount(cart)-calcFreshNoodlePromoDiscount(cart);
+  const total=Object.values(cart).reduce((s,i)=>s+calcLineTotal(i.qty,(i.manualPrice||i.price),i.name),0)-calcDumplingPromoDiscount(cart)-calcStoreDiscount(cart)-calcFreshNoodlePromoDiscount(cart)-calcComboPromoDiscount(cart);
   const timestamp=Date.now();
   const txId='TX'+(''+timestamp).slice(-10);
 
@@ -1754,7 +1790,11 @@ async function doConfirm(){
   }
   // 新鮮粉麵優惠行（receipt）
   if(calcFreshNoodlePromoDiscount(cart)>0){
-    rh+=`<div class="receipt-row" style="color:#1565c0;font-weight:600"><span>新鮮粉麵優惠（${getFreshNoodlePromoQty(cart)}盒）</span><span>-HK$${calcFreshNoodlePromoDiscount(cart)}</span></div>`;
+    rh+=`<div class="receipt-row" style="color:#1565c0;font-weight:600"><span>新鮮粉麵優惠（${getFreshNoodlePromoQty(cart)-getComboCount(cart)}盒）</span><span>-HK$${calcFreshNoodlePromoDiscount(cart)}</span></div>`;
+  }
+  // 凍品換購優惠行（receipt）
+  if(calcComboPromoDiscount(cart)>0){
+    rh+=`<div class="receipt-row" style="color:#e65100;font-weight:600"><span>凍品換購新鮮粉麵（${getComboCount(cart)}件）</span><span>-HK$${calcComboPromoDiscount(cart)}</span></div>`;
   }
   document.getElementById('receiptItems').innerHTML=rh;
   document.getElementById('receiptSub').textContent=
