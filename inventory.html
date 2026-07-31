@@ -1450,7 +1450,7 @@ function renderGrid(){
     const minus=document.createElement('button');
     minus.className='qty-btn'+(currentMode==='purchase'?' green':'');
     minus.textContent='−';
-    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,activeProduct,selPack);};
+    minus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,-1,activeProduct,selPack,selectedOpt?.price);};
 
     const num=document.createElement('span');
     num.className='qty-num';
@@ -1459,7 +1459,7 @@ function renderGrid(){
     const plus=document.createElement('button');
     plus.className='qty-btn';
     plus.textContent='+';
-    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,activeProduct,selPack);};
+    plus.onclick=(e)=>{e.stopPropagation();changeQty(cartKey,1,activeProduct,selPack,selectedOpt?.price);};
 
     qtyCtrl.appendChild(minus);
     qtyCtrl.appendChild(num);
@@ -1602,7 +1602,7 @@ function calcLineTotal(qty, price, name){
 }
 
 
-function changeQty(cartKey,delta,p,selPack){
+function changeQty(cartKey,delta,p,selPack,selectedPrice){
   // Allow if store is selected OR if user is logged in as employee (store inferred from email)
   if(!currentStore){
     const email = currentUser ? currentUser.email.toLowerCase() : '';
@@ -1615,8 +1615,9 @@ function changeQty(cartKey,delta,p,selPack){
       return;
     }
   }
+  const price = selectedPrice || parsePrice(p.price);
   if(!cart[cartKey]){
-    cart[cartKey]={qty:0,price:parsePrice(p.price),cat:p.cat,name:p.name,pack:selPack,sku:p.sku||''};
+    cart[cartKey]={qty:0,price:price,cat:p.cat,name:p.name,pack:selPack,sku:p.sku||''};
     // Manual price for YHM01 (現金收入) and YHM02 (外購)
     if(String(p.name||'').includes('現金')||String(p.name||'').includes('外購')){
       const mp=prompt('請輸入實際金額（'+p.name+'）\n（預設：'+cart[cartKey].price+'）','');
