@@ -525,23 +525,17 @@
   },
   {
     "cat": "特色麵",
-    "name": "全蛋麵 (幼麵) 6個裝",
+    "name": "全蛋麵",
     "price": "HKD 60",
-    "note": "",
+    "note": "幼麵 HKD 60 / 粗麵 HKD 60",
     "stock": 0,
     "image": "E:\\Lum\\特色麵\\全蛋麵(幼麵)6個裝.jpg",
-    "local_img": "product_47.jpg",
-    "sku": "YH205"
-  },
-  {
-    "cat": "特色麵",
-    "name": "全蛋麵 (粗麵) 6個裝",
-    "price": "HKD 60",
-    "note": "",
-    "stock": 0,
-    "image": "E:\\Lum\\特色麵\\全蛋麵(粗麵)6個裝.jpg",
-    "local_img": "product_48.jpg",
-    "sku": "YH205A"
+    "local_img": "全蛋麵(幼麵)6個裝.jpg",
+    "sku": "YH205",
+    "img1": "全蛋麵(幼麵)6個裝.jpg",
+    "img2": "全蛋麵(粗麵)6個裝.jpg",
+    "label1": "幼麵",
+    "label2": "粗麵"
   },
   {
     "cat": "素纖麵",
