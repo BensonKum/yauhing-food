@@ -1897,10 +1897,11 @@ async function exportLogToExcel(){
 
     // SKU -> name lookup from products_v2.json (Firestore products collection is empty)
     const skuNames = {};
+    const skuCats = {};
     try {
       const r = await fetch('products_v2.json?_=' + Date.now());
       const products = await r.json();
-      products.forEach(p => { if(p.sku && p.name && !p.hidden) skuNames[p.sku] = p.name; });
+      products.forEach(p => { if(p.sku && p.name && !p.hidden) skuNames[p.sku] = p.name; if(p.sku && p.cat) skuCats[p.sku] = p.cat; });
     } catch(e){ console.warn('products_v2.json load failed:', e); }
 
     // Build data rows: header lines + 1 row per line item
@@ -1909,7 +1910,7 @@ async function exportLogToExcel(){
       ['分店', store==='all'?'全部':store==='central'?'中環店':'始創店'],
       ['日期範圍', from && to ? from + ' 至 ' + to : '全部'],
       [],
-      ['時間', '類型', '分店', 'SKU', '產品名稱', '數量', '單價', '金額']
+      ['時間', '類型', '分店', 'SKU', '產品名稱', '分類', '數量', '單價', '金額']
     ];
 
     txns.forEach(t => {
@@ -1958,7 +1959,7 @@ async function exportLogToExcel(){
       lineItems.forEach(item => {
         dataRows.push([
           dtStr, typeLabel, storeLabel,
-          item.sku, item.name,
+          item.sku, item.name, skuCats[item.sku] || '',
           item.qty, item.unitPrice, item.lineTotal
         ]);
       });
@@ -1969,7 +1970,7 @@ async function exportLogToExcel(){
 
     // Column widths
     ws['!cols'] = [
-      {wch:18},{wch:8},{wch:8},{wch:12},{wch:32},{wch:8},{wch:12},{wch:12}
+      {wch:18},{wch:8},{wch:8},{wch:12},{wch:32},{wch:12},{wch:8},{wch:12},{wch:12}
     ];
 
     const wb = XLSX.utils.book_new();
