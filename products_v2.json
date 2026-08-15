@@ -251,7 +251,8 @@
     "image": null,
     "local_img": "意大利墨魚汁麵6個裝.jpg",
     "sku": "YH201A",
-    "shop_only": true
+    "shop_only": true,
+    "no_pair": true
   },
   {
     "cat": "特色麵",

@@ -1308,7 +1308,7 @@ function renderGrid(){
   const processedSkus=new Set();
   
   products.forEach(p=>{
-    if(p.sku&&p.sku.endsWith('A')){
+    if(p.sku&&p.sku.endsWith('A')&&!p.no_pair){
       const baseSku=p.sku.slice(0,-1);
       const baseProduct=products.find(x=>x.sku===baseSku);
       if(baseProduct){
@@ -1321,8 +1321,8 @@ function renderGrid(){
   
   // Filter products: show base products of pairs, and standalone products
   let filtered=(currentCat==='全部'?products:products.filter(p=>p.cat===currentCat)).filter(p=>{
-    // Hide variant SKUs (they'll be shown as pack options)
-    if(p.sku&&p.sku.endsWith('A')&&skuPairs.has(p.sku.slice(0,-1))) return false;
+    // Hide variant SKUs (they'll be shown as pack options) — but not if no_pair=true
+    if(p.sku&&p.sku.endsWith('A')&&skuPairs.has(p.sku.slice(0,-1))&&!p.no_pair) return false;
     return true;
   });
   
