@@ -1,4 +1,4 @@
-[
+﻿[
   {
     "cat": "手工麵",
     "name": "半熟幼麵 (乾)",
@@ -1224,5 +1224,27 @@
     "image": null,
     "local_img": null,
     "sku": "YHM02"
+  },
+  {
+    "cat": "餃子系列",
+    "name": "粟米素菜餃 (8隻裝)",
+    "price": "HKD 25",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_corn_dumpling.jpg",
+    "sku": "YM808",
+    "shop_only": true
+  },
+  {
+    "cat": "餃子系列",
+    "name": "香菇素菜餃 (8隻裝)",
+    "price": "HKD 25",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": "product_cabbage_dumpling.jpg",
+    "sku": "YM809",
+    "shop_only": true
   }
 ]
