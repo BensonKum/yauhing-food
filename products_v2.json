@@ -1246,5 +1246,16 @@
     "local_img": "product_cabbage_dumpling.jpg",
     "sku": "YM809",
     "shop_only": true
+  },
+  {
+    "sku": "YM810",
+    "name": "雜菇鮮肉餃 (8隻裝)",
+    "cat": "餃子系列",
+    "price": "HKD 25",
+    "note": "",
+    "stock": 0,
+    "image": null,
+    "local_img": null,
+    "shop_only": true
   }
 ]
