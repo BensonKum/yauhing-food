@@ -28,6 +28,13 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
     }
 
+    // 發票入貨去重記錄：已登入用戶可讀寫，delete 僅 admin
+    match /invoice_imports/{importId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.token.email == 'admin@yauhing.hk';
+    }
+
     // 員工資料：公開讀取（打卡頁面需要載入員工列表，無需登入）
     // 寫入（新增/編輯/刪除）：僅 admin@yauhing.hk
     match /employees/{empId} {
